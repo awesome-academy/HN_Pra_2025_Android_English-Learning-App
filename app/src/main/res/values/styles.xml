@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- ===== FONT STYLES ===== -->
+
+    <!-- ===== FONT REGULAR ===== -->
+    <style name="TextRegular">
+        <item name="android:fontFamily">@font/nunito_regular</item>
+    </style>
+    <style name="TextRegular.10sp">
+        <item name="android:textSize">@dimen/sp_10</item>
+    </style>
+    <style name="TextRegular.12sp">
+        <item name="android:textSize">@dimen/sp_12</item>
+    </style>
+    <style name="TextRegular.14sp">
+        <item name="android:textSize">@dimen/sp_14</item>
+    </style>
+    <style name="TextRegular.16sp">
+        <item name="android:textSize">@dimen/sp_16</item>
+    </style>
+
+    <!-- ===== FONT MEDIUM ===== -->
+    <style name="TextMedium">
+        <item name="android:fontFamily">@font/nunito_medium</item>
+    </style>
+    <style name="TextMedium.10sp">
+        <item name="android:textSize">@dimen/sp_10</item>
+    </style>
+    <style name="TextMedium.12sp">
+        <item name="android:textSize">@dimen/sp_12</item>
+    </style>
+    <style name="TextMedium.14sp">
+        <item name="android:textSize">@dimen/sp_14</item>
+    </style>
+    <style name="TextMedium.16sp">
+        <item name="android:textSize">@dimen/sp_16</item>
+    </style>
+
+    <!-- ===== FONT SEMIBOLD ===== -->
+    <style name="TextSemiBold">
+        <item name="android:fontFamily">@font/nunito_semibold</item>
+    </style>
+    <style name="TextSemiBold.14sp">
+        <item name="android:textSize">@dimen/sp_14</item>
+    </style>
+    <style name="TextSemiBold.16sp">
+        <item name="android:textSize">@dimen/sp_16</item>
+    </style>
+    <style name="TextSemiBold.18sp">
+        <item name="android:textSize">@dimen/sp_18</item>
+    </style>
+
+    <!-- ===== FONT BOLD ===== -->
+    <style name="TextBold">
+        <item name="android:fontFamily">@font/nunito_bold</item>
+    </style>
+    <style name="TextBold.16sp">
+        <item name="android:textSize">@dimen/sp_16</item>
+    </style>
+    <style name="TextBold.18sp">
+        <item name="android:textSize">@dimen/sp_18</item>
+    </style>
+    <style name="TextBold.24sp">
+        <item name="android:textSize">@dimen/sp_24</item>
+    </style>
+
+    <!-- ===== FONT LIGHT ===== -->
+    <style name="TextLight">
+        <item name="android:fontFamily">@font/nunito_light</item>
+    </style>
+    <style name="TextLight.14sp">
+        <item name="android:textSize">@dimen/sp_14</item>
+    </style>
+
+
+    <!-- ===== NAVIGATION BAR STYLE ===== -->
+    <style name="CustomBottomNavigationView" parent="Widget.MaterialComponents.BottomNavigationView">
+        <item name="itemPaddingTop">@dimen/dp_6</item>
+        <item name="itemPaddingBottom">@dimen/dp_6</item>
+    </style>
+</resources>

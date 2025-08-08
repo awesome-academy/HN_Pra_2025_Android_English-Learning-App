@@ -2,5 +2,12 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name= "main_blue">#2563EB</color>
+    <color name= "secondary_orange">#FE9519</color>
+    <color name="state_error">#E53535</color>
+    <color name="state_warning">#FFCC00</color>
+    <color name="state_success">#05A660</color>
+    <color name="state_info">#0063F7</color>
+    <color name="success_70">#ECF9EF</color>
 </resources>
 

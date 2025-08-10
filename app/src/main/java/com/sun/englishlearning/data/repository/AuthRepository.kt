@@ -1,0 +1,88 @@
+package com.sun.englishlearning.data.repository
+
+import android.content.Context
+import androidx.credentials.ClearCredentialStateRequest
+import androidx.credentials.Credential
+import androidx.credentials.CredentialManager
+import androidx.credentials.CustomCredential
+import androidx.credentials.GetCredentialRequest
+import com.google.android.libraries.identity.googleid.GetGoogleIdOption
+import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.tasks.await
+
+interface AuthRepository {
+    val currentUser: FirebaseUser?
+    suspend fun signInWithGoogle(context: Context, serverClientId: String): Result<FirebaseUser>
+    suspend fun signOut(context: Context): Result<Unit>
+}
+
+class AuthRepositoryImpl : AuthRepository {
+
+    private val auth: FirebaseAuth = Firebase.auth
+
+    override val currentUser: FirebaseUser?
+        get() = auth.currentUser
+
+    override suspend fun signInWithGoogle(context: Context, serverClientId: String): Result<FirebaseUser> {
+        val credentialManager = CredentialManager.create(context)
+
+        // 1. Request Google ID Token from Credential Manager
+        val googleIdOption = GetGoogleIdOption.Builder()
+            .setFilterByAuthorizedAccounts(false)
+            .setServerClientId(serverClientId)
+            .build()
+
+        val request = GetCredentialRequest.Builder()
+            .addCredentialOption(googleIdOption)
+            .build()
+
+        return try {
+            val result = credentialManager.getCredential(context, request)
+            val credential = result.credential
+
+            // 2. Extract idToken from the result
+            val idToken = extractIdToken(credential)
+                ?: return Result.failure(Exception("Cannot retrieve Google ID Token."))
+
+            // 3. Authenticate with Firebase
+            val firebaseCredential = GoogleAuthProvider.getCredential(idToken, null)
+            val authResult = auth.signInWithCredential(firebaseCredential).await()
+            val user = authResult.user
+            if (user!= null) {
+                Result.success(user)
+            } else {
+                Result.failure(Exception("Firebase authentication failed."))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    private fun extractIdToken(credential: Credential): String? {
+        if (credential is CustomCredential && credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
+            return try {
+                val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.data)
+                googleIdTokenCredential.idToken
+            } catch (e: Exception) {
+                null
+            }
+        }
+        return null
+    }
+
+    override suspend fun signOut(context: Context): Result<Unit> {
+        val credentialManager = CredentialManager.create(context)
+        return try {
+            auth.signOut()
+            credentialManager.clearCredentialState(ClearCredentialStateRequest())
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+}

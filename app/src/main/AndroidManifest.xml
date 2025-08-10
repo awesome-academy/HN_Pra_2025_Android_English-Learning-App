@@ -12,13 +12,24 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.EnglishLearning">
         <activity
-            android:name=".MainActivity"
-            android:exported="true">
+            android:name=".screen.login.LoginActivity"
+            android:exported="false" />
+        <activity
+            android:name=".screen.splash.SplashActivity"
+            android:exported="true"
+            android:theme="@style/Theme.App.Starting">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".screen.onboarding.OnboardingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
         </activity>
     </application>
 

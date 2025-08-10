@@ -12,13 +12,13 @@ abstract class BaseFragment<VB : ViewBinding> : Fragment() {
     private var _viewBinding: VB? = null
     protected val viewBinding get() = _viewBinding!!
 
-    abstract fun inflateViewBinding(inflater: LayoutInflater, container: ViewGroup?): VB // Thêm container
+    abstract fun inflateViewBinding(inflater: LayoutInflater, container: ViewGroup?): VB // Add container
 
     abstract fun initData()
     abstract fun initView()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        _viewBinding = inflateViewBinding(inflater, container) // Sửa ở đây
+        _viewBinding = inflateViewBinding(inflater, container) 
         return viewBinding.root
     }
 

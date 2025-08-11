@@ -19,6 +19,41 @@
     <string name="welcome_title">Welcome!</string>
     <string name="sign_out_label">Sign out</string>
     <string name="start_label">Start</string>
+    <!-- Home Screen -->
+    <string name="greeting_text">Hi, Huan👋</string>
+    <string name="subtitle_text">Let\'s start learning!</string>
+    <string name="learning_time_label">Thời gian bạn đã học trong tuần này</string>
+    <string name="learning_time_value">2h 15m</string>
+    <string name="lets_start_button">Let\'s start</string>
+    <string name="courses_section_title">Khóa học</string>
+    <string name="view_all_courses">Xem toàn bộ</string>
+    <string name="recent_learning_title">Gần đây học</string>
+    <string name="view_all_recent">Xem toàn bộ</string>
+    
+    <!-- Course Categories -->
+    <string name="category_travel">Travel</string>
+    <string name="category_practice">Practice</string>
+    <string name="category_business">Business</string>
+    <string name="category_academic">Academic</string>
+    
+    <!-- Recent Learning -->
+    <string name="tourist_trip">Tourist trip</string>
+    <string name="hang_out_friends">Hang out with friends</string>
+    <string name="lesson_format">Lesson: %d</string>
+    <string name="advanced_format">Advanced: %d</string>
+    
+    <!-- Suggested Courses -->
+    <string name="suggested_courses_title">Gợi ý cho bạn</string>
+    <string name="office_conversation_title">How to Conversation in the office with your colleagues</string>
+    <string name="office_conversation_subtitle">At Work vocabulary</string>
+    
+    <!-- Review Screen -->
+    <string name="your_vocabulary_title">Your vocabulary</string>
+    <string name="weak_words">Weak words</string>
+    <string name="today_words">Today words</string>
+    <string name="medium_words">Medium words</string>
+    <string name="strong_words">Strong words</string>
+    <string name="your_saved_words">Your save words</string>
 
 
 </resources>

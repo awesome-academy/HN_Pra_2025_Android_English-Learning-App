@@ -1,0 +1,362 @@
+{
+  "words": [
+    {
+      "word": "hello",
+      "phonetic": "/həˈloʊ/",
+      "partOfSpeech": "exclamation",
+      "definition": "Used as a greeting or to begin a phone conversation.",
+      "example": "Hello, how are you?",
+      "audioUrl": "https://ssl.gstatic.com/dictionary/static/sounds/20220808/hello--_us_1.mp3"
+    },
+    {
+      "word": "world",
+      "phonetic": "/wɜːrld/",
+      "partOfSpeech": "noun",
+      "definition": "The earth, together with all of its countries, peoples, and natural features.",
+      "example": "Welcome to the world.",
+      "audioUrl": "https://ssl.gstatic.com/dictionary/static/sounds/20220808/world--_us_1.mp3"
+    },
+    {
+      "word": "love",
+      "phonetic": "/lʌv/",
+      "partOfSpeech": "noun",
+      "definition": "An intense feeling of deep affection.",
+      "example": "I love spending time with family.",
+      "synonyms": ["adore", "cherish", "care"],
+      "audioUrl": "https://ssl.gstatic.com/dictionary/static/sounds/20220808/love--_us_1.mp3"
+    },
+    {
+      "word": "happy",
+      "phonetic": "/ˈhæpi/",
+      "partOfSpeech": "adjective",
+      "definition": "Feeling or showing pleasure or contentment.",
+      "example": "She looks very happy today.",
+      "synonyms": ["joyful", "cheerful", "glad"],
+      "audioUrl": "https://ssl.gstatic.com/dictionary/static/sounds/20220808/happy--_us_1.mp3"
+    },
+    {
+      "word": "beautiful",
+      "phonetic": "/ˈbjuːtɪfəl/",
+      "partOfSpeech": "adjective",
+      "definition": "Pleasing the senses or mind aesthetically.",
+      "example": "What a beautiful sunset!",
+      "synonyms": ["pretty", "lovely", "gorgeous"],
+      "audioUrl": "https://ssl.gstatic.com/dictionary/static/sounds/20220808/beautiful--_us_1.mp3"
+    },
+    {
+      "word": "learn",
+      "phonetic": "/lɜːrn/",
+      "partOfSpeech": "verb",
+      "definition": "Acquire knowledge of or skill in something by study, experience, or being taught.",
+      "example": "I want to learn English.",
+      "synonyms": ["study", "master", "acquire"],
+      "audioUrl": "https://ssl.gstatic.com/dictionary/static/sounds/20220808/learn--_us_1.mp3"
+    },
+    {
+      "word": "friend",
+      "phonetic": "/frend/",
+      "partOfSpeech": "noun",
+      "definition": "A person whom one knows and with whom one has a bond of mutual affection.",
+      "example": "She is my best friend.",
+      "synonyms": ["companion", "buddy", "pal"],
+      "audioUrl": "https://ssl.gstatic.com/dictionary/static/sounds/20220808/friend--_us_1.mp3"
+    },
+    {
+      "word": "house",
+      "phonetic": "/haʊs/",
+      "partOfSpeech": "noun",
+      "definition": "A building for human habitation, especially one that is lived in by a family.",
+      "example": "They bought a new house.",
+      "synonyms": ["home", "residence", "dwelling"],
+      "audioUrl": "https://ssl.gstatic.com/dictionary/static/sounds/20220808/house--_us_1.mp3"
+    },
+    {
+      "word": "good",
+      "phonetic": "/ɡʊd/",
+      "partOfSpeech": "adjective",
+      "definition": "To be desired or approved of.",
+      "example": "That's a good idea!",
+      "synonyms": ["excellent", "great", "fine"],
+      "audioUrl": "https://ssl.gstatic.com/dictionary/static/sounds/20220808/good--_us_1.mp3"
+    },
+    {
+      "word": "time",
+      "phonetic": "/taɪm/",
+      "partOfSpeech": "noun",
+      "definition": "The indefinite continued progress of existence and events.",
+      "example": "What time is it?",
+      "synonyms": ["moment", "period", "duration"],
+      "audioUrl": "https://ssl.gstatic.com/dictionary/static/sounds/20220808/time--_us_1.mp3"
+    },
+    {
+      "word": "water",
+      "phonetic": "/ˈwɔːtər/",
+      "partOfSpeech": "noun",
+      "definition": "A colorless, transparent, odorless liquid that forms the seas, lakes, rivers, and rain.",
+      "example": "Please drink more water.",
+      "synonyms": ["H2O", "liquid"],
+      "audioUrl": "https://ssl.gstatic.com/dictionary/static/sounds/20220808/water--_us_1.mp3"
+    },
+    {
+      "word": "food",
+      "phonetic": "/fuːd/",
+      "partOfSpeech": "noun",
+      "definition": "Any nutritious substance that people or animals eat or drink.",
+      "example": "The food was delicious.",
+      "synonyms": ["nourishment", "meal", "cuisine"],
+      "audioUrl": "https://ssl.gstatic.com/dictionary/static/sounds/20220808/food--_us_1.mp3"
+    },
+    {
+      "word": "book",
+      "phonetic": "/bʊk/",
+      "partOfSpeech": "noun",
+      "definition": "A written or printed work consisting of pages glued or sewn together along one side.",
+      "example": "I'm reading a good book.",
+      "synonyms": ["novel", "publication", "volume"],
+      "audioUrl": "https://ssl.gstatic.com/dictionary/static/sounds/20220808/book--_us_1.mp3"
+    },
+    {
+      "word": "school",
+      "phonetic": "/skuːl/",
+      "partOfSpeech": "noun",
+      "definition": "An institution for educating children.",
+      "example": "The children go to school every day.",
+      "synonyms": ["academy", "institution", "college"],
+      "audioUrl": "https://ssl.gstatic.com/dictionary/static/sounds/20220808/school--_us_1.mp3"
+    },
+    {
+      "word": "work",
+      "phonetic": "/wɜːrk/",
+      "partOfSpeech": "verb",
+      "definition": "Activity involving mental or physical effort done in order to achieve a purpose or result.",
+      "example": "I work at a technology company.",
+      "synonyms": ["employment", "job", "labor"],
+      "audioUrl": "https://ssl.gstatic.com/dictionary/static/sounds/20220808/work--_us_1.mp3"
+    },
+    {
+      "word": "family",
+      "phonetic": "/ˈfæməli/",
+      "partOfSpeech": "noun",
+      "definition": "A group consisting of parents and children living together in a household.",
+      "example": "I love spending time with my family.",
+      "synonyms": ["relatives", "household", "clan"],
+      "audioUrl": "https://ssl.gstatic.com/dictionary/static/sounds/20220808/family--_us_1.mp3"
+    },
+    {
+      "word": "money",
+      "phonetic": "/ˈmʌni/",
+      "partOfSpeech": "noun",
+      "definition": "A current medium of exchange in the form of coins and banknotes.",
+      "example": "I need to save more money.",
+      "synonyms": ["currency", "cash", "funds"],
+      "audioUrl": "https://ssl.gstatic.com/dictionary/static/sounds/20220808/money--_us_1.mp3"
+    },
+    {
+      "word": "car",
+      "phonetic": "/kɑːr/",
+      "partOfSpeech": "noun",
+      "definition": "A road vehicle, typically with four wheels, powered by an internal combustion engine.",
+      "example": "She drives a red car.",
+      "synonyms": ["automobile", "vehicle"],
+      "audioUrl": "https://ssl.gstatic.com/dictionary/static/sounds/20220808/car--_us_1.mp3"
+    },
+    {
+      "word": "city",
+      "phonetic": "/ˈsɪti/",
+      "partOfSpeech": "noun",
+      "definition": "A large town.",
+      "example": "New York is a big city.",
+      "synonyms": ["metropolis", "urban area", "town"],
+      "audioUrl": "https://ssl.gstatic.com/dictionary/static/sounds/20220808/city--_us_1.mp3"
+    },
+    {
+      "word": "country",
+      "phonetic": "/ˈkʌntri/",
+      "partOfSpeech": "noun",
+      "definition": "A nation with its own government, occupying a particular territory.",
+      "example": "Which country are you from?",
+      "synonyms": ["nation", "state", "homeland"],
+      "audioUrl": "https://ssl.gstatic.com/dictionary/static/sounds/20220808/country--_us_1.mp3"
+    },
+    {
+      "word": "language",
+      "phonetic": "/ˈlæŋɡwɪdʒ/",
+      "partOfSpeech": "noun",
+      "definition": "The method of human communication, either spoken or written.",
+      "example": "English is a global language.",
+      "synonyms": ["tongue", "speech", "communication"],
+      "audioUrl": "https://ssl.gstatic.com/dictionary/static/sounds/20220808/language--_us_1.mp3"
+    },
+    {
+      "word": "travel",
+      "phonetic": "/ˈtrævəl/",
+      "partOfSpeech": "verb",
+      "definition": "Go from one place to another, typically over a distance of some length.",
+      "example": "I love to travel around the world.",
+      "synonyms": ["journey", "trip", "voyage"],
+      "audioUrl": "https://ssl.gstatic.com/dictionary/static/sounds/20220808/travel--_us_1.mp3"
+    },
+    {
+      "word": "music",
+      "phonetic": "/ˈmjuːzɪk/",
+      "partOfSpeech": "noun",
+      "definition": "Vocal or instrumental sounds combined in such a way as to produce beauty of form.",
+      "example": "I enjoy listening to music.",
+      "synonyms": ["melody", "harmony", "song"],
+      "audioUrl": "https://ssl.gstatic.com/dictionary/static/sounds/20220808/music--_us_1.mp3"
+    },
+    {
+      "word": "computer",
+      "phonetic": "/kəmˈpjuːtər/",
+      "partOfSpeech": "noun",
+      "definition": "An electronic device for storing and processing data.",
+      "example": "I use my computer for work.",
+      "synonyms": ["PC", "laptop", "machine"],
+      "audioUrl": "https://ssl.gstatic.com/dictionary/static/sounds/20220808/computer--_us_1.mp3"
+    },
+    {
+      "word": "phone",
+      "phonetic": "/foʊn/",
+      "partOfSpeech": "noun",
+      "definition": "A telephone.",
+      "example": "Can you call me on my phone?",
+      "synonyms": ["telephone", "mobile", "cell"],
+      "audioUrl": "https://ssl.gstatic.com/dictionary/static/sounds/20220808/phone--_us_1.mp3"
+    },
+    {
+      "word": "take",
+      "phonetic": "/teɪk/",
+      "partOfSpeech": "verb",
+      "definition": "To lay hold of; to get into one's hands or possession.",
+      "example": "Please take this book.",
+      "synonyms": ["grab", "get", "pick up"],
+      "audioUrl": "https://ssl.gstatic.com/dictionary/static/sounds/20220808/take--_us_1.mp3"
+    },
+    {
+      "word": "make",
+      "phonetic": "/meɪk/",
+      "partOfSpeech": "verb",
+      "definition": "To form, create, or produce something.",
+      "example": "I want to make a cake.",
+      "synonyms": ["create", "build", "produce"],
+      "audioUrl": "https://ssl.gstatic.com/dictionary/static/sounds/20220808/make--_us_1.mp3"
+    },
+    {
+      "word": "give",
+      "phonetic": "/ɡɪv/",
+      "partOfSpeech": "verb",
+      "definition": "To freely transfer the possession of something to someone.",
+      "example": "Give me your hand.",
+      "synonyms": ["offer", "provide", "grant"],
+      "audioUrl": "https://ssl.gstatic.com/dictionary/static/sounds/20220808/give--_us_1.mp3"
+    },
+    {
+      "word": "come",
+      "phonetic": "/kʌm/",
+      "partOfSpeech": "verb",
+      "definition": "To move toward or arrive at a particular place.",
+      "example": "Come here please.",
+      "synonyms": ["arrive", "approach", "reach"],
+      "audioUrl": "https://ssl.gstatic.com/dictionary/static/sounds/20220808/come--_us_1.mp3"
+    },
+    {
+      "word": "go",
+      "phonetic": "/ɡoʊ/",
+      "partOfSpeech": "verb",
+      "definition": "To move from one place to another; to travel or proceed.",
+      "example": "Let's go to the park.",
+      "synonyms": ["move", "travel", "proceed"],
+      "audioUrl": "https://ssl.gstatic.com/dictionary/static/sounds/20220808/go--_us_1.mp3"
+    },
+    {
+      "word": "see",
+      "phonetic": "/si/",
+      "partOfSpeech": "verb",
+      "definition": "To perceive with the eyes; to view or observe.",
+      "example": "I can see the mountains.",
+      "synonyms": ["view", "observe", "watch"],
+      "audioUrl": "https://ssl.gstatic.com/dictionary/static/sounds/20220808/see--_us_1.mp3"
+    },
+    {
+      "word": "know",
+      "phonetic": "/noʊ/",
+      "partOfSpeech": "verb",
+      "definition": "To be aware of through observation, inquiry, or information.",
+      "example": "I know the answer.",
+      "synonyms": ["understand", "realize", "comprehend"],
+      "audioUrl": "https://ssl.gstatic.com/dictionary/static/sounds/20220808/know--_us_1.mp3"
+    },
+    {
+      "word": "think",
+      "phonetic": "/θɪŋk/",
+      "partOfSpeech": "verb",
+      "definition": "To have a particular opinion, belief, or idea about someone or something.",
+      "example": "I think this is correct.",
+      "synonyms": ["believe", "consider", "suppose"],
+      "audioUrl": "https://ssl.gstatic.com/dictionary/static/sounds/20220808/think--_us_1.mp3"
+    },
+    {
+      "word": "feel",
+      "phonetic": "/fil/",
+      "partOfSpeech": "verb",
+      "definition": "To experience an emotion or physical sensation.",
+      "example": "I feel happy today.",
+      "synonyms": ["sense", "experience", "perceive"],
+      "audioUrl": "https://ssl.gstatic.com/dictionary/static/sounds/20220808/feel--_us_1.mp3"
+    },
+    {
+      "word": "look",
+      "phonetic": "/lʊk/",
+      "partOfSpeech": "verb",
+      "definition": "To direct one's gaze toward someone or something.",
+      "example": "Look at the beautiful sunset.",
+      "synonyms": ["see", "watch", "observe"],
+      "audioUrl": "https://ssl.gstatic.com/dictionary/static/sounds/20220808/look--_us_1.mp3"
+    },
+    {
+      "word": "want",
+      "phonetic": "/wɑnt/",
+      "partOfSpeech": "verb",
+      "definition": "To have a desire to possess or do something; to wish for.",
+      "example": "I want to learn English.",
+      "synonyms": ["desire", "wish", "need"],
+      "audioUrl": "https://ssl.gstatic.com/dictionary/static/sounds/20220808/want--_us_1.mp3"
+    },
+    {
+      "word": "need",
+      "phonetic": "/nid/",
+      "partOfSpeech": "verb",
+      "definition": "To require something because it is essential or very important.",
+      "example": "I need your help.",
+      "synonyms": ["require", "want", "must have"],
+      "audioUrl": "https://ssl.gstatic.com/dictionary/static/sounds/20220808/need--_us_1.mp3"
+    },
+    {
+      "word": "like",
+      "phonetic": "/laɪk/",
+      "partOfSpeech": "verb",
+      "definition": "To find agreeable, enjoyable, or satisfactory.",
+      "example": "I like this song.",
+      "synonyms": ["enjoy", "prefer", "love"],
+      "audioUrl": "https://ssl.gstatic.com/dictionary/static/sounds/20220808/like--_us_1.mp3"
+    },
+    {
+      "word": "say",
+      "phonetic": "/seɪ/",
+      "partOfSpeech": "verb",
+      "definition": "To utter words so as to convey information, an opinion, or a feeling.",
+      "example": "What did you say?",
+      "synonyms": ["speak", "tell", "express"],
+      "audioUrl": "https://ssl.gstatic.com/dictionary/static/sounds/20220808/say--_us_1.mp3"
+    },
+    {
+      "word": "tell",
+      "phonetic": "/tɛl/",
+      "partOfSpeech": "verb",
+      "definition": "To communicate information to someone in spoken or written words.",
+      "example": "Tell me a story.",
+      "synonyms": ["say", "inform", "explain"],
+      "audioUrl": "https://ssl.gstatic.com/dictionary/static/sounds/20220808/tell--_us_1.mp3"
+    }
+  ]
+}

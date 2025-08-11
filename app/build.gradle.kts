@@ -3,6 +3,8 @@ import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    kotlin("kapt")
+    // Google Services plugin needed for Firebase Firestore
     alias(libs.plugins.google.gms.google.services)
 }
 
@@ -19,16 +21,15 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        defaultConfig {
-            val clientId = gradleLocalProperties(rootDir, providers)
-                .getProperty("WEB_CLIENT_ID") ?: error("Missing 'WEB_CLIENT_ID' in local.properties")
+        // Google Sign-In client ID configuration
+        val clientId = gradleLocalProperties(rootDir, providers)
+            .getProperty("WEB_CLIENT_ID") ?: error("Missing 'WEB_CLIENT_ID' in local.properties")
 
-            buildConfigField(
-                "String",
-                "WEB_CLIENT_ID",
-                "\"$clientId\""
-            )
-        }
+        buildConfigField(
+            "String",
+            "WEB_CLIENT_ID",
+            "\"$clientId\""
+        )
 
     }
 
@@ -67,15 +68,26 @@ dependencies {
     implementation("androidx.navigation:navigation-fragment-ktx:2.7.7")
     implementation("androidx.navigation:navigation-ui-ktx:2.7.7")
 
+    // HTTP Networking (kept for future use)
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+    
+    // Room Database
+    implementation("androidx.room:room-runtime:2.6.1")
+    implementation("androidx.room:room-ktx:2.6.1")
+    kapt("androidx.room:room-compiler:2.6.1")
+
     // Firebase - Use the BoM to manage versions
     implementation(platform("com.google.firebase:firebase-bom:33.1.1"))
-    implementation("com.google.firebase:firebase-auth-ktx")
+    implementation("com.google.firebase:firebase-auth-ktx")  // Needed for basic Firebase Auth
     implementation("com.google.firebase:firebase-firestore-ktx")
 
     // Google Sign-In
     implementation(libs.androidx.credentials)
     implementation(libs.androidx.credentials.play.services.auth)
     implementation(libs.googleid)
+    implementation(libs.play.services.auth)
 
     // Testing
     testImplementation(libs.junit)
@@ -86,3 +98,4 @@ dependencies {
     implementation("androidx.navigation:navigation-fragment-ktx:2.7.0")
     implementation("androidx.navigation:navigation-ui-ktx:2.7.0")
 }
+

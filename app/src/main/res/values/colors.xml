@@ -9,5 +9,15 @@
     <color name="state_success">#05A660</color>
     <color name="state_info">#0063F7</color>
     <color name="success_70">#ECF9EF</color>
+    
+    <!-- UI Colors -->
+    <color name="background_light">#F9FAFB</color>
+    <color name="text_primary">#1F2937</color>
+    <color name="text_secondary">#6B7280</color>
+    <color name="text_light">#9CA3AF</color>
+    <color name="border_light">#E5E7EB</color>
+    <color name="card_background">#FFFFFF</color>
+    <color name="progress_background">#E5E7EB</color>
+    <color name="primary">#2563EB</color>
 </resources>
 

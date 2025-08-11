@@ -2,7 +2,6 @@ package com.sun.englishlearning.screen.login
 
 import android.content.Context
 import com.sun.englishlearning.BuildConfig
-import com.sun.englishlearning.R
 import com.sun.englishlearning.data.repository.AuthRepository
 import com.sun.englishlearning.data.repository.AuthRepositoryImpl
 import kotlinx.coroutines.CoroutineScope
@@ -30,7 +29,7 @@ class LoginPresenter(
                 result.onSuccess {
                     view?.onLoginSuccess()
                 }.onFailure { exception ->
-                    view?.onLoginFailure(exception.message?: "An error has occurred")
+                    view?.onLoginFailure(exception.message ?: "An error has occurred")
                 }
             }
         }

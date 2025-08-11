@@ -18,17 +18,20 @@ class SplashActivity : AppCompatActivity() {
 
         super.onCreate(savedInstanceState)
 
-        // Navigation logic
+        // Navigation logic (Google Sign-In disabled - skip auth check)
         AppPreferences.setFirstLaunch(this, true)
         if (AppPreferences.isFirstLaunch(this)) {
             startActivity(Intent(this, OnboardingActivity::class.java))
         } else {
-            val currentUser = Firebase.auth.currentUser
-            if (currentUser != null) {
-                startActivity(Intent(this, MainActivity::class.java))
-            } else {
-                startActivity(Intent(this, LoginActivity::class.java))
-            }
+            // Skip authentication check since Google Sign-In is disabled
+            startActivity(Intent(this, MainActivity::class.java))
+            // Original auth check code (disabled):
+            // val currentUser = Firebase.auth.currentUser
+            // if (currentUser != null) {
+            //     startActivity(Intent(this, MainActivity::class.java))
+            // } else {
+            //     startActivity(Intent(this, LoginActivity::class.java))
+            // }
         }
         finish()
     }

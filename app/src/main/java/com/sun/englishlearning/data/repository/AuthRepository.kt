@@ -19,7 +19,6 @@ import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.tasks.await
 
 interface AuthRepository {
-    val currentUser: FirebaseUser?
     suspend fun signInWithGoogle(context: Context, serverClientId: String): Result<FirebaseUser>
     suspend fun signOut(context: Context): Result<Unit>
 }
@@ -29,13 +28,12 @@ class AuthRepositoryImpl : AuthRepository {
     private val auth: FirebaseAuth = Firebase.auth
     private val db: FirebaseFirestore = Firebase.firestore
 
-    override val currentUser: FirebaseUser?
+    val currentUser: FirebaseUser?
         get() = auth.currentUser
 
     override suspend fun signInWithGoogle(context: Context, serverClientId: String): Result<FirebaseUser> {
         val credentialManager = CredentialManager.create(context)
 
-        // 1. Request Google ID Token from Credential Manager
         val googleIdOption = GetGoogleIdOption.Builder()
             .setFilterByAuthorizedAccounts(false)
             .setServerClientId(serverClientId)
@@ -55,26 +53,18 @@ class AuthRepositoryImpl : AuthRepository {
             val authResult = auth.signInWithCredential(firebaseCredential).await()
             val user = authResult.user
             if (user != null) {
-                // --- START OF NEW SECTION ---
-                // 1. Create a Map containing user data
                 val userProfile = hashMapOf(
                     "uid" to user.uid,
                     "displayName" to user.displayName,
                     "email" to user.email,
                     "photoUrl" to user.photoUrl.toString(),
-                    "createdAt" to System.currentTimeMillis() // Save creation timestamp
+                    "createdAt" to System.currentTimeMillis()
                 )
 
-                // 2. Write data to Firestore
-                // Use .document(user.uid) so the document ID matches the user's UID
-                // Use set with SetOptions.merge() to:
-                // - Create a new document if it doesn't exist.
-                // - Update the document if it exists without overwriting other fields.
                 db.collection("users").document(user.uid)
                     .set(userProfile, SetOptions.merge())
-                    .await() // Use await to ensure the write operation completes
+                    .await()
 
-                // --- END OF NEW SECTION ---
                 Result.success(user)
             } else {
                 Result.failure(Exception("Firebase authentication failed."))

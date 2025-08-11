@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/dp_16"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?android:attr/selectableItemBackground"
+    app:cardBackgroundColor="@color/lesson_card_background"
+    app:cardCornerRadius="@dimen/dp_12"
+    app:cardElevation="@dimen/dp_4">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="@dimen/dp_16">
+
+        <!-- Lesson Image -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="@dimen/dp_80"
+            android:layout_height="@dimen/dp_80"
+            android:layout_marginEnd="@dimen/dp_16"
+            app:cardCornerRadius="@dimen/dp_8"
+            app:cardElevation="@dimen/dp_0">
+
+            <ImageView
+                android:id="@+id/image_lesson"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                tools:src="@drawable/ic_launcher_background" />
+
+        </androidx.cardview.widget.CardView>
+
+        <!-- Lesson Content -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <!-- Lesson Title -->
+            <TextView
+                android:id="@+id/text_lesson_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dp_8"
+                android:fontFamily="sans-serif-medium"
+                android:textColor="@color/lesson_title_text"
+                android:textSize="@dimen/sp_18"
+                tools:text="Friends Series" />
+
+            <!-- Lesson Details Row -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dp_12"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <!-- Lesson Number -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/dp_16"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="@dimen/dp_16"
+                        android:layout_height="@dimen/dp_16"
+                        android:layout_marginEnd="@dimen/dp_4"
+                        android:src="@drawable/ic_book"
+                        android:tint="@color/lesson_number_icon"
+                        tools:ignore="UseAppTint" />
+
+                    <TextView
+                        android:id="@+id/text_lesson_number"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif"
+                        android:textColor="@color/lesson_subtitle_text"
+                        android:textSize="@dimen/sp_14"
+                        tools:text="Lesson: 3" />
+
+                </LinearLayout>
+
+                <!-- Advanced Level -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="@dimen/dp_16"
+                        android:layout_height="@dimen/dp_16"
+                        android:layout_marginEnd="@dimen/dp_4"
+                        android:src="@drawable/ic_star"
+                        android:tint="@color/advanced_star_icon"
+                        tools:ignore="UseAppTint" />
+
+                    <TextView
+                        android:id="@+id/text_advanced_level"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif"
+                        android:textColor="@color/lesson_subtitle_text"
+                        android:textSize="@dimen/sp_14"
+                        tools:text="Advanced: 45" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- Progress Bar -->
+            <ProgressBar
+                android:id="@+id/progress_lesson"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_6"
+                android:layout_marginBottom="@dimen/dp_8"
+                android:max="100"
+                android:progressDrawable="@drawable/progress_bar_lesson"
+                tools:progress="43" />
+
+            <!-- Points Text -->
+            <TextView
+                android:id="@+id/text_lesson_points"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif"
+                android:textColor="@color/lesson_points_text"
+                android:textSize="@dimen/sp_12"
+                tools:text="points : 43 / 100" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

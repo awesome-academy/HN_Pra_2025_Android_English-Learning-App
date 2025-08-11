@@ -15,7 +15,7 @@
         android:id="@+id/navigation_courses"
         android:name="com.sun.englishlearning.screen.courses.CoursesFragment"
         android:label="@string/title_courses"
-        tools:layout="@layout/fragment_courses" />
+        tools:layout="@layout/activity_lessons" />
 
     <fragment
         android:id="@+id/navigation_review"

@@ -1,5 +1,7 @@
 package com.sun.englishlearning.data.model
 
+import java.io.Serializable
+
 data class Lesson(
     val id: String = "",
     val title: String = "",
@@ -12,4 +14,4 @@ data class Lesson(
     val imageUrl: String = "",
     val description: String = "",
     val isCompleted: Boolean = false
-)
+) : Serializable

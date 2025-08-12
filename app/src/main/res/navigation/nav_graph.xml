@@ -15,7 +15,21 @@
         android:id="@+id/navigation_courses"
         android:name="com.sun.englishlearning.screen.courses.CoursesFragment"
         android:label="@string/title_courses"
-        tools:layout="@layout/activity_lessons" />
+        tools:layout="@layout/activity_lessons">
+        <action
+            android:id="@+id/action_courses_to_lesson_detail"
+            app:destination="@id/lessonDetailFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/lessonDetailFragment"
+        android:name="com.sun.englishlearning.screen.lessondetail.LessonDetailFragment"
+        android:label="Lesson Detail"
+        tools:layout="@layout/fragment_lesson_detail">
+        <argument
+            android:name="lesson"
+            app:argType="com.sun.englishlearning.data.model.Lesson" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_review"

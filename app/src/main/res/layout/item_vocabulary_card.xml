@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="@dimen/dp_16"
+    android:layout_marginBottom="@dimen/dp_12"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?android:attr/selectableItemBackground"
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="@dimen/dp_16"
+    app:cardElevation="@dimen/dp_4">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/dp_20">
+
+        <!-- Word Header -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:layout_marginBottom="@dimen/dp_12">
+
+            <!-- Word Icon -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="@dimen/dp_40"
+                android:layout_height="@dimen/dp_40"
+                android:layout_marginEnd="@dimen/dp_12"
+                app:cardBackgroundColor="@color/main_blue"
+                app:cardCornerRadius="@dimen/dp_20"
+                app:cardElevation="@dimen/dp_0">
+
+                <TextView
+                    android:id="@+id/text_word_initial"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_18"
+                    android:fontFamily="@font/nunito_bold"
+                    tools:text="S" />
+
+            </androidx.cardview.widget.CardView>
+
+            <!-- Word Name -->
+            <TextView
+                android:id="@+id/text_word_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/nunito_bold"
+                android:textColor="@color/lesson_title_text"
+                android:textSize="@dimen/sp_20"
+                tools:text="School" />
+
+            <!-- Sound Button -->
+            <ImageView
+                android:id="@+id/btn_sound"
+                android:layout_width="@dimen/dp_32"
+                android:layout_height="@dimen/dp_32"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true"
+                android:padding="@dimen/dp_4"
+                android:src="@drawable/ic_volume"
+                android:tint="@color/main_blue"
+                tools:ignore="UseAppTint" />
+
+        </LinearLayout>
+
+        <!-- Definition -->
+        <TextView
+            android:id="@+id/text_definition"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dp_16"
+            android:fontFamily="@font/nunito_medium"
+            android:lineSpacingExtra="@dimen/dp_4"
+            android:textColor="@color/lesson_subtitle_text"
+            android:textSize="@dimen/sp_16"
+            tools:text="An institution for educating children" />
+
+        <!-- Example Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/example_background"
+            android:orientation="vertical"
+            android:padding="@dimen/dp_16">
+
+            <!-- Example Label -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dp_8"
+                android:fontFamily="@font/nunito_bold"
+                android:text="Example:"
+                android:textColor="@color/secondary_orange"
+                android:textSize="@dimen/sp_14" />
+
+            <!-- Example Text -->
+            <TextView
+                android:id="@+id/text_example"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/nunito_regular"
+                android:fontStyle="italic"
+                android:lineSpacingExtra="@dimen/dp_2"
+                android:textColor="@color/lesson_subtitle_text"
+                android:textSize="@dimen/sp_15"
+                tools:text="I go to school every day." />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

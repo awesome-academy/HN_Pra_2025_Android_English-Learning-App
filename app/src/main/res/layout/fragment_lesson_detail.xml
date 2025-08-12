@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/screen_background"
+    android:orientation="vertical">
+
+    <!-- Header Section -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:elevation="@dimen/dp_4"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/dp_20">
+
+        <!-- Top Bar -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="@dimen/dp_16">
+
+            <!-- Back Button -->
+            <ImageView
+                android:id="@+id/btn_back"
+                android:layout_width="@dimen/dp_32"
+                android:layout_height="@dimen/dp_32"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true"
+                android:padding="@dimen/dp_4"
+                android:src="@drawable/ic_arrow_back"
+                android:tint="@color/lesson_title_text"
+                tools:ignore="UseAppTint" />
+
+            <!-- Title -->
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/nunito_bold"
+                android:gravity="center"
+                android:text="Lesson Details"
+                android:textColor="@color/lesson_title_text"
+                android:textSize="@dimen/sp_20" />
+
+            <!-- Placeholder for symmetry -->
+            <View
+                android:layout_width="@dimen/dp_32"
+                android:layout_height="@dimen/dp_32" />
+
+        </LinearLayout>
+
+        <!-- Lesson Info Card -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/dp_16"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="@dimen/dp_16"
+            app:cardElevation="@dimen/dp_8">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="@dimen/dp_20">
+
+                <!-- Lesson Image -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="@dimen/dp_80"
+                    android:layout_height="@dimen/dp_80"
+                    android:layout_marginEnd="@dimen/dp_16"
+                    app:cardCornerRadius="@dimen/dp_12"
+                    app:cardElevation="@dimen/dp_0">
+
+                    <ImageView
+                        android:id="@+id/image_lesson"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        tools:src="@drawable/ic_launcher_background" />
+
+                </androidx.cardview.widget.CardView>
+
+                <!-- Lesson Info -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <!-- Lesson Title -->
+                    <TextView
+                        android:id="@+id/text_lesson_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/dp_8"
+                        android:fontFamily="@font/nunito_bold"
+                        android:textColor="@color/lesson_title_text"
+                        android:textSize="@dimen/sp_22"
+                        tools:text="School Stationery" />
+
+                    <!-- Lesson Details Row -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/dp_12"
+                        android:orientation="horizontal">
+
+                        <!-- Lesson Number -->
+                        <TextView
+                            android:id="@+id/text_lesson_number"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/dp_16"
+                            android:fontFamily="@font/nunito_medium"
+                            android:textColor="@color/lesson_subtitle_text"
+                            android:textSize="@dimen/sp_14"
+                            tools:text="Lesson: 4" />
+
+                        <!-- Advanced Level -->
+                        <TextView
+                            android:id="@+id/text_advanced_level"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/nunito_medium"
+                            android:textColor="@color/lesson_subtitle_text"
+                            android:textSize="@dimen/sp_14"
+                            tools:text="Advanced: 20" />
+
+                    </LinearLayout>
+
+                    <!-- Progress Bar -->
+                    <ProgressBar
+                        android:id="@+id/progress_lesson"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_6"
+                        android:layout_marginBottom="@dimen/dp_8"
+                        android:max="100"
+                        android:progressDrawable="@drawable/progress_bar_lesson"
+                        tools:progress="100" />
+
+                    <!-- Points Text -->
+                    <TextView
+                        android:id="@+id/text_lesson_points"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/nunito_regular"
+                        android:textColor="@color/lesson_points_text"
+                        android:textSize="@dimen/sp_12"
+                        tools:text="points: 100 / 100" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <!-- Description -->
+        <TextView
+            android:id="@+id/text_lesson_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_16"
+            android:fontFamily="@font/nunito_regular"
+            android:lineSpacingExtra="@dimen/dp_4"
+            android:textColor="@color/lesson_subtitle_text"
+            android:textSize="@dimen/sp_16"
+            tools:text="Essential school supplies and stationery items that students use in their daily learning activities." />
+
+    </LinearLayout>
+
+    <!-- Vocabulary Section -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <!-- Vocabulary Header -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="@dimen/dp_16">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/nunito_bold"
+                android:text="Vocabulary"
+                android:textColor="@color/lesson_title_text"
+                android:textSize="@dimen/sp_18" />
+
+            <!-- Word Count -->
+            <TextView
+                android:id="@+id/text_word_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/word_count_background"
+                android:fontFamily="@font/nunito_bold"
+                android:paddingHorizontal="@dimen/dp_12"
+                android:paddingVertical="@dimen/dp_6"
+                android:textColor="@color/main_blue"
+                android:textSize="@dimen/sp_12"
+                tools:text="5 words" />
+
+        </LinearLayout>
+
+        <!-- Vocabulary List -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view_vocabulary"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingBottom="@dimen/dp_16"
+            tools:listitem="@layout/item_vocabulary_card" />
+
+    </LinearLayout>
+
+</LinearLayout>

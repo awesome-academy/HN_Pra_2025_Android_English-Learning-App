@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sun.englishlearning.R
 import com.sun.englishlearning.databinding.ActivityLessonsBinding
@@ -97,7 +98,8 @@ class CoursesFragment : BaseFragment<ActivityLessonsBinding>() {
 
 
     private fun onLessonClick(lesson: Lesson) {
-        Toast.makeText(requireContext(), "Clicked on: ${lesson.title}", Toast.LENGTH_SHORT).show()
-        // TODO: Navigate to lesson detail or start lesson
+        // Navigate to lesson detail using Navigation Component
+        val action = CoursesFragmentDirections.actionCoursesToLessonDetail(lesson)
+        findNavController().navigate(action)
     }
 }

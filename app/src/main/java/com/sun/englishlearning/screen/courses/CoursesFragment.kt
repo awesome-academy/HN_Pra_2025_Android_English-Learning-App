@@ -25,7 +25,6 @@ class CoursesFragment : BaseFragment<FragmentCoursesBinding>(), CoursesContract.
     }
 
     override fun initData() {
-        // Yêu cầu Presenter tải dữ liệu
         presenter.loadCategories()
     }
 

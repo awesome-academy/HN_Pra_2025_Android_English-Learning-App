@@ -18,13 +18,11 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(), LoginContract.View {
 
     override fun initView() {
         binding.btnGoogleSignIn.setOnClickListener {
-            // Notify Presenter to handle
             presenter.handleGoogleSignIn()
         }
     }
 
     override fun initData() {
-        // Initialize Presenter and attach this View
         presenter = LoginPresenter(this)
         presenter.attachView(this)
     }

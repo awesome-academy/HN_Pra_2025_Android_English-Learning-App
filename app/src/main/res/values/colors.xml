@@ -21,5 +21,9 @@
     <color name="screen_background">#FFF5F5F5</color>
     <color name="lesson_number_icon">#FF666666</color>
     <color name="advanced_star_icon">#FF666666</color>
+
+    <!-- Tab Colors -->
+    <color name="tab_text_color">#FF2563EB</color>
+    <color name="tab_text_inactive">#FF666666</color>
 </resources>
 

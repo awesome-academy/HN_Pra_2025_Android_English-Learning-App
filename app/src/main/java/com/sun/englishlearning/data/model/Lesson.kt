@@ -9,6 +9,7 @@ data class Lesson(
     val totalPoints: Int = 100,
     val progressPercentage: Int = 0,
     val imageRes: Int = 0,
+    val imageUrl: String = "",
     val description: String = "",
     val isCompleted: Boolean = false
 )

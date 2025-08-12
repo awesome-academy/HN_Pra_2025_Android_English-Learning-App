@@ -3,6 +3,10 @@ package com.sun.englishlearning.screen.courses
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
+import com.sun.englishlearning.R
 import com.sun.englishlearning.databinding.ItemLessonCardBinding
 import com.sun.englishlearning.data.model.Lesson
 
@@ -42,10 +46,19 @@ class LessonAdapter(
                 textAdvancedLevel.text = "Advanced: ${lesson.advancedLevel}"
                 textLessonPoints.text = "points: ${lesson.currentPoints} / ${lesson.totalPoints}"
                 progressLesson.progress = lesson.progressPercentage
-                
-                // Set lesson image (placeholder for now)
-                // imageLesson.setImageResource(lesson.imageRes)
-                
+
+                // Load lesson image using Glide
+                if (lesson.imageUrl.isNotEmpty()) {
+                    Glide.with(imageLesson.context)
+                        .load(lesson.imageUrl)
+                        .apply(RequestOptions().transform(RoundedCorners(16)))
+                        .placeholder(R.drawable.ic_launcher_background)
+                        .error(R.drawable.ic_launcher_background)
+                        .into(imageLesson)
+                } else {
+                    imageLesson.setImageResource(R.drawable.ic_launcher_background)
+                }
+
                 root.setOnClickListener {
                     onLessonClick(lesson)
                 }

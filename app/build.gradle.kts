@@ -52,4 +52,7 @@ dependencies {
     //Navigation component
     implementation("androidx.navigation:navigation-fragment-ktx:2.7.0")
     implementation("androidx.navigation:navigation-ui-ktx:2.7.0")
+
+    //Image loading
+    implementation("com.github.bumptech.glide:glide:4.16.0")
 }

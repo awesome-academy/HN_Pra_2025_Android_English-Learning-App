@@ -6,10 +6,19 @@
     <string name="title_courses">Courses</string>
     <string name="title_review">Review</string>
     <string name="title_me">Me</string>
+    <string name="let_go">Let\'s go!</string>
+    <string name="already_got_an_account">Already got an account?</string>
+    <string name="login">Login</string>
+    <string name="title_ob1">Lesson on demand</string>
+    <string name="content_ob1">Now, It’s your turn to choose the subject of your course. In SpeakUp, you will learn vocabulary, phrases, pronunciations, and grammar patterns through several courses with various topics. Try it and find its efficiency.</string>
+    <string name="title_ob2">It’s gamified!</string>
+    <string name="content_ob2">The smart competitive ones, or those who look for the fun side of everything, will have a great learning experience here. Every step you take, any progress you make, SpeakUp has a reward to encourage your achievement.</string>
+    <string name="title_ob3">Take learning beyond the classroom walls</string>
+    <string name="content_ob3">Find certified teachers, personalize your own English learning plan.</string>
 
-    <!-- Other -->
     <string name="welcome_title">Welcome!</string>
     <string name="sign_out_label">Sign out</string>
     <string name="start_label">Start</string>
+
 
 </resources>

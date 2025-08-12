@@ -3,7 +3,36 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/navigation_home">
+    app:startDestination="@id/welcomeFragment">
+
+    <fragment
+        android:id="@+id/welcomeFragment"
+        android:name="com.sun.englishlearning.screen.onboarding.fragment.WelComeFragment"
+        android:label="Welcome"
+        tools:layout="@layout/fragment_wel_come">
+        <action
+            android:id="@+id/action_welcome_to_onboarding"
+            app:destination="@id/onboardingFragment"
+            app:popUpTo="@id/welcomeFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_welcome_to_home"
+            app:destination="@id/navigation_home"
+            app:popUpTo="@id/welcomeFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/onboardingFragment"
+        android:name="com.sun.englishlearning.screen.onboarding.fragment.PageOnboardingFragment"
+        android:label="Onboarding"
+        tools:layout="@layout/fragment_page_onboarding">
+        <action
+            android:id="@+id/action_onboarding_to_home"
+            app:destination="@id/navigation_home"
+            app:popUpTo="@id/onboardingFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_home"

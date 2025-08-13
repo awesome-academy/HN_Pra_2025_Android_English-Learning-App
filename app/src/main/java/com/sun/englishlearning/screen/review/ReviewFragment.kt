@@ -5,13 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.sun.englishlearning.R
-import com.sun.englishlearning.databinding.FragmentHomeBinding
+import com.sun.englishlearning.databinding.FragmentReviewBinding
 import com.sun.englishlearning.utils.base.BaseFragment
 
-class ReviewFragment : BaseFragment<FragmentHomeBinding>() {
+class ReviewFragment : BaseFragment<FragmentReviewBinding>() {
 
-    override fun inflateViewBinding(inflater: LayoutInflater, container: ViewGroup?): FragmentHomeBinding {
-        return FragmentHomeBinding.inflate(inflater, container, false)
+    override fun inflateViewBinding(inflater: LayoutInflater, container: ViewGroup?): FragmentReviewBinding {
+        return FragmentReviewBinding.inflate(inflater, container, false)
     }
 
     override fun initView() {

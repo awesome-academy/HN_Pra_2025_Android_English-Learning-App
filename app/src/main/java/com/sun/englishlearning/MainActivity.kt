@@ -2,6 +2,7 @@ package com.sun.englishlearning
 
 import android.content.Intent
 import android.view.LayoutInflater
+import android.view.View
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.sun.englishlearning.databinding.ActivityMainBinding
@@ -20,6 +21,14 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         val navController = navHostFragment.navController
 
         binding.bottomNavigationView.setupWithNavController(navController)
+
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            val hideBottomNav = when (destination.id) {
+                R.id.welcomeFragment, R.id.onboardingFragment -> true
+                else -> false
+            }
+            binding.bottomNavigationView.visibility = if (hideBottomNav) View.GONE else View.VISIBLE
+        }
     }
 
     override fun initData() {

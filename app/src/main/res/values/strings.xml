@@ -1,10 +1,15 @@
 <resources>
     <string name="app_name">EnglishLearning</string>
-
+    <string name="default_web_client_id">213565137892-5m5fkhu7cnq0d92o2rg04s1b8gn8bop7.apps.googleusercontent.com</string>
     <!-- Bottom Navigation Bar Titles -->
     <string name="title_home">Home</string>
     <string name="title_courses">Courses</string>
     <string name="title_review">Review</string>
     <string name="title_me">Me</string>
+
+    <!-- Other -->
+    <string name="welcome_title">Welcome!</string>
+    <string name="sign_out_label">Sign out</string>
+    <string name="start_label">Start</string>
 
 </resources>

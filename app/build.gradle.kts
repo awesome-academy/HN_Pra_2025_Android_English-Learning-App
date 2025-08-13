@@ -19,17 +19,14 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        defaultConfig {
-            val clientId = gradleLocalProperties(rootDir, providers)
-                .getProperty("WEB_CLIENT_ID") ?: error("Missing 'WEB_CLIENT_ID' in local.properties")
+        val clientId = gradleLocalProperties(rootDir, providers)
+            .getProperty("WEB_CLIENT_ID") ?: error("Missing 'WEB_CLIENT_ID' in local.properties")
 
-            buildConfigField(
-                "String",
-                "WEB_CLIENT_ID",
-                "\"$clientId\""
-            )
-        }
-
+        buildConfigField(
+            "String",
+            "WEB_CLIENT_ID",
+            "\"$clientId\""
+        )
     }
 
     buildTypes {

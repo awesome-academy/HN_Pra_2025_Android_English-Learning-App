@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">EnglishLearning</string>
-    <string name="default_web_client_id">213565137892-5m5fkhu7cnq0d92o2rg04s1b8gn8bop7.apps.googleusercontent.com</string>
+    <string name="default_web_client_id">213565137892-6mumd525dp95fulh2bn21fq56lu55c7u.apps.googleusercontent.com</string>
     <!-- Bottom Navigation Bar Titles -->
     <string name="title_home">Home</string>
     <string name="title_courses">Courses</string>
@@ -19,6 +19,28 @@
     <string name="welcome_title">Welcome!</string>
     <string name="sign_out_label">Sign out</string>
     <string name="start_label">Start</string>
+    
+    <!-- Home Screen Strings -->
+    <string name="greeting_hi">Hi, Huan👋</string>
+    <string name="start_learning">Let\'s start learning!</string>
+    <string name="study_time_this_week">Thời gian bạn đã học trong tuần này</string>
+    <string name="lets_start">Let\'s start</string>
+    <string name="courses">Khóa học</string>
+    <string name="see_all">Xem toàn bộ →</string>
+    <string name="travel">Travel</string>
+    <string name="practice">Practice</string>
+    <string name="business">Business</string>
+    <string name="academic">Academic</string>
+    <string name="nearby_learning">Gần đây học</string>
+    <string name="tourist_trip">Tourist trip</string>
+    <string name="hang_out_with_friends">Hang out with friends</string>
+    <string name="lesson_count">Lesson: %d</string>
+    <string name="advanced_level">Advanced: %d</string>
+    <string name="progress_format">%d/10</string>
+    <string name="suggestions_for_you">Gợi ý cho bạn</string>
+    <string name="conversation_office">How to Conversation in the office with your colleagues</string>
+    <string name="at_work_vocabulary">At Work vocabulary</string>
+    <string name="study_time_format">%dh %dm</string>
 
 
 </resources>

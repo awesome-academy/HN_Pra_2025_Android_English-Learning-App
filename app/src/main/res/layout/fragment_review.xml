@@ -1,16 +1,239 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fillViewport="true"
     tools:context=".screen.review.ReviewFragment">
 
-    <TextView
-        android:id="@+id/text_view_title"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        style="@style/TextBold.24sp"
-        android:text="@string/title_review" />
+        android:orientation="vertical"
+        android:padding="@dimen/dp_16">
 
-</FrameLayout>
+        <!-- Header -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/title_review"
+            android:layout_gravity="center"
+            style="@style/TextBold.18sp"
+            android:textColor="@color/black"
+            android:layout_marginBottom="@dimen/dp_32" />
+
+        <!-- Your vocabulary section -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/your_vocabulary"
+            style="@style/TextBold.24sp"
+            android:textColor="@color/black"
+            android:layout_marginBottom="@dimen/dp_24" />
+
+        <!-- Vocabulary Cards Grid -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- First Row -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="@dimen/dp_16">
+
+                <!-- Week words card -->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/card_week_words"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/dp_120"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="@dimen/dp_8"
+                    app:cardCornerRadius="@dimen/dp_12"
+                    app:cardElevation="@dimen/dp_2">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:padding="@dimen/dp_16">
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_red_card" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/week_words"
+                            style="@style/TextSemiBold.14sp"
+                            android:textColor="@color/black"
+                            android:layout_marginTop="@dimen/dp_12" />
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <!-- Today words card -->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/card_today_words"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/dp_120"
+                    android:layout_weight="1"
+                    android:layout_marginStart="@dimen/dp_8"
+                    app:cardCornerRadius="@dimen/dp_12"
+                    app:cardElevation="@dimen/dp_2">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:padding="@dimen/dp_16">
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_yellow_card" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/today_words"
+                            style="@style/TextSemiBold.14sp"
+                            android:textColor="@color/black"
+                            android:layout_marginTop="@dimen/dp_12" />
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+            </LinearLayout>
+
+            <!-- Second Row -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="@dimen/dp_32">
+
+                <!-- Medium words card -->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/card_medium_words"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/dp_120"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="@dimen/dp_8"
+                    app:cardCornerRadius="@dimen/dp_12"
+                    app:cardElevation="@dimen/dp_2">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:padding="@dimen/dp_16">
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_green_card" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/medium_words"
+                            style="@style/TextSemiBold.14sp"
+                            android:textColor="@color/black"
+                            android:layout_marginTop="@dimen/dp_12" />
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <!-- Strong words card -->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/card_strong_words"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/dp_120"
+                    android:layout_weight="1"
+                    android:layout_marginStart="@dimen/dp_8"
+                    app:cardCornerRadius="@dimen/dp_12"
+                    app:cardElevation="@dimen/dp_2">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:padding="@dimen/dp_16">
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_blue_card" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/strong_words"
+                            style="@style/TextSemiBold.14sp"
+                            android:textColor="@color/black"
+                            android:layout_marginTop="@dimen/dp_12" />
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- Your save words section -->
+        <LinearLayout
+            android:id="@+id/layout_save_words"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="@dimen/dp_16"
+            android:background="@drawable/bg_rounded_card"
+            android:layout_marginBottom="@dimen/dp_16">
+
+            <View
+                android:layout_width="@dimen/dp_48"
+                android:layout_height="@dimen/dp_48"
+                android:background="@drawable/bg_blue_button"
+                android:layout_marginEnd="@dimen/dp_16" />
+
+            <ImageView
+                android:layout_width="@dimen/dp_24"
+                android:layout_height="@dimen/dp_24"
+                android:src="@drawable/ic_bookmark"
+                android:layout_marginStart="@dimen/dp_minus40"
+                android:layout_marginEnd="@dimen/dp_28" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/your_save_words"
+                style="@style/TextSemiBold.16sp"
+                android:textColor="@color/black" />
+
+            <ImageView
+                android:layout_width="@dimen/dp_24"
+                android:layout_height="@dimen/dp_24"
+                android:src="@drawable/ic_arrow_right" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>
+

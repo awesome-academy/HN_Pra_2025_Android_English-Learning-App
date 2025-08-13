@@ -41,6 +41,14 @@
     <string name="conversation_office">How to Conversation in the office with your colleagues</string>
     <string name="at_work_vocabulary">At Work vocabulary</string>
     <string name="study_time_format">%dh %dm</string>
+    
+    <!-- Review Screen Strings -->
+    <string name="your_vocabulary">Your vocabulary</string>
+    <string name="week_words">Week words</string>
+    <string name="today_words">Today words</string>
+    <string name="medium_words">Medium words</string>
+    <string name="strong_words">Strong words</string>
+    <string name="your_save_words">Your save words</string>
 
 
 </resources>

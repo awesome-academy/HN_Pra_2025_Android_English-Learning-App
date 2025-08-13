@@ -34,6 +34,12 @@ class OnboardingActivity : BaseActivity<ActivityOnboardingBinding>() {
             startActivity(intent)
             finish()
         }
+        
+        binding.tvLogin.setOnClickListener {
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
     }
 
     override fun initData() {}

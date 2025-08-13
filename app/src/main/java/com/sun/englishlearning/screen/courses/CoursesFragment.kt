@@ -93,10 +93,7 @@ class CoursesFragment : BaseFragment<ActivityLessonsBinding>() {
 
         lessonAdapter.updateLessons(lessons)
     }
-
-
-
-
+    
     private fun onLessonClick(lesson: Lesson) {
         // Navigate to lesson detail using Navigation Component
         val action = CoursesFragmentDirections.actionCoursesToLessonDetail(lesson)

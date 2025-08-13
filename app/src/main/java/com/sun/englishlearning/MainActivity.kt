@@ -22,13 +22,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 
         binding.bottomNavigationView.setupWithNavController(navController)
 
-        navController.addOnDestinationChangedListener { _, destination, _ ->
-            val hideBottomNav = when (destination.id) {
-                R.id.welcomeFragment, R.id.onboardingFragment -> true
-                else -> false
-            }
-            binding.bottomNavigationView.visibility = if (hideBottomNav) View.GONE else View.VISIBLE
-        }
     }
 
     override fun initData() {

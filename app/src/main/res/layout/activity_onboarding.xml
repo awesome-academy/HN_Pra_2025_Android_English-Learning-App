@@ -26,12 +26,12 @@
         android:text="@string/let_go"
         android:textColor="@color/white"
         android:textSize="@dimen/sp_12"
-        app:layout_constraintBottom_toTopOf="@+id/llContainer"
+        app:layout_constraintBottom_toTopOf="@+id/ll_container"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/llContainer"
+        android:id="@+id/ll_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dp_8"
@@ -50,7 +50,7 @@
             android:textSize="@dimen/sp_14" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tvLogin"
+            android:id="@+id/tv_login"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dp_6"

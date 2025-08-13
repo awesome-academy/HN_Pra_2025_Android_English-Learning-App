@@ -79,7 +79,7 @@ class CoursesFragment : BaseFragment<ActivityLessonsBinding>() {
 
     private fun setupBackButton() {
         viewBinding.btnBack.setOnClickListener {
-            // Handle back button click - you can navigate back or close fragment
+            // Handle back button click
             requireActivity().onBackPressed()
         }
     }
@@ -93,9 +93,9 @@ class CoursesFragment : BaseFragment<ActivityLessonsBinding>() {
 
         lessonAdapter.updateLessons(lessons)
     }
-    
+
     private fun onLessonClick(lesson: Lesson) {
-        // Navigate to lesson detail using Navigation Component
+        // Navigate to lesson detail
         val action = CoursesFragmentDirections.actionCoursesToLessonDetail(lesson)
         findNavController().navigate(action)
     }

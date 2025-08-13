@@ -47,7 +47,7 @@ class LessonAdapter(
                 textLessonPoints.text = "points: ${lesson.currentPoints} / ${lesson.totalPoints}"
                 progressLesson.progress = lesson.progressPercentage
 
-                // Load lesson image using Glide
+                // Load lesson image
                 if (lesson.imageUrl.isNotEmpty()) {
                     Glide.with(imageLesson.context)
                         .load(lesson.imageUrl)

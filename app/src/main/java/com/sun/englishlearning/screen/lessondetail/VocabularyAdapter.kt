@@ -52,7 +52,6 @@ class VocabularyAdapter(
 
                 // Sound button click listener
                 btnSound.setOnClickListener {
-                    // TODO: Implement sound playing functionality
                     Toast.makeText(
                         binding.root.context,
                         "Playing sound for: ${word.name}",

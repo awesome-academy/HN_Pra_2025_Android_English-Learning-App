@@ -31,7 +31,7 @@ class LessonDetailFragment : BaseFragment<FragmentLessonDetailBinding>() {
         setupRecyclerView()
         setupBackButton()
 
-        // Get lesson from Safe Args
+        // Get lesson
         currentLesson = args.lesson
         currentLesson?.let { lesson ->
             displayLessonInfo(lesson)
@@ -40,7 +40,7 @@ class LessonDetailFragment : BaseFragment<FragmentLessonDetailBinding>() {
     }
 
     override fun initData() {
-        // Data is loaded in initView
+
     }
 
     private fun setupRecyclerView() {
@@ -74,7 +74,7 @@ class LessonDetailFragment : BaseFragment<FragmentLessonDetailBinding>() {
             // Set progress
             progressLesson.progress = lesson.progressPercentage
 
-            // Load lesson image using Glide
+            // Load lesson image
             if (lesson.imageUrl.isNotEmpty()) {
                 Glide.with(requireContext())
                     .load(lesson.imageUrl)
@@ -98,6 +98,5 @@ class LessonDetailFragment : BaseFragment<FragmentLessonDetailBinding>() {
 
     private fun onWordClick(word: Word) {
         Toast.makeText(requireContext(), "Word: ${word.name}", Toast.LENGTH_SHORT).show()
-        // TODO: Implement word detail or pronunciation functionality
     }
 }

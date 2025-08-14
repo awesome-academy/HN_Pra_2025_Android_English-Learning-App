@@ -8,3 +8,5 @@ data class SavedWord(
     val example: String = "",
     val isFavorite: Boolean = true
 )
+
+

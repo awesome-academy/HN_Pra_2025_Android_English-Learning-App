@@ -1,17 +1,22 @@
 package com.sun.englishlearning.screen.lessondetail
 
+import android.content.Context
 import android.os.Handler
 import android.os.Looper
 import com.sun.englishlearning.data.model.Lesson
 import com.sun.englishlearning.data.model.Word
 import com.sun.englishlearning.data.repository.VocabularyRepository
-import kotlin.concurrent.thread
+import com.sun.englishlearning.data.repository.source.remote.OnResultListener
 
 class LessonDetailPresenter : LessonDetailContract.Presenter {
 
     private var view: LessonDetailContract.View? = null
     private var currentLesson: Lesson? = null
-    private val mainHandler = Handler(Looper.getMainLooper())
+    private var context: Context? = null
+
+    fun setContext(context: Context) {
+        this.context = context
+    }
 
     override fun loadLessonDetail(lesson: Lesson) {
         currentLesson = lesson
@@ -20,20 +25,35 @@ class LessonDetailPresenter : LessonDetailContract.Presenter {
     }
 
     override fun loadVocabulary(lessonId: String) {
-        view?.showLoading()
-        thread {
-            try {
-                val vocabulary = VocabularyRepository.getVocabularyByLessonId(lessonId)
-                mainHandler.post {
+        context?.let { ctx ->
+            view?.showLoading()
+
+            // Use API-based vocabulary loading
+            VocabularyRepository.getVocabularyByLessonId(ctx, lessonId, object : OnResultListener<List<Word>> {
+                override fun onSuccess(data: List<Word>) {
                     view?.hideLoading()
-                    view?.showVocabulary(vocabulary)
+                    view?.showVocabulary(data)
                 }
-            } catch (e: Exception) {
-                mainHandler.post {
+
+                override fun onError(error: String) {
                     view?.hideLoading()
-                    view?.showError(e.message ?: "Error loading vocabulary")
+                    // Fallback to synchronous method if API fails
+                    val fallbackVocabulary = VocabularyRepository.getVocabularyByLessonId(lessonId)
+                    if (fallbackVocabulary.isNotEmpty()) {
+                        view?.showVocabulary(fallbackVocabulary)
+                    } else {
+                        view?.showError(error)
+                    }
                 }
-            }
+
+                override fun onLoading() {
+                    view?.showLoading()
+                }
+            })
+        } ?: run {
+            // Fallback if no context
+            val fallbackVocabulary = VocabularyRepository.getVocabularyByLessonId(lessonId)
+            view?.showVocabulary(fallbackVocabulary)
         }
     }
 
@@ -58,10 +78,10 @@ class LessonDetailPresenter : LessonDetailContract.Presenter {
     }
 
     override fun onStart() {
-        // Initialize if needed
+
     }
 
     override fun onStop() {
-        // Clean up if needed
+
     }
 }

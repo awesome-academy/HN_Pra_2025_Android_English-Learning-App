@@ -3,7 +3,6 @@ package com.sun.englishlearning.utils
 import android.content.Context
 import android.util.Log
 import com.sun.englishlearning.data.model.Lesson
-import org.json.JSONArray
 import org.json.JSONObject
 import java.io.IOException
 import java.io.InputStream
@@ -53,7 +52,7 @@ object JsonUtils {
     }
 
     /**
-     * Parse JSON string to List<Lesson> using Android's built-in JSON parser
+     * Parse JSON string to List<Lesson>
      */
     fun parseLessonsFromJson(jsonString: String): List<Lesson> {
         return try {
@@ -84,29 +83,5 @@ object JsonUtils {
             Log.e(TAG, "Error parsing lessons from JSON string", e)
             emptyList()
         }
-    }
-    
-    /**
-     * Get lesson by ID from JSON data
-     */
-    fun getLessonById(context: Context, lessonId: String): Lesson? {
-        val lessons = loadLessonsFromAssets(context)
-        return lessons.find { it.id == lessonId }
-    }
-
-    /**
-     * Get completed lessons from JSON data
-     */
-    fun getCompletedLessons(context: Context): List<Lesson> {
-        val lessons = loadLessonsFromAssets(context)
-        return lessons.filter { it.isCompleted }
-    }
-
-    /**
-     * Get ongoing lessons from JSON data
-     */
-    fun getOngoingLessons(context: Context): List<Lesson> {
-        val lessons = loadLessonsFromAssets(context)
-        return lessons.filter { !it.isCompleted }
     }
 }

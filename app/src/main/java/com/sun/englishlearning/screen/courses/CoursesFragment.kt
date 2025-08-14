@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.sun.englishlearning.R
 import com.sun.englishlearning.databinding.ActivityLessonsBinding
 import com.sun.englishlearning.data.model.Lesson
-import com.sun.englishlearning.data.repository.LessonRepository
 import androidx.fragment.app.Fragment
 import com.sun.englishlearning.screen.courses.adapter.CoursesAdapter
 
@@ -114,7 +113,7 @@ class CoursesFragment : Fragment(), CoursesContract.View {
 
     // MVP View implementations
     override fun showLoading() {
-        // Show loading indicator if needed
+        // Show loading indicator
     }
 
     override fun hideLoading() {

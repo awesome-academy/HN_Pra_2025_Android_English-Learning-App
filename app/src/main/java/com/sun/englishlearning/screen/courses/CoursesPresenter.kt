@@ -102,6 +102,6 @@ class CoursesPresenter : CoursesContract.Presenter {
     }
 
     override fun onStop() {
-        // Clean up if needed
+
     }
 }

@@ -63,6 +63,7 @@ class LessonDetailFragment : Fragment(), LessonDetailContract.View {
 
     private fun initPresenter() {
         presenter = LessonDetailPresenter()
+        (presenter as LessonDetailPresenter).setContext(requireContext())
         presenter.attachView(this)
     }
 
@@ -91,7 +92,7 @@ class LessonDetailFragment : Fragment(), LessonDetailContract.View {
 
     // MVP View implementations
     override fun showLoading() {
-        // Show loading indicator if needed
+        // Show loading indicator
     }
 
     override fun hideLoading() {

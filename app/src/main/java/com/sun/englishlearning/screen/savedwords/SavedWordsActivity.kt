@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sun.englishlearning.data.model.SavedWord
 import com.sun.englishlearning.databinding.ActivitySavedWordsBinding
+import com.sun.englishlearning.screen.search.WordSearchActivity
 import com.sun.englishlearning.utils.base.BaseActivity
 
 class SavedWordsActivity : BaseActivity<ActivitySavedWordsBinding>() {
@@ -50,6 +51,11 @@ class SavedWordsActivity : BaseActivity<ActivitySavedWordsBinding>() {
     private fun setupClickListeners() {
         binding.btnBack.setOnClickListener {
             finish()
+        }
+
+        binding.etSearch.setOnClickListener {
+            val intent = WordSearchActivity.createIntent(this)
+            startActivity(intent)
         }
     }
 

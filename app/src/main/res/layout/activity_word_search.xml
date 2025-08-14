@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@android:color/white">
+
+    <!-- Top App Bar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_56"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="@dimen/dp_16"
+        android:background="@android:color/white">
+
+        <ImageView
+            android:id="@+id/btn_back"
+            android:layout_width="@dimen/dp_24"
+            android:layout_height="@dimen/dp_24"
+            android:src="@drawable/ic_arrow_right"
+            android:rotation="180"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:padding="@dimen/dp_4" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Word Search"
+            android:textSize="@dimen/sp_18"
+            android:textColor="@android:color/black"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginStart="@dimen/dp_16"
+            android:layout_marginEnd="@dimen/dp_40" />
+
+    </LinearLayout>
+
+    <!-- Search Section -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="@dimen/dp_16"
+        android:background="@android:color/white">
+
+        <EditText
+            android:id="@+id/et_search_word"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/dp_48"
+            android:layout_weight="1"
+            android:background="@drawable/bg_rounded_card"
+            android:hint="Enter word to search..."
+            android:textSize="@dimen/sp_16"
+            android:textColor="@android:color/black"
+            android:textColorHint="#999999"
+            android:padding="@dimen/dp_12"
+            android:singleLine="true"
+            android:imeOptions="actionSearch"
+            android:layout_marginEnd="@dimen/dp_8" />
+
+        <Button
+            android:id="@+id/btn_search"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_48"
+            android:text="Search"
+            android:textColor="@android:color/white"
+            android:background="@drawable/bg_blue_button"
+            android:paddingStart="@dimen/dp_16"
+            android:paddingEnd="@dimen/dp_16" />
+
+    </LinearLayout>
+
+    <!-- Content Area -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/dp_16">
+
+            <!-- Loading Spinner -->
+            <ProgressBar
+                android:id="@+id/progress_loading"
+                android:layout_width="@dimen/dp_48"
+                android:layout_height="@dimen/dp_48"
+                android:layout_gravity="center"
+                android:visibility="gone"
+                android:layout_marginTop="@dimen/dp_32" />
+
+            <!-- Search Result Card -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_search_result"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="@dimen/dp_12"
+                app:cardElevation="@dimen/dp_4"
+                android:layout_margin="@dimen/dp_8"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/dp_20">
+
+                    <!-- Word Title -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="@dimen/dp_16">
+
+                        <TextView
+                            android:id="@+id/tv_word_title"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="example"
+                            android:textSize="@dimen/sp_24"
+                            android:textColor="@android:color/black"
+                            android:textStyle="bold" />
+
+                        <ImageView
+                            android:id="@+id/btn_favorite"
+                            android:layout_width="@dimen/dp_32"
+                            android:layout_height="@dimen/dp_32"
+                            android:src="@drawable/ic_bookmark"
+                            android:background="?android:attr/selectableItemBackgroundBorderless"
+                            android:padding="@dimen/dp_6"
+                            app:tint="#CCCCCC" />
+
+                    </LinearLayout>
+
+                    <!-- IPA Transcription -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="@dimen/dp_12">
+
+                        <TextView
+                            android:id="@+id/tv_ipa"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="/ɪɡˈzæm.pəl/"
+                            android:textSize="@dimen/sp_16"
+                            android:textColor="#666666"
+                            android:fontFamily="serif" />
+
+                        <ImageView
+                            android:id="@+id/btn_play_sound"
+                            android:layout_width="@dimen/dp_32"
+                            android:layout_height="@dimen/dp_32"
+                            android:src="@drawable/ic_sound"
+                            android:background="?android:attr/selectableItemBackgroundBorderless"
+                            android:padding="@dimen/dp_6"
+                            app:tint="@color/main_blue" />
+
+                    </LinearLayout>
+
+                    <!-- Part of Speech -->
+                    <TextView
+                        android:id="@+id/tv_part_of_speech"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="noun"
+                        android:textSize="@dimen/sp_14"
+                        android:textColor="@color/main_blue"
+                        android:background="@drawable/bg_rounded_card"
+                        android:paddingStart="@dimen/dp_8"
+                        android:paddingEnd="@dimen/dp_8"
+                        android:paddingTop="@dimen/dp_4"
+                        android:paddingBottom="@dimen/dp_4"
+                        android:layout_marginBottom="@dimen/dp_12" />
+
+                    <!-- Definition -->
+                    <TextView
+                        android:id="@+id/tv_definition"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="a thing characteristic of its kind or illustrating a general rule"
+                        android:textSize="@dimen/sp_16"
+                        android:textColor="@android:color/black"
+                        android:layout_marginBottom="@dimen/dp_16"
+                        android:lineSpacingExtra="@dimen/dp_4" />
+
+                    <!-- Example Usage -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:background="@drawable/bg_rounded_card"
+                        android:padding="@dimen/dp_12">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Example:"
+                            android:textSize="@dimen/sp_14"
+                            android:textColor="#666666"
+                            android:textStyle="bold"
+                            android:layout_marginBottom="@dimen/dp_4" />
+
+                        <TextView
+                            android:id="@+id/tv_example"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="&quot;it is a good example of how European action can produce results&quot;"
+                            android:textSize="@dimen/sp_14"
+                            android:textColor="#666666"
+                            android:fontStyle="italic" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <!-- Empty State -->
+            <LinearLayout
+                android:id="@+id/layout_empty_state"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_marginTop="@dimen/dp_64"
+                android:visibility="visible">
+
+                <ImageView
+                    android:layout_width="@dimen/dp_64"
+                    android:layout_height="@dimen/dp_64"
+                    android:src="@drawable/ic_search"
+                    app:tint="#CCCCCC"
+                    android:layout_marginBottom="@dimen/dp_16" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Search for a word to see its definition"
+                    android:textSize="@dimen/sp_16"
+                    android:textColor="#999999"
+                    android:gravity="center" />
+
+            </LinearLayout>
+
+            <!-- Error State -->
+            <LinearLayout
+                android:id="@+id/layout_error_state"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_marginTop="@dimen/dp_64"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Word not found"
+                    android:textSize="@dimen/sp_18"
+                    android:textColor="@color/state_error"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="@dimen/dp_8" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Please try a different word"
+                    android:textSize="@dimen/sp_14"
+                    android:textColor="#999999"
+                    android:gravity="center" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

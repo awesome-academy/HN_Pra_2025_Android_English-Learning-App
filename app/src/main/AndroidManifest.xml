@@ -36,6 +36,9 @@
         <activity
             android:name=".screen.savedwords.SavedWordsActivity"
             android:exported="false" />
+        <activity
+            android:name=".screen.search.WordSearchActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

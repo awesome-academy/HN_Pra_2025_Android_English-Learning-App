@@ -1,4 +1,4 @@
-package com.sun.englishlearning.screen.courses
+package com.sun.englishlearning.screen.courses.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -10,10 +10,10 @@ import com.sun.englishlearning.R
 import com.sun.englishlearning.databinding.ItemLessonCardBinding
 import com.sun.englishlearning.data.model.Lesson
 
-class LessonAdapter(
+class CoursesAdapter(
     private var lessons: List<Lesson> = emptyList(),
     private val onLessonClick: (Lesson) -> Unit = {}
-) : RecyclerView.Adapter<LessonAdapter.LessonViewHolder>() {
+) : RecyclerView.Adapter<CoursesAdapter.LessonViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LessonViewHolder {
         val binding = ItemLessonCardBinding.inflate(
@@ -35,23 +35,31 @@ class LessonAdapter(
         notifyDataSetChanged()
     }
 
-    inner class LessonViewHolder(
-        private val binding: ItemLessonCardBinding
-    ) : RecyclerView.ViewHolder(binding.root) {
+    inner class LessonViewHolder(private val binding: ItemLessonCardBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
         fun bind(lesson: Lesson) {
             binding.apply {
+                // Set lesson title
                 textLessonTitle.text = lesson.title
+                
+                // Set lesson number
                 textLessonNumber.text = "Lesson: ${lesson.lessonNumber}"
+                
+                // Set advanced level
                 textAdvancedLevel.text = "Advanced: ${lesson.advancedLevel}"
+                
+                // Set points
                 textLessonPoints.text = "points: ${lesson.currentPoints} / ${lesson.totalPoints}"
+                
+                // Set progress
                 progressLesson.progress = lesson.progressPercentage
 
-                // Load lesson image
+                // Load lesson image using Glide
                 if (lesson.imageUrl.isNotEmpty()) {
-                    Glide.with(imageLesson.context)
+                    Glide.with(binding.root.context)
                         .load(lesson.imageUrl)
-                        .apply(RequestOptions().transform(RoundedCorners(16)))
+                        .apply(RequestOptions().transform(RoundedCorners(24)))
                         .placeholder(R.drawable.ic_launcher_background)
                         .error(R.drawable.ic_launcher_background)
                         .into(imageLesson)
@@ -59,6 +67,7 @@ class LessonAdapter(
                     imageLesson.setImageResource(R.drawable.ic_launcher_background)
                 }
 
+                // Set click listener
                 root.setOnClickListener {
                     onLessonClick(lesson)
                 }

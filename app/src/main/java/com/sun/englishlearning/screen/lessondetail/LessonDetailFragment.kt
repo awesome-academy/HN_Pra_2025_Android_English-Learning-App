@@ -2,6 +2,7 @@ package com.sun.englishlearning.screen.lessondetail
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
@@ -14,39 +15,67 @@ import com.sun.englishlearning.R
 import com.sun.englishlearning.databinding.FragmentLessonDetailBinding
 import com.sun.englishlearning.data.model.Lesson
 import com.sun.englishlearning.data.model.Word
-import com.sun.englishlearning.data.repository.VocabularyRepository
-import com.sun.englishlearning.utils.base.BaseFragment
+import com.sun.englishlearning.screen.lessondetail.adapter.VocabularyAdapter
+import androidx.fragment.app.Fragment
 
-class LessonDetailFragment : BaseFragment<FragmentLessonDetailBinding>() {
+class LessonDetailFragment : Fragment(), LessonDetailContract.View {
+
+    private var _viewBinding: FragmentLessonDetailBinding? = null
+    private val viewBinding get() = _viewBinding!!
 
     private lateinit var vocabularyAdapter: VocabularyAdapter
+    private lateinit var presenter: LessonDetailContract.Presenter
     private val args: LessonDetailFragmentArgs by navArgs()
     private var currentLesson: Lesson? = null
 
-    override fun inflateViewBinding(inflater: LayoutInflater, container: ViewGroup?): FragmentLessonDetailBinding {
-        return FragmentLessonDetailBinding.inflate(inflater, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        _viewBinding = FragmentLessonDetailBinding.inflate(inflater, container, false)
+        return viewBinding.root
     }
 
-    override fun initView() {
-        setupRecyclerView()
-        setupBackButton()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initPresenter()
+        initView()
 
-        // Get lesson
+        // Get lesson from args and load
         currentLesson = args.lesson
         currentLesson?.let { lesson ->
-            displayLessonInfo(lesson)
-            loadVocabulary(lesson.id)
+            presenter.loadLessonDetail(lesson)
         }
     }
 
-    override fun initData() {
+    override fun onStart() {
+        super.onStart()
+        presenter.onStart()
+    }
 
+    override fun onStop() {
+        super.onStop()
+        presenter.onStop()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        presenter.detachView()
+        _viewBinding = null
+    }
+
+    private fun initPresenter() {
+        presenter = LessonDetailPresenter()
+        presenter.attachView(this)
+    }
+
+    private fun initView() {
+        setupRecyclerView()
+        setupBackButton()
     }
 
     private fun setupRecyclerView() {
-        vocabularyAdapter = VocabularyAdapter { word ->
-            onWordClick(word)
-        }
+        vocabularyAdapter = VocabularyAdapter(
+            onWordClick = { word -> presenter.onWordClicked(word) },
+            onSoundClick = { word -> presenter.onSoundClicked(word) }
+        )
 
         viewBinding.recyclerViewVocabulary.apply {
             layoutManager = LinearLayoutManager(requireContext())
@@ -56,21 +85,30 @@ class LessonDetailFragment : BaseFragment<FragmentLessonDetailBinding>() {
 
     private fun setupBackButton() {
         viewBinding.btnBack.setOnClickListener {
-            findNavController().navigateUp()
+            presenter.onBackClicked()
         }
     }
 
-    private fun displayLessonInfo(lesson: Lesson) {
+    // MVP View implementations
+    override fun showLoading() {
+        // Show loading indicator if needed
+    }
+
+    override fun hideLoading() {
+        // Hide loading indicator
+    }
+
+    override fun displayLessonInfo(lesson: Lesson) {
         viewBinding.apply {
             // Set lesson title
             textLessonTitle.text = lesson.title
-            
+
             // Set lesson details
             textLessonNumber.text = "Lesson: ${lesson.lessonNumber}"
             textAdvancedLevel.text = "Advanced: ${lesson.advancedLevel}"
             textLessonPoints.text = "points: ${lesson.currentPoints} / ${lesson.totalPoints}"
             textLessonDescription.text = lesson.description
-            
+
             // Set progress
             progressLesson.progress = lesson.progressPercentage
 
@@ -88,15 +126,26 @@ class LessonDetailFragment : BaseFragment<FragmentLessonDetailBinding>() {
         }
     }
 
-    private fun loadVocabulary(lessonId: String) {
-        val vocabulary = VocabularyRepository.getVocabularyByLessonId(lessonId)
-        vocabularyAdapter.updateWords(vocabulary)
-        
-        // Update word count
-        viewBinding.textWordCount.text = "${vocabulary.size} words"
+    override fun showVocabulary(words: List<Word>) {
+        vocabularyAdapter.updateWords(words)
+        viewBinding.textWordCount.text = "${words.size} words"
     }
 
-    private fun onWordClick(word: Word) {
+    override fun showError(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun navigateBack() {
+        findNavController().navigateUp()
+    }
+
+    override fun playWordSound(word: Word) {
+        Toast.makeText(requireContext(), "Playing sound for: ${word.name}", Toast.LENGTH_SHORT).show()
+        // TODO: Implement actual sound playing
+    }
+
+    override fun showWordDetail(word: Word) {
         Toast.makeText(requireContext(), "Word: ${word.name}", Toast.LENGTH_SHORT).show()
+        // TODO: Implement word detail functionality
     }
 }

@@ -52,11 +52,6 @@ class SavedWordsActivity : BaseActivity<ActivitySavedWordsBinding>() {
         binding.btnBack.setOnClickListener {
             finish()
         }
-
-        binding.etSearch.setOnClickListener {
-            val intent = WordSearchActivity.createIntent(this)
-            startActivity(intent)
-        }
     }
 
     private fun setupSearchView() {

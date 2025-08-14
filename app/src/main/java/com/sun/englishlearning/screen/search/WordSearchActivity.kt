@@ -215,3 +215,4 @@ class WordSearchActivity : BaseActivity<ActivityWordSearchBinding>() {
         }
     }
 }
+

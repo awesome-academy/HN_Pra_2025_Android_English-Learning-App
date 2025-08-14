@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sun.englishlearning.data.model.SavedWord
 import com.sun.englishlearning.databinding.ActivitySavedWordsBinding
-import com.sun.englishlearning.screen.search.WordSearchActivity
 import com.sun.englishlearning.utils.base.BaseActivity
 
 class SavedWordsActivity : BaseActivity<ActivitySavedWordsBinding>() {

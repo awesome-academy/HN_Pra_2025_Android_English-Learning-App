@@ -62,7 +62,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="as many as"
-                    android:textSize="14sp"
+                    android:textSize="@dimen/sp_14"
                     android:textColor="#666666" />
 
             </LinearLayout>

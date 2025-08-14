@@ -1,9 +1,11 @@
 package com.sun.englishlearning.screen.review
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
 import com.sun.englishlearning.databinding.FragmentReviewBinding
+import com.sun.englishlearning.screen.savedwords.SavedWordsActivity
 import com.sun.englishlearning.utils.base.BaseFragment
 
 class ReviewFragment : BaseFragment<FragmentReviewBinding>() {
@@ -38,8 +40,13 @@ class ReviewFragment : BaseFragment<FragmentReviewBinding>() {
             }
 
             layoutSaveWords.setOnClickListener {
-                Toast.makeText(context, "Your save words clicked", Toast.LENGTH_SHORT).show()
+                val intent = Intent(requireContext(), SavedWordsActivity::class.java)
+                startActivity(intent)
             }
         }
     }
 }
+
+
+
+

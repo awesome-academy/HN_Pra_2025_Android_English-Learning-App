@@ -25,5 +25,6 @@
     <!-- Tab Colors -->
     <color name="tab_text_color">#FF2563EB</color>
     <color name="tab_text_inactive">#FF666666</color>
+    <color name="red">#E53535</color>
 </resources>
 

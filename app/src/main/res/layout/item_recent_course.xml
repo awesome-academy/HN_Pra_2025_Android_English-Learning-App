@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="2dp">
+    android:layout_margin="@dimen/dp_8"
+    app:cardCornerRadius="@dimen/dp_12"
+    app:cardElevation="@dimen/dp_2">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,7 +15,7 @@
         <ImageView
             android:id="@+id/iv_course_image"
             android:layout_width="match_parent"
-            android:layout_height="140dp"
+            android:layout_height="@dimen/dp_140"
             android:scaleType="centerCrop"
             android:src="@drawable/img_ob1" />
 
@@ -23,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="@dimen/dp_16">
 
             <TextView
                 android:id="@+id/tv_course_title"
@@ -32,20 +32,20 @@
                 android:text="@string/tourist_trip"
                 style="@style/TextSemiBold.16sp"
                 android:textColor="@color/black"
-                android:layout_marginBottom="8dp" />
+                android:layout_marginBottom="@dimen/dp_8" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
-                android:layout_marginBottom="12dp">
+                android:layout_marginBottom="@dimen/dp_12">
 
                 <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
+                    android:layout_width="@dimen/dp_16"
+                    android:layout_height="@dimen/dp_16"
                     android:src="@drawable/ic_home"
-                    android:layout_marginEnd="4dp" />
+                    android:layout_marginEnd="@dimen/dp_4" />
 
                 <TextView
                     android:id="@+id/tv_lesson_count"
@@ -56,11 +56,11 @@
                     android:textColor="#6B7280" />
 
                 <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
+                    android:layout_width="@dimen/dp_16"
+                    android:layout_height="@dimen/dp_16"
                     android:src="@drawable/ic_me"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="4dp" />
+                    android:layout_marginStart="@dimen/dp_16"
+                    android:layout_marginEnd="@dimen/dp_4" />
 
                 <TextView
                     android:id="@+id/tv_advanced_level"
@@ -89,13 +89,13 @@
                         android:id="@+id/progress_course"
                         style="?android:attr/progressBarStyleHorizontal"
                         android:layout_width="0dp"
-                        android:layout_height="6dp"
+                        android:layout_height="@dimen/dp_6"
                         android:layout_weight="1"
                         android:max="10"
                         android:progress="6"
                         android:progressTint="@color/secondary_orange"
                         android:progressBackgroundTint="#E5E7EB"
-                        android:layout_marginEnd="8dp" />
+                        android:layout_marginEnd="@dimen/dp_8" />
 
                     <TextView
                         android:id="@+id/tv_progress"

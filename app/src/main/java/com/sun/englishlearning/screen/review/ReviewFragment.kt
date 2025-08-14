@@ -1,10 +1,8 @@
 package com.sun.englishlearning.screen.review
 
-import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import com.sun.englishlearning.R
+import android.widget.Toast
 import com.sun.englishlearning.databinding.FragmentReviewBinding
 import com.sun.englishlearning.utils.base.BaseFragment
 
@@ -15,9 +13,33 @@ class ReviewFragment : BaseFragment<FragmentReviewBinding>() {
     }
 
     override fun initView() {
-        viewBinding.textViewTitle.text = getString(R.string.title_review)
+        setupClickListeners()
     }
 
     override fun initData() {
+    }
+
+    private fun setupClickListeners() {
+        with(viewBinding) {
+            cardWeekWords.setOnClickListener {
+                Toast.makeText(context, "Week words clicked", Toast.LENGTH_SHORT).show()
+            }
+
+            cardTodayWords.setOnClickListener {
+                Toast.makeText(context, "Today words clicked", Toast.LENGTH_SHORT).show()
+            }
+
+            cardMediumWords.setOnClickListener {
+                Toast.makeText(context, "Medium words clicked", Toast.LENGTH_SHORT).show()
+            }
+
+            cardStrongWords.setOnClickListener {
+                Toast.makeText(context, "Strong words clicked", Toast.LENGTH_SHORT).show()
+            }
+
+            layoutSaveWords.setOnClickListener {
+                Toast.makeText(context, "Your save words clicked", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 }

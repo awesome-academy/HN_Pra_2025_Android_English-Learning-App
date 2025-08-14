@@ -1,5 +1,6 @@
 package com.sun.englishlearning.screen.home
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.sun.englishlearning.R
 import com.sun.englishlearning.databinding.FragmentHomeBinding
+import com.sun.englishlearning.screen.search.WordSearchActivity
 import com.sun.englishlearning.utils.base.BaseFragment
 
 class HomeFragment : BaseFragment<FragmentHomeBinding>() {
@@ -26,7 +28,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     private fun setupClickListeners() {
         with(viewBinding) {
             ivSearch.setOnClickListener {
-                Toast.makeText(context, "Search clicked", Toast.LENGTH_SHORT).show()
+                val intent = Intent(requireContext(), WordSearchActivity::class.java)
+                startActivity(intent)
             }
 
             btnLetsStart.setOnClickListener {

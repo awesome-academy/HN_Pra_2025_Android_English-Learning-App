@@ -1,32 +1,90 @@
-// screen/courses/CoursesPresenter.kt
 package com.sun.englishlearning.screen.courses
 
-import com.sun.englishlearning.data.repository.CategoryRepository
-import com.sun.englishlearning.data.repository.CategoryRepositoryImpl
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import android.content.Context
+import android.os.Handler
+import android.os.Looper
+import com.sun.englishlearning.data.model.Lesson
+import com.sun.englishlearning.data.repository.LessonRepository
+import kotlin.concurrent.thread
 
-class CoursesPresenter(
-    private val repository: CategoryRepository = CategoryRepositoryImpl()
-) : CoursesContract.Presenter {
+class CoursesPresenter : CoursesContract.Presenter {
 
     private var view: CoursesContract.View? = null
-    private val presenterScope = CoroutineScope(Dispatchers.Main)
+    private var context: Context? = null
+    private var isOngoingTabSelected = true
+    private val mainHandler = Handler(Looper.getMainLooper())
 
-    override fun loadCategories() {
-        view?.showLoading()
-        presenterScope.launch {
-            val result = withContext(Dispatchers.IO) {
-                repository.getCategories()
+    fun setContext(context: Context) {
+        this.context = context
+    }
+
+    override fun loadOngoingLessons() {
+        context?.let { ctx ->
+            view?.showLoading()
+            thread {
+                try {
+                    val lessons = LessonRepository.getOngoingLessons(ctx)
+                    mainHandler.post {
+                        view?.hideLoading()
+                        view?.showOngoingLessons(lessons)
+                    }
+                } catch (e: Exception) {
+                    mainHandler.post {
+                        view?.hideLoading()
+                        view?.showError(e.message ?: "Error loading ongoing lessons")
+                    }
+                }
             }
-            result.onSuccess { categories ->
-                view?.showCategories(categories)
-            }.onFailure { error ->
-                view?.showError(error.message ?: "Lỗi không xác định")
+        }
+    }
+
+    override fun loadCompletedLessons() {
+        context?.let { ctx ->
+            view?.showLoading()
+            thread {
+                try {
+                    val lessons = LessonRepository.getCompletedLessons(ctx)
+                    mainHandler.post {
+                        view?.hideLoading()
+                        view?.showCompletedLessons(lessons)
+                    }
+                } catch (e: Exception) {
+                    mainHandler.post {
+                        view?.hideLoading()
+                        view?.showError(e.message ?: "Error loading completed lessons")
+                    }
+                }
             }
-            view?.hideLoading()
+        }
+    }
+
+    override fun onTabSelected(isOngoing: Boolean) {
+        isOngoingTabSelected = isOngoing
+        view?.updateTabSelection(isOngoing)
+
+        if (isOngoing) {
+            loadOngoingLessons()
+        } else {
+            loadCompletedLessons()
+        }
+    }
+
+    override fun onLessonClicked(lesson: Lesson) {
+        view?.navigateToLessonDetail(lesson)
+    }
+
+    override fun refreshLessons() {
+        context?.let { ctx ->
+            thread {
+                LessonRepository.refreshCache(ctx)
+                mainHandler.post {
+                    if (isOngoingTabSelected) {
+                        loadOngoingLessons()
+                    } else {
+                        loadCompletedLessons()
+                    }
+                }
+            }
         }
     }
 
@@ -38,6 +96,12 @@ class CoursesPresenter(
         this.view = null
     }
 
-    override fun onStart() {}
-    override fun onStop() {}
+    override fun onStart() {
+        // Load initial data
+        onTabSelected(true) // Load ongoing lessons by default
+    }
+
+    override fun onStop() {
+
+    }
 }

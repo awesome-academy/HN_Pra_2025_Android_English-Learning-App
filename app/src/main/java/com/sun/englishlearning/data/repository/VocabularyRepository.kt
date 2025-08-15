@@ -1,53 +1,59 @@
 package com.sun.englishlearning.data.repository
 
+import android.content.Context
 import com.sun.englishlearning.data.model.Word
+import com.sun.englishlearning.data.repository.source.VocabularyDataSource
+import com.sun.englishlearning.data.repository.source.remote.OnResultListener
 
 object VocabularyRepository {
-    
-    fun getVocabularyByLessonId(lessonId: String): List<Word> {
-        return when (lessonId) {
-            "35" -> getSchoolsVocabulary()
-            else -> emptyList()
-        }
+
+    private val vocabularyDataSource = VocabularyDataSource()
+
+    /**
+     * Get vocabulary for lesson with API definitions (async)
+     */
+    fun getVocabularyByLessonId(
+        context: Context,
+        lessonId: String,
+        listener: OnResultListener<List<Word>>
+    ) {
+        vocabularyDataSource.getVocabularyForLesson(context, lessonId, listener)
     }
-    
-    private fun getSchoolsVocabulary(): List<Word> {
+
+    /**
+     * Get single word definition (async)
+     */
+    fun getWordDefinition(word: String, listener: OnResultListener<Word>) {
+        vocabularyDataSource.getWordDefinition(word, listener)
+    }
+
+    /**
+     * Synchronous method for backward compatibility (returns fallback data)
+     */
+    fun getVocabularyByLessonId(lessonId: String): List<Word> {
+        // Return simple fallback data for backward compatibility
+        return createFallbackVocabulary(lessonId)
+    }
+
+    /**
+     * Create simple fallback vocabulary
+     */
+    private fun createFallbackVocabulary(lessonId: String): List<Word> {
         return listOf(
             Word(
-                id = "1",
-                name = "School",
-                definition = "An institution for educating children",
+                id = "fallback_$lessonId",
+                name = "Loading...",
+                definition = "Please wait while we load vocabulary from the internet",
                 soundUrl = "",
-                example = "I go to school every day."
-            ),
-            Word(
-                id = "2",
-                name = "Teacher",
-                definition = "A person who teaches students",
-                soundUrl = "",
-                example = "My teacher is very kind."
-            ),
-            Word(
-                id = "3",
-                name = "Student",
-                definition = "A person who is learning at a school",
-                soundUrl = "",
-                example = "She is a good student."
-            ),
-            Word(
-                id = "4",
-                name = "Principal",
-                definition = "The head of a school",
-                soundUrl = "",
-                example = "The principal gave a speech."
-            ),
-            Word(
-                id = "5",
-                name = "Library",
-                definition = "A place where books are kept for reading",
-                soundUrl = "",
-                example = "I borrowed a book from the library."
+                example = "This is a fallback word while loading real data"
             )
         )
+    }
+
+    /**
+     * Check API availability
+     */
+    fun checkApiAvailability(listener: OnResultListener<Boolean>) {
+        vocabularyDataSource.checkApiAvailability(listener)
     }
 }

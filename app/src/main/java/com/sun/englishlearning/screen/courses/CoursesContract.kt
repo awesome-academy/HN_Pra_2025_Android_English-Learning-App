@@ -1,17 +1,24 @@
 package com.sun.englishlearning.screen.courses
 
-import com.sun.englishlearning.data.model.Category
+import com.sun.englishlearning.data.model.Lesson
 import com.sun.englishlearning.utils.base.BasePresenter
 
 interface CoursesContract {
     interface View {
         fun showLoading()
         fun hideLoading()
-        fun showCategories(categories: List<Category>)
+        fun showOngoingLessons(lessons: List<Lesson>)
+        fun showCompletedLessons(lessons: List<Lesson>)
         fun showError(message: String)
+        fun navigateToLessonDetail(lesson: Lesson)
+        fun updateTabSelection(isOngoing: Boolean)
     }
 
     interface Presenter : BasePresenter<View> {
-        fun loadCategories()
+        fun loadOngoingLessons()
+        fun loadCompletedLessons()
+        fun onTabSelected(isOngoing: Boolean)
+        fun onLessonClicked(lesson: Lesson)
+        fun refreshLessons()
     }
 }

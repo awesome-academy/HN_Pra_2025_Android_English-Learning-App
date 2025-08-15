@@ -1,15 +1,15 @@
-package com.sun.englishlearning.screen.lessondetail
+package com.sun.englishlearning.screen.lessondetail.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
-import com.sun.englishlearning.databinding.ItemVocabularyCardBinding
 import com.sun.englishlearning.data.model.Word
+import com.sun.englishlearning.databinding.ItemVocabularyCardBinding
 
 class VocabularyAdapter(
     private var words: List<Word> = emptyList(),
-    private val onWordClick: (Word) -> Unit = {}
+    private val onWordClick: (Word) -> Unit = {},
+    private val onSoundClick: (Word) -> Unit = {}
 ) : RecyclerView.Adapter<VocabularyAdapter.VocabularyViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VocabularyViewHolder {
@@ -40,23 +40,19 @@ class VocabularyAdapter(
             binding.apply {
                 // Set word name
                 textWordName.text = word.name
-                
+
                 // Set first letter as initial
                 textWordInitial.text = word.name.firstOrNull()?.toString()?.uppercase() ?: "?"
-                
+
                 // Set definition
                 textDefinition.text = word.definition
-                
+
                 // Set example
                 textExample.text = word.example
 
                 // Sound button click listener
                 btnSound.setOnClickListener {
-                    Toast.makeText(
-                        binding.root.context,
-                        "Playing sound for: ${word.name}",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    onSoundClick(word)
                 }
 
                 // Card click listener

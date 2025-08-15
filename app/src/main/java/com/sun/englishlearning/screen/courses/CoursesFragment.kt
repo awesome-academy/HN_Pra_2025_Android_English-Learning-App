@@ -11,36 +11,65 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.sun.englishlearning.R
 import com.sun.englishlearning.databinding.ActivityLessonsBinding
 import com.sun.englishlearning.data.model.Lesson
-import com.sun.englishlearning.data.repository.LessonRepository
-import com.sun.englishlearning.utils.base.BaseFragment
+import androidx.fragment.app.Fragment
+import com.sun.englishlearning.screen.courses.adapter.CoursesAdapter
 
-class CoursesFragment : BaseFragment<ActivityLessonsBinding>() {
+class CoursesFragment : Fragment(), CoursesContract.View {
 
-    private lateinit var lessonAdapter: LessonAdapter
+    private var _viewBinding: ActivityLessonsBinding? = null
+    private val viewBinding get() = _viewBinding!!
+
+    private lateinit var coursesAdapter: CoursesAdapter
+    private lateinit var presenter: CoursesContract.Presenter
     private var isOngoingTabSelected = true
 
-    override fun inflateViewBinding(inflater: LayoutInflater, container: ViewGroup?): ActivityLessonsBinding {
-        return ActivityLessonsBinding.inflate(inflater, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        _viewBinding = ActivityLessonsBinding.inflate(inflater, container, false)
+        return viewBinding.root
     }
 
-    override fun initView() {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initPresenter()
+        initView()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        presenter.onStart()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        presenter.onStop()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        presenter.detachView()
+        _viewBinding = null
+    }
+
+    private fun initPresenter() {
+        presenter = CoursesPresenter()
+        (presenter as CoursesPresenter).setContext(requireContext())
+        presenter.attachView(this)
+    }
+
+    private fun initView() {
         setupRecyclerView()
         setupTabs()
         setupBackButton()
     }
 
-    override fun initData() {
-        loadLessons()
-    }
-
     private fun setupRecyclerView() {
-        lessonAdapter = LessonAdapter { lesson ->
-            onLessonClick(lesson)
+        coursesAdapter = CoursesAdapter { lesson ->
+            presenter.onLessonClicked(lesson)
         }
 
         viewBinding.recyclerViewLessons.apply {
             layoutManager = LinearLayoutManager(requireContext())
-            adapter = lessonAdapter
+            adapter = coursesAdapter
         }
     }
 
@@ -49,13 +78,11 @@ class CoursesFragment : BaseFragment<ActivityLessonsBinding>() {
         selectTab(true)
 
         viewBinding.tabOngoing.setOnClickListener {
-            selectTab(true)
-            loadLessons()
+            presenter.onTabSelected(true)
         }
 
         viewBinding.tabCompleted.setOnClickListener {
-            selectTab(false)
-            loadLessons()
+            presenter.onTabSelected(false)
         }
     }
 
@@ -84,19 +111,33 @@ class CoursesFragment : BaseFragment<ActivityLessonsBinding>() {
         }
     }
 
-    private fun loadLessons() {
-        val lessons = if (isOngoingTabSelected) {
-            LessonRepository.getOngoingLessons()
-        } else {
-            LessonRepository.getCompletedLessons()
-        }
-
-        lessonAdapter.updateLessons(lessons)
+    // MVP View implementations
+    override fun showLoading() {
+        // Show loading indicator
     }
 
-    private fun onLessonClick(lesson: Lesson) {
-        // Navigate to lesson detail
+    override fun hideLoading() {
+        // Hide loading indicator
+    }
+
+    override fun showOngoingLessons(lessons: List<Lesson>) {
+        coursesAdapter.updateLessons(lessons)
+    }
+
+    override fun showCompletedLessons(lessons: List<Lesson>) {
+        coursesAdapter.updateLessons(lessons)
+    }
+
+    override fun showError(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun navigateToLessonDetail(lesson: Lesson) {
         val action = CoursesFragmentDirections.actionCoursesToLessonDetail(lesson)
         findNavController().navigate(action)
+    }
+
+    override fun updateTabSelection(isOngoing: Boolean) {
+        selectTab(isOngoing)
     }
 }

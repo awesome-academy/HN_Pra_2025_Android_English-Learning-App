@@ -71,4 +71,11 @@
     <string name="profile_privacy">Privacy policy</string>
     <string name="profile_logout">Logout</string>
     <string name="profile_delete_account">Delete account</string>
+    <string name="phonetic_transcription">Phonetic transcription</string>
+    <string name="english_word">English word</string>
+    <string name="play_pronunciation_audio">Play pronunciation audio</string>
+    <string name="definition">Definition</string>
+    <string name="go_back_to_lesson">Go back to lesson</string>
+    <string name="lesson">Lesson</string>
+    <string name="current_flashcard_position">Current flashcard position</string>
 </resources>

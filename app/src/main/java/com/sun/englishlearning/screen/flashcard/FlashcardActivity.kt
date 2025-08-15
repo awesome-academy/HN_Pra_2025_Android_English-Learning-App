@@ -103,9 +103,9 @@ class FlashcardActivity : BaseActivity<ActivityFlashcardBinding>() {
 
     private fun setupToolbar() {
         binding.textTitle.text = if (lessonTitle.isNotEmpty()) {
-            "$lessonTitle - Flashcards"
+            lessonTitle
         } else {
-            "Flashcards"
+            "Lesson"
         }
         updatePositionIndicator(currentIndex)
     }

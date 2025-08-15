@@ -58,7 +58,6 @@
                 android:id="@+id/tv_course_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="How to Conversation in the office with your colleagues"
                 android:textSize="@dimen/sp_16"
                 android:textColor="@android:color/black"
                 android:textStyle="bold"
@@ -71,7 +70,6 @@
                 android:id="@+id/tv_course_subtitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="At Work vocabulary"
                 android:textSize="@dimen/sp_14"
                 android:textColor="#666666" />
 

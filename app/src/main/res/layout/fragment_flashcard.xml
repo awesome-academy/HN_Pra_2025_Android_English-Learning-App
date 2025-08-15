@@ -1,190 +1,215 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="@dimen/dp_8"
-    app:cardBackgroundColor="@color/white"
-    app:cardCornerRadius="@dimen/dp_20"
-    app:cardElevation="@dimen/dp_8">
+    android:background="@color/flashcard_background"
+    android:padding="16dp">
 
-    <ScrollView
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:background="@drawable/bg_flashcard_modern"
+        app:cardBackgroundColor="@color/flashcard_surface"
+        app:cardCornerRadius="24dp"
+        app:cardElevation="12dp"
+        app:cardUseCompatPadding="true">
 
-        <LinearLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="@dimen/dp_32">
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            android:scrollbars="none">
 
-            <!-- Word Section -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:orientation="vertical"
-                android:layout_marginBottom="@dimen/dp_32">
+                android:padding="32dp"
+                android:clipToPadding="false">
 
-                <!-- Word Icon -->
-                <androidx.cardview.widget.CardView
-                    android:layout_width="@dimen/dp_80"
-                    android:layout_height="@dimen/dp_80"
-                    android:layout_marginBottom="@dimen/dp_20"
-                    app:cardBackgroundColor="@color/main_blue"
-                    app:cardCornerRadius="@dimen/dp_40"
-                    app:cardElevation="@dimen/dp_0">
-
-                    <TextView
-                        android:id="@+id/text_word_initial"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/sp_32"
-                        android:fontFamily="@font/nunito_bold"
-                        android:contentDescription="Word initial letter"
-                        tools:text="S" />
-
-                </androidx.cardview.widget.CardView>
-
-                <!-- Word Name -->
-                <TextView
-                    android:id="@+id/text_word_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/dp_12"
-                    android:fontFamily="@font/nunito_bold"
-                    android:gravity="center"
-                    android:textColor="@color/lesson_title_text"
-                    android:textSize="@dimen/sp_36"
-                    android:contentDescription="English word"
-                    tools:text="School" />
-
-                <!-- Phonetic and Audio -->
+                <!-- Word Section -->
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="40dp"
+                    android:paddingVertical="24dp">
 
-                    <!-- Phonetic -->
+                    <!-- Word Name with Modern Typography -->
                     <TextView
-                        android:id="@+id/text_phonetic"
+                        android:id="@+id/text_word_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/dp_12"
-                        android:fontFamily="serif"
-                        android:textColor="@color/lesson_subtitle_text"
-                        android:textSize="@dimen/sp_18"
-                        android:contentDescription="Phonetic transcription"
-                        tools:text="/skuːl/" />
+                        android:layout_marginBottom="16dp"
+                        android:fontFamily="@font/nunito_bold"
+                        android:gravity="center"
+                        android:textColor="@color/flashcard_text_primary"
+                        android:textSize="42sp"
+                        android:contentDescription="English word"
+                        android:letterSpacing="0.02"
+                        android:lineSpacingExtra="4dp"
+                        tools:text="School" />
 
-                    <!-- Audio Button -->
-                    <androidx.cardview.widget.CardView
-                        android:layout_width="@dimen/dp_48"
-                        android:layout_height="@dimen/dp_48"
-                        app:cardBackgroundColor="@color/secondary_orange"
-                        app:cardCornerRadius="@dimen/dp_24"
-                        app:cardElevation="@dimen/dp_4">
+                    <!-- Phonetic and Audio Section -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:background="@drawable/bg_flashcard_gradient"
+                        android:paddingHorizontal="20dp"
+                        android:paddingVertical="12dp"
+                        android:layout_marginBottom="8dp"
+                        android:elevation="4dp">
 
-                        <ImageView
-                            android:id="@+id/btn_audio"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:background="?android:attr/selectableItemBackgroundBorderless"
+                        <!-- Enhanced Phonetic Display -->
+                        <TextView
+                            android:id="@+id/text_phonetic"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="16dp"
+                            android:fontFamily="serif"
+                            android:textColor="@color/white"
+                            android:textSize="20sp"
+                            android:contentDescription="Phonetic transcription"
+                            android:textStyle="italic"
+                            android:letterSpacing="0.05"
+                            tools:text="/skuːl/" />
+
+                        <!-- Modern Audio Button -->
+                        <FrameLayout
+                            android:layout_width="56dp"
+                            android:layout_height="56dp"
+                            android:background="@drawable/bg_audio_button_modern"
                             android:clickable="true"
                             android:focusable="true"
-                            android:padding="@dimen/dp_12"
-                            android:src="@drawable/ic_volume"
-                            android:contentDescription="Play pronunciation audio"
-                            app:tint="@color/white" />
+                            android:elevation="6dp">
 
-                    </androidx.cardview.widget.CardView>
+                            <ImageView
+                                android:id="@+id/btn_audio"
+                                android:layout_width="28dp"
+                                android:layout_height="28dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_volume"
+                                android:contentDescription="Play pronunciation audio"
+                                app:tint="@color/white"
+                                android:scaleType="centerInside" />
+
+                        </FrameLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <!-- Modern Part of Speech Badge -->
+                <TextView
+                    android:id="@+id/text_part_of_speech"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="32dp"
+                    android:background="@drawable/bg_part_of_speech_modern"
+                    android:fontFamily="@font/nunito_bold"
+                    android:paddingHorizontal="20dp"
+                    android:paddingVertical="10dp"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:visibility="gone"
+                    android:elevation="4dp"
+                    android:letterSpacing="0.1"
+                    android:textAllCaps="true"
+                    tools:text="noun"
+                    tools:visibility="visible" />
+
+                <!-- Enhanced Definition Section -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="32dp"
+                    android:orientation="vertical"
+                    android:paddingHorizontal="8dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
+                        android:fontFamily="@font/nunito_bold"
+                        android:text="Definition"
+                        android:textColor="@color/flashcard_primary"
+                        android:textSize="18sp"
+                        android:letterSpacing="0.05" />
+
+                    <TextView
+                        android:id="@+id/text_definition"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/nunito_medium"
+                        android:lineSpacingExtra="6dp"
+                        android:textColor="@color/flashcard_text_primary"
+                        android:textSize="20sp"
+                        android:letterSpacing="0.01"
+                        android:lineSpacingMultiplier="1.3"
+                        tools:text="An institution for educating children and young people" />
+
+                </LinearLayout>
+
+                <!-- Modern Example Section -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_example_modern"
+                    android:orientation="vertical"
+                    android:padding="24dp"
+                    android:elevation="2dp"
+                    android:layout_marginHorizontal="8dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="16dp">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_star"
+                            android:layout_marginEnd="8dp"
+                            app:tint="@color/flashcard_secondary" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/nunito_bold"
+                            android:text="Example"
+                            android:textColor="@color/flashcard_secondary"
+                            android:textSize="18sp"
+                            android:letterSpacing="0.05" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/text_example"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/nunito_regular"
+                        android:fontStyle="italic"
+                        android:lineSpacingExtra="6dp"
+                        android:textColor="@color/flashcard_text_secondary"
+                        android:textSize="18sp"
+                        android:letterSpacing="0.01"
+                        android:lineSpacingMultiplier="1.4"
+                        tools:text="I go to school every day to learn new things." />
 
                 </LinearLayout>
 
             </LinearLayout>
 
-            <!-- Part of Speech -->
-            <TextView
-                android:id="@+id/text_part_of_speech"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginBottom="@dimen/dp_24"
-                android:background="@drawable/word_count_background"
-                android:fontFamily="@font/nunito_bold"
-                android:paddingHorizontal="@dimen/dp_16"
-                android:paddingVertical="@dimen/dp_8"
-                android:textColor="@color/main_blue"
-                android:textSize="@dimen/sp_14"
-                android:visibility="gone"
-                tools:text="noun"
-                tools:visibility="visible" />
+        </ScrollView>
 
-            <!-- Definition Section -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/dp_24"
-                android:orientation="vertical">
+    </androidx.cardview.widget.CardView>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/dp_12"
-                    android:fontFamily="@font/nunito_bold"
-                    android:text="Definition"
-                    android:textColor="@color/main_blue"
-                    android:textSize="@dimen/sp_16" />
-
-                <TextView
-                    android:id="@+id/text_definition"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/nunito_medium"
-                    android:lineSpacingExtra="@dimen/dp_4"
-                    android:textColor="@color/lesson_title_text"
-                    android:textSize="@dimen/sp_18"
-                    tools:text="An institution for educating children and young people" />
-
-            </LinearLayout>
-
-            <!-- Example Section -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/example_background"
-                android:orientation="vertical"
-                android:padding="@dimen/dp_20">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/dp_12"
-                    android:fontFamily="@font/nunito_bold"
-                    android:text="Example"
-                    android:textColor="@color/secondary_orange"
-                    android:textSize="@dimen/sp_16" />
-
-                <TextView
-                    android:id="@+id/text_example"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/nunito_regular"
-                    android:fontStyle="italic"
-                    android:lineSpacingExtra="@dimen/dp_4"
-                    android:textColor="@color/lesson_subtitle_text"
-                    android:textSize="@dimen/sp_17"
-                    tools:text="I go to school every day to learn new things." />
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-    </ScrollView>
-
-</androidx.cardview.widget.CardView>
+</FrameLayout>

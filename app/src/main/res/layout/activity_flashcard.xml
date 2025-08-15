@@ -4,136 +4,92 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/cardview_light_background"
-    android:orientation="vertical">
+    android:background="@color/flashcard_background"
+    android:orientation="vertical"
+    android:fitsSystemWindows="true">
 
-    <!-- Top Bar -->
+    <!-- Modern Top Bar -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:elevation="@dimen/dp_4"
+        android:background="@color/flashcard_surface"
+        android:elevation="8dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:padding="@dimen/dp_16">
+        android:padding="20dp"
+        android:paddingTop="24dp">
 
-        <!-- Back Button -->
-        <ImageView
-            android:id="@+id/btn_back"
-            android:layout_width="@dimen/dp_32"
-            android:layout_height="@dimen/dp_32"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
+        <!-- Modern Back Button -->
+        <FrameLayout
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/bg_audio_button_modern"
             android:clickable="true"
-            android:focusable="true"
-            android:padding="@dimen/dp_4"
-            android:src="@drawable/ic_arrow_back"
-            android:contentDescription="Go back to lesson"
-            app:tint="@color/lesson_title_text" />
+            android:focusable="true">
 
-        <!-- Title -->
+            <ImageView
+                android:id="@+id/btn_back"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_arrow_back"
+                android:contentDescription="Go back to lesson"
+                app:tint="@color/white"
+                android:scaleType="centerInside" />
+
+        </FrameLayout>
+
+        <!-- Modern Title -->
         <TextView
             android:id="@+id/text_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dp_16"
+            android:layout_marginStart="20dp"
             android:layout_weight="1"
             android:fontFamily="@font/nunito_bold"
             android:text="Flashcards"
-            android:textColor="@color/lesson_title_text"
-            android:textSize="@dimen/sp_20" />
+            android:textColor="@color/flashcard_text_primary"
+            android:textSize="24sp"
+            android:letterSpacing="0.02" />
 
-        <!-- Position Indicator -->
+        <!-- Modern Position Indicator -->
         <TextView
             android:id="@+id/text_position"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/word_count_background"
+            android:background="@drawable/bg_part_of_speech_modern"
             android:fontFamily="@font/nunito_bold"
-            android:paddingHorizontal="@dimen/dp_12"
-            android:paddingVertical="@dimen/dp_6"
-            android:textColor="@color/main_blue"
-            android:textSize="@dimen/sp_12"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="8dp"
+            android:textColor="@color/white"
+            android:textSize="14sp"
             android:contentDescription="Current flashcard position"
+            android:elevation="4dp"
+            android:letterSpacing="0.1"
             tools:text="1 / 10" />
 
     </LinearLayout>
 
-    <!-- ViewPager2 for Flashcards -->
+    <!-- Modern ViewPager2 for Flashcards -->
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/view_pager_flashcards"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:paddingHorizontal="@dimen/dp_16"
-        android:paddingVertical="@dimen/dp_20" />
+        android:paddingHorizontal="8dp"
+        android:paddingVertical="16dp"
+        android:clipToPadding="false"
+        android:clipChildren="false" />
 
-    <!-- Bottom Navigation Hints -->
+    <!-- Modern Bottom Navigation Hints -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:elevation="@dimen/dp_2"
+        android:background="@color/flashcard_surface"
+        android:elevation="8dp"
         android:gravity="center"
         android:orientation="horizontal"
-        android:padding="@dimen/dp_16">
-
-        <!-- Previous Hint -->
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="@dimen/dp_16"
-                android:layout_height="@dimen/dp_16"
-                android:layout_marginEnd="@dimen/dp_8"
-                android:src="@drawable/ic_arrow_back"
-                app:tint="@color/lesson_subtitle_text" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/nunito_medium"
-                android:text="Swipe left"
-                android:textColor="@color/lesson_subtitle_text"
-                android:textSize="@dimen/sp_12" />
-
-        </LinearLayout>
-
-        <!-- Divider -->
-        <View
-            android:layout_width="@dimen/dp_1"
-            android:layout_height="@dimen/dp_20"
-            android:background="@color/lesson_subtitle_text"
-            android:alpha="0.3" />
-
-        <!-- Next Hint -->
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/nunito_medium"
-                android:text="Swipe right"
-                android:textColor="@color/lesson_subtitle_text"
-                android:textSize="@dimen/sp_12" />
-
-            <ImageView
-                android:layout_width="@dimen/dp_16"
-                android:layout_height="@dimen/dp_16"
-                android:layout_marginStart="@dimen/dp_8"
-                android:src="@drawable/ic_arrow_forward"
-                app:tint="@color/lesson_subtitle_text" />
-
-        </LinearLayout>
-
-    </LinearLayout>
+        android:padding="20dp"
+        android:paddingBottom="24dp"/>
 
 </LinearLayout>

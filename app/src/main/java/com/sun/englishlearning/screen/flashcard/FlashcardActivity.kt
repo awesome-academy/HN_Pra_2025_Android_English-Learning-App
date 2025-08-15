@@ -1,10 +1,15 @@
 package com.sun.englishlearning.screen.flashcard
 
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.animation.AccelerateDecelerateInterpolator
+import android.view.animation.OvershootInterpolator
+import androidx.core.view.ViewCompat
 import androidx.viewpager2.widget.ViewPager2
 import com.sun.englishlearning.data.model.Word
 import com.sun.englishlearning.databinding.ActivityFlashcardBinding
@@ -63,6 +68,7 @@ class FlashcardActivity : BaseActivity<ActivityFlashcardBinding>() {
             setupViewPager()
             setupClickListeners()
             setupAccessibility()
+            animateInitialAppearance()
 
             Log.d(TAG, "FlashcardActivity initialized successfully")
         } catch (e: Exception) {
@@ -114,30 +120,8 @@ class FlashcardActivity : BaseActivity<ActivityFlashcardBinding>() {
             // Enable smooth scrolling
             isUserInputEnabled = true
 
-            // Set page transformer for smooth transitions
-            setPageTransformer { page, position ->
-                page.apply {
-                    when {
-                        position < -1 -> { // [-Infinity,-1)
-                            // This page is way off-screen to the left
-                            alpha = 0f
-                        }
-                        position <= 1 -> { // [-1,1]
-                            // Fade the page relative to its position
-                            alpha = 1 - kotlin.math.abs(position)
-
-                            // Scale the page down (between MIN_SCALE and 1)
-                            val scaleFactor = kotlin.math.max(MIN_SCALE, 1 - kotlin.math.abs(position))
-                            scaleX = scaleFactor
-                            scaleY = scaleFactor
-                        }
-                        else -> { // (1,+Infinity]
-                            // This page is way off-screen to the right
-                            alpha = 0f
-                        }
-                    }
-                }
-            }
+            // Set modern page transformer for smooth transitions
+            setPageTransformer(ModernPageTransformer())
 
             // Add page change callback
             registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
@@ -160,17 +144,63 @@ class FlashcardActivity : BaseActivity<ActivityFlashcardBinding>() {
     }
 
     private fun setupClickListeners() {
-        binding.btnBack.setOnClickListener {
-            finish()
+        binding.btnBack.setOnClickListener { view ->
+            // Animate button press
+            animateButtonPress(view) {
+                finish()
+            }
         }
+    }
+
+    private fun animateButtonPress(view: android.view.View, onComplete: () -> Unit) {
+        val scaleDown = AnimatorSet().apply {
+            playTogether(
+                ObjectAnimator.ofFloat(view, "scaleX", 1f, 0.9f),
+                ObjectAnimator.ofFloat(view, "scaleY", 1f, 0.9f)
+            )
+            duration = 100
+            interpolator = AccelerateDecelerateInterpolator()
+        }
+
+        val scaleUp = AnimatorSet().apply {
+            playTogether(
+                ObjectAnimator.ofFloat(view, "scaleX", 0.9f, 1f),
+                ObjectAnimator.ofFloat(view, "scaleY", 0.9f, 1f)
+            )
+            duration = 100
+            interpolator = OvershootInterpolator()
+        }
+
+        scaleDown.addListener(object : android.animation.AnimatorListenerAdapter() {
+            override fun onAnimationEnd(animation: android.animation.Animator) {
+                scaleUp.start()
+                onComplete()
+            }
+        })
+
+        scaleDown.start()
     }
 
     private fun updatePositionIndicator(position: Int) {
         val displayPosition = position + 1
         val totalWords = words.size
         val positionText = "$displayPosition / $totalWords"
-        binding.textPosition.text = positionText
-        binding.textPosition.contentDescription = "Flashcard $displayPosition of $totalWords"
+
+        // Animate position indicator update
+        binding.textPosition.animate()
+            .scaleX(1.1f)
+            .scaleY(1.1f)
+            .setDuration(150)
+            .withEndAction {
+                binding.textPosition.text = positionText
+                binding.textPosition.contentDescription = "Flashcard $displayPosition of $totalWords"
+                binding.textPosition.animate()
+                    .scaleX(1f)
+                    .scaleY(1f)
+                    .setDuration(150)
+                    .start()
+            }
+            .start()
     }
 
     private fun updateNavigationHints(position: Int) {
@@ -240,6 +270,68 @@ class FlashcardActivity : BaseActivity<ActivityFlashcardBinding>() {
         binding.viewPagerFlashcards.announceForAccessibility(
             "Showing flashcard ${currentIndex + 1} of ${words.size}"
         )
+    }
+
+    private fun animateInitialAppearance() {
+        // Animate top bar
+        binding.textTitle.apply {
+            alpha = 0f
+            translationY = -50f
+            animate()
+                .alpha(1f)
+                .translationY(0f)
+                .setDuration(400)
+                .setInterpolator(OvershootInterpolator())
+                .start()
+        }
+
+        binding.textPosition.apply {
+            alpha = 0f
+            scaleX = 0.5f
+            scaleY = 0.5f
+            animate()
+                .alpha(1f)
+                .scaleX(1f)
+                .scaleY(1f)
+                .setDuration(400)
+                .setStartDelay(200)
+                .setInterpolator(OvershootInterpolator())
+                .start()
+        }
+
+        // Animate ViewPager
+        binding.viewPagerFlashcards.apply {
+            alpha = 0f
+            scaleX = 0.9f
+            scaleY = 0.9f
+            animate()
+                .alpha(1f)
+                .scaleX(1f)
+                .scaleY(1f)
+                .setDuration(500)
+                .setStartDelay(300)
+                .setInterpolator(AccelerateDecelerateInterpolator())
+                .start()
+        }
+
+        // Animate bottom hints
+        val bottomHints = listOf(
+            binding.root.findViewById<android.view.View>(android.R.id.content)
+        )
+
+        // Find and animate bottom navigation hints
+        binding.root.post {
+            val bottomLayout = binding.root.getChildAt(binding.root.childCount - 1)
+            bottomLayout.alpha = 0f
+            bottomLayout.translationY = 100f
+            bottomLayout.animate()
+                .alpha(1f)
+                .translationY(0f)
+                .setDuration(400)
+                .setStartDelay(500)
+                .setInterpolator(AccelerateDecelerateInterpolator())
+                .start()
+        }
     }
 
     private fun showError(message: String) {

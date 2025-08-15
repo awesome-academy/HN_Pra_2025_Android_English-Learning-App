@@ -1,11 +1,17 @@
 package com.sun.englishlearning.screen.flashcard
 
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
+import android.view.animation.OvershootInterpolator
+import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
+import com.sun.englishlearning.R
 import com.sun.englishlearning.data.model.Word
 import com.sun.englishlearning.databinding.FragmentFlashcardBinding
 
@@ -51,6 +57,7 @@ class FlashcardFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupWordData()
         setupClickListeners()
+        animateCardAppearance()
     }
 
     private fun setupWordData() {
@@ -58,11 +65,6 @@ class FlashcardFragment : Fragment() {
             // Set word name
             textWordName.text = word.name
             textWordName.contentDescription = "English word: ${word.name}"
-
-            // Set first letter as initial
-            val initial = word.name.firstOrNull()?.toString()?.uppercase() ?: "?"
-            textWordInitial.text = initial
-            textWordInitial.contentDescription = "First letter: $initial"
 
             // Set definition
             val definition = if (word.definition.isNotEmpty()) {
@@ -110,23 +112,148 @@ class FlashcardFragment : Fragment() {
     }
 
     private fun setupClickListeners() {
-        binding.btnAudio.setOnClickListener {
-            // Provide visual feedback
-            it.animate()
-                .scaleX(0.9f)
-                .scaleY(0.9f)
-                .setDuration(100)
-                .withEndAction {
-                    it.animate()
-                        .scaleX(1.0f)
-                        .scaleY(1.0f)
-                        .setDuration(100)
-                        .start()
-                }
-                .start()
+        // Enhanced audio button with modern animations
+        binding.btnAudio.setOnClickListener { view ->
+            // Modern ripple effect with scale animation
+            animateButtonPress(view) {
+                // Get parent activity and play audio
+                (activity as? FlashcardActivity)?.playWordAudio(word)
+            }
+        }
 
-            // Get parent activity and play audio
-            (activity as? FlashcardActivity)?.playWordAudio(word)
+        // Add touch feedback to the entire card
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
+            insets
+        }
+    }
+
+    private fun animateButtonPress(view: View, onAnimationEnd: () -> Unit) {
+        val scaleDown = AnimatorSet().apply {
+            playTogether(
+                ObjectAnimator.ofFloat(view, "scaleX", 1f, 0.95f),
+                ObjectAnimator.ofFloat(view, "scaleY", 1f, 0.95f)
+            )
+            duration = 100
+            interpolator = OvershootInterpolator()
+        }
+
+        val scaleUp = AnimatorSet().apply {
+            playTogether(
+                ObjectAnimator.ofFloat(view, "scaleX", 0.95f, 1.05f),
+                ObjectAnimator.ofFloat(view, "scaleY", 0.95f, 1.05f)
+            )
+            duration = 150
+            interpolator = OvershootInterpolator()
+        }
+
+        val scaleNormal = AnimatorSet().apply {
+            playTogether(
+                ObjectAnimator.ofFloat(view, "scaleX", 1.05f, 1f),
+                ObjectAnimator.ofFloat(view, "scaleY", 1.05f, 1f)
+            )
+            duration = 100
+            interpolator = OvershootInterpolator()
+        }
+
+        scaleDown.addListener(object : android.animation.AnimatorListenerAdapter() {
+            override fun onAnimationEnd(animation: android.animation.Animator) {
+                scaleUp.start()
+                onAnimationEnd()
+            }
+        })
+
+        scaleUp.addListener(object : android.animation.AnimatorListenerAdapter() {
+            override fun onAnimationEnd(animation: android.animation.Animator) {
+                scaleNormal.start()
+            }
+        })
+
+        scaleDown.start()
+    }
+
+    private fun animateCardAppearance() {
+
+        // Animate word name with scale up
+        binding.textWordName.apply {
+            alpha = 0f
+            scaleX = 0.8f
+            scaleY = 0.8f
+            animate()
+                .alpha(1f)
+                .scaleX(1f)
+                .scaleY(1f)
+                .setDuration(400)
+                .setStartDelay(200)
+                .setInterpolator(OvershootInterpolator())
+                .start()
+        }
+
+        // Animate phonetic section
+        binding.textPhonetic.apply {
+            alpha = 0f
+            translationY = 50f
+            animate()
+                .alpha(1f)
+                .translationY(0f)
+                .setDuration(300)
+                .setStartDelay(400)
+                .start()
+        }
+
+        // Animate audio button
+        binding.btnAudio.apply {
+            alpha = 0f
+            scaleX = 0.5f
+            scaleY = 0.5f
+            animate()
+                .alpha(1f)
+                .scaleX(1f)
+                .scaleY(1f)
+                .setDuration(300)
+                .setStartDelay(500)
+                .setInterpolator(OvershootInterpolator())
+                .start()
+        }
+
+        // Animate definition section
+        binding.textDefinition.apply {
+            alpha = 0f
+            translationY = 30f
+            animate()
+                .alpha(1f)
+                .translationY(0f)
+                .setDuration(400)
+                .setStartDelay(600)
+                .start()
+        }
+
+        // Animate example section
+        binding.textExample.apply {
+            alpha = 0f
+            translationY = 30f
+            animate()
+                .alpha(1f)
+                .translationY(0f)
+                .setDuration(400)
+                .setStartDelay(700)
+                .start()
+        }
+
+        // Animate part of speech if visible
+        if (binding.textPartOfSpeech.visibility == View.VISIBLE) {
+            binding.textPartOfSpeech.apply {
+                alpha = 0f
+                scaleX = 0.8f
+                scaleY = 0.8f
+                animate()
+                    .alpha(1f)
+                    .scaleX(1f)
+                    .scaleY(1f)
+                    .setDuration(300)
+                    .setStartDelay(800)
+                    .setInterpolator(OvershootInterpolator())
+                    .start()
+            }
         }
     }
 

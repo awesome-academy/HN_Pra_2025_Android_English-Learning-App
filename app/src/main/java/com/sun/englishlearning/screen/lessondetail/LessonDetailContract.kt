@@ -14,6 +14,7 @@ interface LessonDetailContract {
         fun navigateBack()
         fun playWordSound(word: Word)
         fun showWordDetail(word: Word)
+        fun navigateToFlashcard(words: List<Word>, currentIndex: Int, lessonTitle: String)
     }
 
     interface Presenter : BasePresenter<View> {

@@ -1,5 +1,9 @@
 package com.sun.englishlearning.data.model
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class Word(
     var id: String = "",
     var name: String = "",
@@ -8,4 +12,4 @@ data class Word(
     var example: String = "",
     var phonetic: String = "",
     var partOfSpeech: String = ""
-)
+) : Parcelable

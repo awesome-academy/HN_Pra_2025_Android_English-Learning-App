@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/cardview_light_background"
+    android:orientation="vertical">
+
+    <!-- Top Bar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:elevation="@dimen/dp_4"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="@dimen/dp_16">
+
+        <!-- Back Button -->
+        <ImageView
+            android:id="@+id/btn_back"
+            android:layout_width="@dimen/dp_32"
+            android:layout_height="@dimen/dp_32"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="@dimen/dp_4"
+            android:src="@drawable/ic_arrow_back"
+            android:contentDescription="Go back to lesson"
+            app:tint="@color/lesson_title_text" />
+
+        <!-- Title -->
+        <TextView
+            android:id="@+id/text_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_16"
+            android:layout_weight="1"
+            android:fontFamily="@font/nunito_bold"
+            android:text="Flashcards"
+            android:textColor="@color/lesson_title_text"
+            android:textSize="@dimen/sp_20" />
+
+        <!-- Position Indicator -->
+        <TextView
+            android:id="@+id/text_position"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/word_count_background"
+            android:fontFamily="@font/nunito_bold"
+            android:paddingHorizontal="@dimen/dp_12"
+            android:paddingVertical="@dimen/dp_6"
+            android:textColor="@color/main_blue"
+            android:textSize="@dimen/sp_12"
+            android:contentDescription="Current flashcard position"
+            tools:text="1 / 10" />
+
+    </LinearLayout>
+
+    <!-- ViewPager2 for Flashcards -->
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/view_pager_flashcards"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:paddingHorizontal="@dimen/dp_16"
+        android:paddingVertical="@dimen/dp_20" />
+
+    <!-- Bottom Navigation Hints -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:elevation="@dimen/dp_2"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="@dimen/dp_16">
+
+        <!-- Previous Hint -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="@dimen/dp_16"
+                android:layout_height="@dimen/dp_16"
+                android:layout_marginEnd="@dimen/dp_8"
+                android:src="@drawable/ic_arrow_back"
+                app:tint="@color/lesson_subtitle_text" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/nunito_medium"
+                android:text="Swipe left"
+                android:textColor="@color/lesson_subtitle_text"
+                android:textSize="@dimen/sp_12" />
+
+        </LinearLayout>
+
+        <!-- Divider -->
+        <View
+            android:layout_width="@dimen/dp_1"
+            android:layout_height="@dimen/dp_20"
+            android:background="@color/lesson_subtitle_text"
+            android:alpha="0.3" />
+
+        <!-- Next Hint -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/nunito_medium"
+                android:text="Swipe right"
+                android:textColor="@color/lesson_subtitle_text"
+                android:textSize="@dimen/sp_12" />
+
+            <ImageView
+                android:layout_width="@dimen/dp_16"
+                android:layout_height="@dimen/dp_16"
+                android:layout_marginStart="@dimen/dp_8"
+                android:src="@drawable/ic_arrow_forward"
+                app:tint="@color/lesson_subtitle_text" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

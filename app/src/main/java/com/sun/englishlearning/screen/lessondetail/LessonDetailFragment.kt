@@ -1,6 +1,7 @@
 package com.sun.englishlearning.screen.lessondetail
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,9 +17,14 @@ import com.sun.englishlearning.databinding.FragmentLessonDetailBinding
 import com.sun.englishlearning.data.model.Lesson
 import com.sun.englishlearning.data.model.Word
 import com.sun.englishlearning.screen.lessondetail.adapter.VocabularyAdapter
+import com.sun.englishlearning.screen.flashcard.FlashcardActivity
 import androidx.fragment.app.Fragment
 
 class LessonDetailFragment : Fragment(), LessonDetailContract.View {
+
+    companion object {
+        private const val TAG = "LessonDetailFragment"
+    }
 
     private var _viewBinding: FragmentLessonDetailBinding? = null
     private val viewBinding get() = _viewBinding!!
@@ -148,5 +154,38 @@ class LessonDetailFragment : Fragment(), LessonDetailContract.View {
     override fun showWordDetail(word: Word) {
         Toast.makeText(requireContext(), "Word: ${word.name}", Toast.LENGTH_SHORT).show()
         // TODO: Implement word detail functionality
+    }
+
+    override fun navigateToFlashcard(words: List<Word>, currentIndex: Int, lessonTitle: String) {
+        try {
+            Log.d(TAG, "Navigating to flashcard: ${words.size} words, index: $currentIndex, title: $lessonTitle")
+
+            if (words.isEmpty()) {
+                Toast.makeText(requireContext(), "No vocabulary words available", Toast.LENGTH_SHORT).show()
+                return
+            }
+
+            if (currentIndex < 0 || currentIndex >= words.size) {
+                Log.w(TAG, "Invalid currentIndex: $currentIndex, using 0 instead")
+                val intent = FlashcardActivity.newIntent(
+                    context = requireContext(),
+                    words = ArrayList(words),
+                    currentIndex = 0,
+                    lessonTitle = lessonTitle
+                )
+                startActivity(intent)
+            } else {
+                val intent = FlashcardActivity.newIntent(
+                    context = requireContext(),
+                    words = ArrayList(words),
+                    currentIndex = currentIndex,
+                    lessonTitle = lessonTitle
+                )
+                startActivity(intent)
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error navigating to flashcard", e)
+            Toast.makeText(requireContext(), "Failed to open flashcard: ${e.message}", Toast.LENGTH_SHORT).show()
+        }
     }
 }

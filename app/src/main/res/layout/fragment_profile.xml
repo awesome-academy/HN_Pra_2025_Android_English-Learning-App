@@ -52,7 +52,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_4"
-            android:textColor="#858585"
+            android:textColor="@color/gray_dark"
             android:textSize="@dimen/sp_12"
             tools:text="myname@gmail.com" />
     </LinearLayout>
@@ -61,7 +61,7 @@
         android:id="@+id/divider_top"
         android:layout_width="0dp"
         android:layout_height="@dimen/dp_1"
-        android:background="#F0F0F0"
+        android:background="@color/gray_light"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/header" />
@@ -105,7 +105,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_1"
-            android:background="#F0F0F0" />
+            android:background="@color/gray_light" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -135,7 +135,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_1"
-            android:background="#F0F0F0" />
+            android:background="@color/gray_light" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -165,7 +165,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_1"
-            android:background="#F0F0F0" />
+            android:background="@color/gray_light" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -195,7 +195,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_1"
-            android:background="#F0F0F0" />
+            android:background="@color/gray_light" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -225,7 +225,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_1"
-            android:background="#F0F0F0" />
+            android:background="@color/gray_light" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -251,7 +251,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_1"
-            android:background="#F0F0F0" />
+            android:background="@color/gray_light" />
 
         <LinearLayout
             android:layout_width="match_parent"

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#fafbff"
+    android:background="@color/background_light_blue"
     tools:context=".screen.me.MeFragment">
 
     <androidx.appcompat.widget.LinearLayoutCompat
@@ -81,7 +81,7 @@
                     android:drawableStart="@drawable/ic_location"
                     android:drawablePadding="@dimen/dp_8"
                     android:fontFamily="@font/nunito_bold"
-                    android:textColor="#515960"
+                    android:textColor="@color/text_dark_gray"
                     android:textSize="@dimen/sp_12"
                     tools:text="Ha Noi" />
 
@@ -93,7 +93,7 @@
                     android:drawableStart="@drawable/closebook"
                     android:drawablePadding="@dimen/dp_8"
                     android:fontFamily="@font/nunito_bold"
-                    android:textColor="#515960"
+                    android:textColor="@color/text_dark_gray"
                     android:textSize="@dimen/sp_12"
                     tools:text="Speak English at beginner level " />
 
@@ -105,7 +105,7 @@
                     android:drawableStart="@drawable/openbook"
                     android:drawablePadding="@dimen/dp_8"
                     android:fontFamily="@font/nunito_bold"
-                    android:textColor="#515960"
+                    android:textColor="@color/text_dark_gray"
                     android:textSize="@dimen/sp_12"
                     tools:text="Learning English" />
 
@@ -179,7 +179,7 @@
                     android:drawableStart="@drawable/ic_up"
                     android:drawablePadding="@dimen/dp_8"
                     android:fontFamily="@font/nunito_bold"
-                    android:textColor="#05A660"
+                    android:textColor="@color/green_primary"
                     android:textSize="@dimen/sp_12"
                     tools:text="113"
                     app:layout_constraintTop_toBottomOf="@id/tv_percent"
@@ -206,7 +206,6 @@
                 android:textStyle="bold"
                 android:text="@string/profile_days_learned" />
 
-            <!-- Progress circles row -->
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/layout_progress_circles"
                 android:layout_width="match_parent"
@@ -215,7 +214,6 @@
                 android:gravity="center"
                 android:orientation="horizontal">
 
-                <!-- 7 items, mỗi item là FrameLayout có weight=1 và chứa 1 view tròn ở giữa -->
                 <FrameLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -323,7 +321,6 @@
                 </FrameLayout>
             </androidx.appcompat.widget.LinearLayoutCompat>
 
-            <!-- Week labels: chia đều bằng weight và căn giữa text -->
             <LinearLayout
                 android:id="@+id/layout_week_labels"
                 android:layout_width="match_parent"

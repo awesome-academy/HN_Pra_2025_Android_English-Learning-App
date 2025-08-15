@@ -9,5 +9,11 @@
     <color name="state_success">#05A660</color>
     <color name="state_info">#0063F7</color>
     <color name="success_70">#ECF9EF</color>
-</resources>
+    <color name="gray_dark">#858585</color>
+    <color name="gray_light">#F0F0F0</color>
 
+    <color name="background_light_blue">#FAFBFF</color>
+    <color name="text_dark_gray">#515960</color>
+    <color name="green_primary">#05A660</color>
+
+</resources>

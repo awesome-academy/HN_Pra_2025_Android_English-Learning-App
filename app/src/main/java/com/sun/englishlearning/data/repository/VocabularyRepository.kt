@@ -49,11 +49,4 @@ object VocabularyRepository {
             )
         )
     }
-
-    /**
-     * Check API availability
-     */
-    fun checkApiAvailability(listener: OnResultListener<Boolean>) {
-        vocabularyDataSource.checkApiAvailability(listener)
-    }
 }

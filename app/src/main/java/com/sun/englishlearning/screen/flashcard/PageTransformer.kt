@@ -5,7 +5,7 @@ import androidx.viewpager2.widget.ViewPager2
 import kotlin.math.abs
 import kotlin.math.max
 
-class ModernPageTransformer : ViewPager2.PageTransformer {
+class PageTransformer : ViewPager2.PageTransformer {
     
     companion object {
         private const val MIN_SCALE = 0.85f
@@ -22,7 +22,7 @@ class ModernPageTransformer : ViewPager2.PageTransformer {
                     scaleY = MIN_SCALE
                 }
                 position <= 1 -> { // [-1,1]
-                    // Modern card-like transformation
+                    // Card-like transformation
                     val scaleFactor = max(MIN_SCALE, 1 - abs(position))
                     val alphaFactor = max(MIN_ALPHA, 1 - abs(position))
                     

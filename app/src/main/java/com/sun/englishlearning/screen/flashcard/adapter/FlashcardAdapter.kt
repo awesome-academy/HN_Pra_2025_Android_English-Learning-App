@@ -16,8 +16,4 @@ class FlashcardAdapter(
     override fun createFragment(position: Int): Fragment {
         return FlashcardFragment.newInstance(words[position])
     }
-
-    fun getWordAt(position: Int): Word? {
-        return if (position in words.indices) words[position] else null
-    }
 }

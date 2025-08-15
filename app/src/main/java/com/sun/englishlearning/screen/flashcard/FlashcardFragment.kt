@@ -7,11 +7,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AnimationUtils
 import android.view.animation.OvershootInterpolator
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
-import com.sun.englishlearning.R
 import com.sun.englishlearning.data.model.Word
 import com.sun.englishlearning.databinding.FragmentFlashcardBinding
 
@@ -112,9 +110,7 @@ class FlashcardFragment : Fragment() {
     }
 
     private fun setupClickListeners() {
-        // Enhanced audio button with modern animations
         binding.btnAudio.setOnClickListener { view ->
-            // Modern ripple effect with scale animation
             animateButtonPress(view) {
                 // Get parent activity and play audio
                 (activity as? FlashcardActivity)?.playWordAudio(word)

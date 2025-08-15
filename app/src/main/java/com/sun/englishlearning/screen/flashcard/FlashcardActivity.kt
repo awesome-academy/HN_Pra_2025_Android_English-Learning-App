@@ -9,7 +9,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.OvershootInterpolator
-import androidx.core.view.ViewCompat
 import androidx.viewpager2.widget.ViewPager2
 import com.sun.englishlearning.data.model.Word
 import com.sun.englishlearning.databinding.ActivityFlashcardBinding
@@ -24,7 +23,6 @@ class FlashcardActivity : BaseActivity<ActivityFlashcardBinding>() {
         private const val EXTRA_WORDS = "extra_words"
         private const val EXTRA_CURRENT_INDEX = "extra_current_index"
         private const val EXTRA_LESSON_TITLE = "extra_lesson_title"
-        private const val MIN_SCALE = 0.85f
 
         fun newIntent(
             context: Context,
@@ -78,7 +76,7 @@ class FlashcardActivity : BaseActivity<ActivityFlashcardBinding>() {
     }
 
     override fun initData() {
-        // Data is initialized in initView
+
     }
 
     private fun getIntentData() {
@@ -120,8 +118,7 @@ class FlashcardActivity : BaseActivity<ActivityFlashcardBinding>() {
             // Enable smooth scrolling
             isUserInputEnabled = true
 
-            // Set modern page transformer for smooth transitions
-            setPageTransformer(ModernPageTransformer())
+            setPageTransformer(PageTransformer())
 
             // Add page change callback
             registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
@@ -204,34 +201,8 @@ class FlashcardActivity : BaseActivity<ActivityFlashcardBinding>() {
     }
 
     private fun updateNavigationHints(position: Int) {
-        // This method can be used to update navigation hints based on current position
-        // For example, disable swipe hints at first/last positions
-        val isFirstCard = position == 0
-        val isLastCard = position == words.size - 1
 
-        // You could add visual feedback here for edge cases
-        // For now, the hints remain static as they provide general guidance
     }
-
-    fun getCurrentWord(): Word? {
-        return if (currentIndex < words.size) words[currentIndex] else null
-    }
-
-    fun navigateToNext() {
-        if (currentIndex < words.size - 1) {
-            binding.viewPagerFlashcards.currentItem = currentIndex + 1
-        }
-    }
-
-    fun navigateToPrevious() {
-        if (currentIndex > 0) {
-            binding.viewPagerFlashcards.currentItem = currentIndex - 1
-        }
-    }
-
-    fun canNavigateNext(): Boolean = currentIndex < words.size - 1
-
-    fun canNavigatePrevious(): Boolean = currentIndex > 0
 
     fun playWordAudio(word: Word) {
         if (word.soundUrl.isNotEmpty()) {
@@ -240,7 +211,7 @@ class FlashcardActivity : BaseActivity<ActivityFlashcardBinding>() {
                 audioUrl = word.soundUrl,
                 listener = object : AudioManager.AudioPlaybackListener {
                     override fun onAudioStarted() {
-                        // Could add visual feedback here
+
                     }
 
                     override fun onAudioCompleted() {
@@ -248,7 +219,7 @@ class FlashcardActivity : BaseActivity<ActivityFlashcardBinding>() {
                     }
 
                     override fun onAudioError(error: String) {
-                        // Error handled by AudioManager
+
                     }
                 }
             )
@@ -313,11 +284,6 @@ class FlashcardActivity : BaseActivity<ActivityFlashcardBinding>() {
                 .setInterpolator(AccelerateDecelerateInterpolator())
                 .start()
         }
-
-        // Animate bottom hints
-        val bottomHints = listOf(
-            binding.root.findViewById<android.view.View>(android.R.id.content)
-        )
 
         // Find and animate bottom navigation hints
         binding.root.post {

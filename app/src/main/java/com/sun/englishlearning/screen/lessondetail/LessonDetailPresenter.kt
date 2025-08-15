@@ -1,8 +1,6 @@
 package com.sun.englishlearning.screen.lessondetail
 
 import android.content.Context
-import android.os.Handler
-import android.os.Looper
 import com.sun.englishlearning.data.model.Lesson
 import com.sun.englishlearning.data.model.Word
 import com.sun.englishlearning.data.repository.VocabularyRepository

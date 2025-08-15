@@ -36,7 +36,7 @@
     <string name="hang_out_with_friends">Hang out with friends</string>
     <string name="lesson_count">Lesson: %d</string>
     <string name="advanced_level">Advanced: %d</string>
-    <string name="progress_format">%d/10</string>
+    <string name="progress_format">%d/%d</string>
     <string name="suggestions_for_you">Gợi ý cho bạn</string>
     <string name="conversation_office">How to Conversation in the office with your colleagues</string>
     <string name="at_work_vocabulary">At Work vocabulary</string>

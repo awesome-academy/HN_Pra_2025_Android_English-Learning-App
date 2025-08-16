@@ -48,7 +48,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 
     override fun initView() {
         setupClickListeners()
-        updateStudyTime()
+        updateGreeting()
         setupSuggestedCourse()
         setupCoursesSection()
         
@@ -65,9 +65,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
                 startActivity(intent)
             }
 
-            btnLetsStart.setOnClickListener {
-                Toast.makeText(context, "Let's start learning!", Toast.LENGTH_SHORT).show()
-            }
 
             tvSeeAllCourses.setOnClickListener {
                 // Navigate to Courses tab
@@ -75,8 +72,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
             }
 
             tvSeeAllRecent.setOnClickListener {
-                // Navigate to view all recent lessons (could be implemented later)
-                Toast.makeText(context, "View all recent lessons", Toast.LENGTH_SHORT).show()
+                // Navigate to Courses tab
+                findNavController().navigate(R.id.navigation_courses)
             }
 
             ivRefresh.setOnClickListener {
@@ -85,8 +82,28 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
         }
     }
 
-    private fun updateStudyTime() {
-        viewBinding.tvStudyTime.text = getString(R.string.study_time_format, 2, 15)
+    private fun updateGreeting() {
+        val currentUser = auth.currentUser
+        val displayName = currentUser?.displayName
+        
+        if (displayName.isNullOrBlank()) {
+            // Fallback to email if display name is not available
+            val email = currentUser?.email
+            val userName = if (!email.isNullOrBlank()) {
+                // Extract name part from email (before @) with validation
+                val namePart = email.substringBefore("@")
+                if (namePart.isNotBlank()) {
+                    namePart.replaceFirstChar { it.uppercase() }
+                } else {
+                    "User"
+                }
+            } else {
+                "User" // Default fallback
+            }
+            viewBinding.tvGreeting.text = "Hi, $userName👋"
+        } else {
+            viewBinding.tvGreeting.text = "Hi, $displayName👋"
+        }
     }
 
     private fun setupSuggestedCourse() {
@@ -140,7 +157,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
             
             // Handle click on suggested course card
             root.setOnClickListener {
-                Toast.makeText(context, "Opening lesson: ${lesson.title}", Toast.LENGTH_SHORT).show()
+                val action = HomeFragmentDirections.actionHomeToLessonDetail(lesson)
+                findNavController().navigate(action)
             }
         }
     }
@@ -219,8 +237,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     private fun loadRecentLessons() {
         coroutineScope.launch {
             try {
+                showRecentLessonsLoading()
                 val userId = getCurrentUserId()
                 val recentLessonsResult = lessonRepository.getRecentlyLearnedLessons(userId, 2)
+                
+                hideRecentLessonsLoading()
                 
                 if (recentLessonsResult.isSuccess) {
                     val recentLessonsWithProgress = recentLessonsResult.getOrNull() ?: emptyList()
@@ -228,24 +249,46 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
                     if (recentLessonsWithProgress.isEmpty()) {
                         showEmptyRecentLessonsState()
                     } else {
+                        showRecentLessonsData()
                         updateRecentLessonsUI(recentLessonsWithProgress)
                     }
                 } else {
                     showEmptyRecentLessonsState()
                 }
             } catch (e: Exception) {
+                hideRecentLessonsLoading()
                 showEmptyRecentLessonsState()
             }
         }
     }
     
-    private fun showEmptyRecentLessonsState() {
-        // Hide both recent lesson cards
+    private fun showRecentLessonsLoading() {
+        // Show loading indicator
+        viewBinding.pbRecentLessonsLoading.visibility = View.VISIBLE
+        // Hide lesson cards and empty state
         viewBinding.cvRecentLesson1.visibility = View.GONE
         viewBinding.cvRecentLesson2.visibility = View.GONE
-        
-        // You could also show a placeholder message here if needed
-        // For now, we'll just hide the cards gracefully
+        viewBinding.llRecentLessonsEmpty.visibility = View.GONE
+    }
+    
+    private fun hideRecentLessonsLoading() {
+        viewBinding.pbRecentLessonsLoading.visibility = View.GONE
+    }
+    
+    private fun showEmptyRecentLessonsState() {
+        // Hide loading and lesson cards
+        viewBinding.pbRecentLessonsLoading.visibility = View.GONE
+        viewBinding.cvRecentLesson1.visibility = View.GONE
+        viewBinding.cvRecentLesson2.visibility = View.GONE
+        // Show empty state
+        viewBinding.llRecentLessonsEmpty.visibility = View.VISIBLE
+    }
+    
+    private fun showRecentLessonsData() {
+        // Hide loading and empty state
+        viewBinding.pbRecentLessonsLoading.visibility = View.GONE
+        viewBinding.llRecentLessonsEmpty.visibility = View.GONE
+        // Lesson cards will be shown by updateRecentLessonsUI
     }
     
     private fun updateRecentLessonsUI(recentLessons: List<Pair<Lesson, UserLessonProgress>>) {

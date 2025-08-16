@@ -41,6 +41,8 @@
     <string name="conversation_office">How to Conversation in the office with your colleagues</string>
     <string name="at_work_vocabulary">At Work vocabulary</string>
     <string name="study_time_format">%dh %dm</string>
+    <string name="recent_lessons_empty_title">Chưa có bài học gần đây</string>
+    <string name="recent_lessons_empty_subtitle">Bắt đầu học để xem tiến trình của bạn tại đây</string>
 
     <!-- Review Screen Strings -->
     <string name="your_vocabulary">Your vocabulary</string>

@@ -7,10 +7,12 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import com.bumptech.glide.Glide
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.sun.englishlearning.R
 import com.sun.englishlearning.data.model.Lesson
+import com.sun.englishlearning.data.model.UserLessonProgress
 import com.sun.englishlearning.data.repository.LessonRepository
 import com.sun.englishlearning.data.repository.LessonRepositoryImpl
 import com.sun.englishlearning.data.repository.UserLessonProgressRepository
@@ -49,6 +51,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
         updateStudyTime()
         setupSuggestedCourse()
         setupCoursesSection()
+        
     }
 
     override fun initData() {
@@ -72,7 +75,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
             }
 
             tvSeeAllRecent.setOnClickListener {
-                Toast.makeText(context, "See all recent", Toast.LENGTH_SHORT).show()
+                // Navigate to view all recent lessons (could be implemented later)
+                Toast.makeText(context, "View all recent lessons", Toast.LENGTH_SHORT).show()
             }
 
             ivRefresh.setOnClickListener {
@@ -124,7 +128,15 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
             tvCourseTitle.text = lesson.title
             tvCourseSubtitle.text = lesson.description
             // Use a default image or the lesson's image resource
-            ivCourseImage.setImageResource(if (lesson.imageRes != 0) lesson.imageRes else R.drawable.img_ob3)
+            if (lesson.imageUrl.isNotBlank()) {
+                Glide.with(this@HomeFragment)
+                    .load(lesson.imageUrl)
+                    .placeholder(R.drawable.img_ob3)
+                    .error(R.drawable.img_ob3)
+                    .into(ivCourseImage)
+            } else {
+                ivCourseImage.setImageResource(R.drawable.img_ob3)
+            }
             
             // Handle click on suggested course card
             root.setOnClickListener {
@@ -147,6 +159,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
         } else {
             // User is signed in, load the data
             loadCourseCategories()
+            loadRecentLessons()
         }
     }
     
@@ -200,6 +213,115 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
                 hideCoursesLoading()
                 Toast.makeText(context, "Something went wrong. Please check your connection and try again.", Toast.LENGTH_LONG).show()
             }
+        }
+    }
+    
+    private fun loadRecentLessons() {
+        coroutineScope.launch {
+            try {
+                val userId = getCurrentUserId()
+                val recentLessonsResult = lessonRepository.getRecentlyLearnedLessons(userId, 2)
+                
+                if (recentLessonsResult.isSuccess) {
+                    val recentLessonsWithProgress = recentLessonsResult.getOrNull() ?: emptyList()
+                    
+                    if (recentLessonsWithProgress.isEmpty()) {
+                        showEmptyRecentLessonsState()
+                    } else {
+                        updateRecentLessonsUI(recentLessonsWithProgress)
+                    }
+                } else {
+                    showEmptyRecentLessonsState()
+                }
+            } catch (e: Exception) {
+                showEmptyRecentLessonsState()
+            }
+        }
+    }
+    
+    private fun showEmptyRecentLessonsState() {
+        // Hide both recent lesson cards
+        viewBinding.cvRecentLesson1.visibility = View.GONE
+        viewBinding.cvRecentLesson2.visibility = View.GONE
+        
+        // You could also show a placeholder message here if needed
+        // For now, we'll just hide the cards gracefully
+    }
+    
+    private fun updateRecentLessonsUI(recentLessons: List<Pair<Lesson, UserLessonProgress>>) {
+        if (recentLessons.isNotEmpty()) {
+            // Update first lesson
+            val (lesson1, progress1) = recentLessons[0]
+            updateLessonCard(
+                lesson1, progress1,
+                viewBinding.cvRecentLesson1,
+                viewBinding.ivRecentLesson1,
+                viewBinding.tvRecentLesson1Title,
+                viewBinding.tvRecentLesson1Number,
+                viewBinding.tvRecentLesson1Difficulty,
+                viewBinding.tvRecentLesson1Progress
+            )
+            
+            // Update second lesson if available
+            if (recentLessons.size > 1) {
+                val (lesson2, progress2) = recentLessons[1]
+                updateLessonCard(
+                    lesson2, progress2,
+                    viewBinding.cvRecentLesson2,
+                    viewBinding.ivRecentLesson2,
+                    viewBinding.tvRecentLesson2Title,
+                    viewBinding.tvRecentLesson2Number,
+                    viewBinding.tvRecentLesson2Difficulty,
+                    viewBinding.tvRecentLesson2Progress
+                )
+            } else {
+                // Hide second card if no second lesson
+                viewBinding.cvRecentLesson2.visibility = View.GONE
+            }
+        } else {
+            // Hide both cards if no recent lessons
+            viewBinding.cvRecentLesson1.visibility = View.GONE
+            viewBinding.cvRecentLesson2.visibility = View.GONE
+        }
+    }
+    
+    private fun updateLessonCard(
+        lesson: Lesson,
+        progress: UserLessonProgress,
+        cardView: androidx.cardview.widget.CardView,
+        imageView: android.widget.ImageView,
+        titleView: android.widget.TextView,
+        numberView: android.widget.TextView,
+        difficultyView: android.widget.TextView,
+        progressView: android.widget.TextView
+    ) {
+        // Show the card
+        cardView.visibility = View.VISIBLE
+        
+        // Load lesson image
+        Glide.with(this)
+            .load(lesson.imageUrl)
+            .placeholder(R.drawable.img_ob1)
+            .error(R.drawable.img_ob1)
+            .centerCrop()
+            .into(imageView)
+        
+        // Set lesson title
+        titleView.text = lesson.title
+        
+        // Set total word count in this lesson
+        numberView.text = "${lesson.wordIds.size} words"
+        
+        // Set difficulty level and score
+        difficultyView.text = "${lesson.difficulty.name}: ${progress.bestScore}"
+        
+        // Set words learned out of total words in lesson
+        progressView.text = "${progress.wordsLearned}/${lesson.wordIds.size}"
+        
+        // Set click listener to navigate to lesson detail
+        cardView.setOnClickListener {
+            val action = HomeFragmentDirections.actionHomeToLessonDetail(lesson)
+            findNavController().navigate(action)
         }
     }
     

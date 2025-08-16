@@ -44,25 +44,19 @@ class CoursesAdapter(
             binding.apply {
                 // Set lesson title
                 textLessonTitle.text = lesson.title
-                
-                // Set lesson number
-                textLessonNumber.text = "Lesson: ${lesson.lessonNumber}"
-                
-                // Set difficulty level
-                textAdvancedLevel.text = "Level: ${lesson.difficulty.name}"
-                
-                // Set points (only show total points since current points is in UserLessonProgress)
-                textLessonPoints.text = "Total Points: ${lesson.totalPoints}"
-                
-                // Set progress from UserLessonProgress if available
+
+                // Set progress - 0% for ongoing lessons (not started yet)
                 val progress = userProgressMap[lesson.id] ?: 0
                 progressLesson.progress = progress
+
+                // Set points display
+                textLessonPoints.text = "Progress: $progress / 100 points"
 
                 // Load lesson image using Glide
                 if (lesson.imageUrl.isNotEmpty()) {
                     Glide.with(binding.root.context)
                         .load(lesson.imageUrl)
-                        .apply(RequestOptions().transform(RoundedCorners(24)))
+                        .apply(RequestOptions().transform(RoundedCorners(16)))
                         .placeholder(R.drawable.ic_launcher_background)
                         .error(R.drawable.ic_launcher_background)
                         .into(imageLesson)

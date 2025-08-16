@@ -24,23 +24,14 @@ Key Design Principles:
 ### 1. Core Content Tables
 
 
-#### `lessons`
+#### `lessons` (Simplified Structure)
 ```typescript
 {
   id: string                    // Primary key
-  courseId: string              // Optional grouping field (legacy)
-  title: string                 // Lesson title
-  lessonNumber: number          // Order/sequence number
+  name: string                  // Lesson title/name
   description: string           // Lesson description
-  duration: string              // "10 min"
-  difficulty: "EASY" | "MEDIUM" | "ADVANCED"  // Lesson difficulty level
-  totalPoints: number           // Maximum points
-  wordIds: string[]             // Foreign keys → words
-  exercises: string[]           // Exercise types
-  videoUrl: string              // Video content
-  audioUrl: string              // Audio content
-  imageUrl: string              // Lesson image
-  isActive: boolean            // Active status
+  image: string                 // Lesson image URL
+  vocabulary: string[]          // Array of vocabulary words for this lesson
   createdAt: Date              // Creation timestamp
   // Note: isStarted is computed at runtime, not stored in database
 }

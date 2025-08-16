@@ -55,7 +55,7 @@ class HomeCoursesFragment : Fragment(), HomeView {
     }
     
     private fun setupPresenter() {
-        presenter = HomePresenter(this)
+        presenter = HomePresenter(this, requireContext())
     }
     
     private fun onCategoryClicked(category: CourseCategory) {

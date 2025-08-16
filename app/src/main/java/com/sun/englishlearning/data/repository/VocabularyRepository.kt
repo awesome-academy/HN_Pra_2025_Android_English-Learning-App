@@ -102,8 +102,7 @@ class WordRepositoryImpl : WordRepository {
                 "example" to word.example,
                 "soundUrl" to word.soundUrl,
                 "imageUrl" to word.imageUrl,
-                "lessonId" to word.lessonId,
-                "difficulty" to word.difficulty
+                "lessonId" to word.lessonId
             )
             
             db.collection("words")

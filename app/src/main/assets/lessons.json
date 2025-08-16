@@ -1,24 +1,144 @@
 {
   "lessons": [
-    { "id": "1", "title": "Schools", "lessonNumber": 1, "advancedLevel": 25, "currentPoints": 85, "totalPoints": 100, "progressPercentage": 85, "imageRes": 0, "imageUrl": "https://learn.mochidemy.com/_next/image?url=https%3A%2F%2Fmochien3.1-api.mochidemy.com%2Fpublic%2Fimages%2Flesson%2FTACB_lesson_35.png&w=3840&q=75", "description": "Learn vocabulary about schools and educational institutions", "isCompleted": false },
-    { "id": "2", "title": "Examination", "lessonNumber": 2, "advancedLevel": 40, "currentPoints": 67, "totalPoints": 100, "progressPercentage": 67, "imageRes": 0, "imageUrl": "https://learn.mochidemy.com/_next/image?url=https%3A%2F%2Fmochien3.1-api.mochidemy.com%2Fpublic%2Fimages%2Flesson%2FTACB_lesson_36.png&w=3840&q=75", "description": "Vocabulary and phrases related to exams and testing", "isCompleted": false },
-    { "id": "3", "title": "Extracurricular Activities", "lessonNumber": 3, "advancedLevel": 30, "currentPoints": 42, "totalPoints": 100, "progressPercentage": 42, "imageRes": 0, "imageUrl": "https://learn.mochidemy.com/_next/image?url=https%3A%2F%2Fmochien3.1-api.mochidemy.com%2Fpublic%2Fimages%2Flesson%2FTACB_lesson_2.webp&w=256&q=70", "description": "Learn about activities outside of regular classes", "isCompleted": false },
-    { "id": "4", "title": "School Stationery", "lessonNumber": 4, "advancedLevel": 20, "currentPoints": 100, "totalPoints": 100, "progressPercentage": 100, "imageRes": 0, "imageUrl": "https://learn.mochidemy.com/_next/image?url=https%3A%2F%2Fmochien3.1-api.mochidemy.com%2Fpublic%2Fimages%2Flesson%2FTACB_lesson_31.webp&w=256&q=70", "description": "Essential school supplies and stationery items", "isCompleted": true },
-    { "id": "5", "title": "School Subjects", "lessonNumber": 5, "advancedLevel": 35, "currentPoints": 58, "totalPoints": 100, "progressPercentage": 58, "imageRes": 0, "imageUrl": "https://learn.mochidemy.com/_next/image?url=https%3A%2F%2Fmochien3.1-api.mochidemy.com%2Fpublic%2Fimages%2Flesson%2FTACB_lesson_32.webp&w=256&q=70", "description": "Different academic subjects taught in school", "isCompleted": false },
-    { "id": "6", "title": "Classroom", "lessonNumber": 6, "advancedLevel": 25, "currentPoints": 100, "totalPoints": 100, "progressPercentage": 100, "imageRes": 0, "imageUrl": "https://learn.mochidemy.com/_next/image?url=https%3A%2F%2Fmochien3.1-api.mochidemy.com%2Fpublic%2Fimages%2Flesson%2FTACB_lesson_33.webp&w=256&q=70", "description": "Classroom objects and learning environment", "isCompleted": true },
-    { "id": "7", "title": "Universities", "lessonNumber": 7, "advancedLevel": 50, "currentPoints": 29, "totalPoints": 100, "progressPercentage": 29, "imageRes": 0, "imageUrl": "https://learn.mochidemy.com/_next/image?url=https%3A%2F%2Fmochien3.1-api.mochidemy.com%2Fpublic%2Fimages%2Flesson%2FTACB_lesson_34.webp&w=256&q=70", "description": "Higher education institutions and university life", "isCompleted": false },
-    { "id": "8", "title": "Body", "lessonNumber": 8, "advancedLevel": 15, "currentPoints": 100, "totalPoints": 100, "progressPercentage": 100, "imageRes": 0, "imageUrl": "https://learn.mochidemy.com/_next/image?url=https%3A%2F%2Fmochien3.1-api.mochidemy.com%2Fpublic%2Fimages%2Flesson%2FTACB_lesson_8.webp&w=256&q=70", "description": "Parts of the human body and related vocabulary", "isCompleted": true },
-    { "id": "9", "title": "Appearance", "lessonNumber": 9, "advancedLevel": 30, "currentPoints": 51, "totalPoints": 100, "progressPercentage": 51, "imageRes": 0, "imageUrl": "https://learn.mochidemy.com/_next/image?url=https%3A%2F%2Fmochien3.1-api.mochidemy.com%2Fpublic%2Fimages%2Flesson%2FTACB_lesson_9.webp&w=256&q=70", "description": "Describing physical appearance and looks", "isCompleted": false },
-    { "id": "10", "title": "Characteristics", "lessonNumber": 10, "advancedLevel": 45, "currentPoints": 36, "totalPoints": 100, "progressPercentage": 36, "imageRes": 0, "imageUrl": "https://learn.mochidemy.com/_next/image?url=https%3A%2F%2Fmochien3.1-api.mochidemy.com%2Fpublic%2Fimages%2Flesson%2FTACB_lesson_10.webp&w=256&q=70", "description": "Personality traits and character descriptions", "isCompleted": false },
-    { "id": "11", "title": "Age", "lessonNumber": 11, "advancedLevel": 20, "currentPoints": 78, "totalPoints": 100, "progressPercentage": 78, "imageRes": 0, "imageUrl": "https://learn.mochidemy.com/_next/image?url=https%3A%2F%2Fmochien3.1-api.mochidemy.com%2Fpublic%2Fimages%2Flesson%2FTACB_lesson_11.webp&w=256&q=70", "description": "Age-related vocabulary and expressions", "isCompleted": false },
-    { "id": "12", "title": "Feelings", "lessonNumber": 12, "advancedLevel": 35, "currentPoints": 92, "totalPoints": 100, "progressPercentage": 92, "imageRes": 0, "imageUrl": "https://learn.mochidemy.com/_next/image?url=https%3A%2F%2Fmochien3.1-api.mochidemy.com%2Fpublic%2Fimages%2Flesson%2FTACB_lesson_12.webp&w=256&q=70", "description": "Emotions and feelings vocabulary", "isCompleted": false },
-    { "id": "13", "title": "Family", "lessonNumber": 13, "advancedLevel": 25, "currentPoints": 100, "totalPoints": 100, "progressPercentage": 100, "imageRes": 0, "imageUrl": "https://learn.mochidemy.com/_next/image?url=https%3A%2F%2Fmochien3.1-api.mochidemy.com%2Fpublic%2Fimages%2Flesson%2FTACB_lesson_13.webp&w=256&q=70", "description": "Family members and relationships", "isCompleted": true },
-    { "id": "14", "title": "Relationships", "lessonNumber": 14, "advancedLevel": 40, "currentPoints": 63, "totalPoints": 100, "progressPercentage": 63, "imageRes": 0, "imageUrl": "https://learn.mochidemy.com/_next/image?url=https%3A%2F%2Fmochien3.1-api.mochidemy.com%2Fpublic%2Fimages%2Flesson%2FTACB_lesson_14.webp&w=256&q=70", "description": "Different types of relationships and social connections", "isCompleted": false },
-    { "id": "15", "title": "Colours", "lessonNumber": 15, "advancedLevel": 15, "currentPoints": 100, "totalPoints": 100, "progressPercentage": 100, "imageRes": 0, "imageUrl": "https://learn.mochidemy.com/_next/image?url=https%3A%2F%2Fmochien3.1-api.mochidemy.com%2Fpublic%2Fimages%2Flesson%2FTACB_lesson_6.webp&w=256&q=70", "description": "Basic colors and color-related vocabulary", "isCompleted": true },
-    { "id": "16", "title": "Shapes", "lessonNumber": 16, "advancedLevel": 20, "currentPoints": 87, "totalPoints": 100, "progressPercentage": 87, "imageRes": 0, "imageUrl": "https://learn.mochidemy.com/_next/image?url=https%3A%2F%2Fmochien3.1-api.mochidemy.com%2Fpublic%2Fimages%2Flesson%2FTACB_lesson_7.webp&w=256&q=70", "description": "Geometric shapes and form descriptions", "isCompleted": false },
-    { "id": "17", "title": "Numbers", "lessonNumber": 17, "advancedLevel": 10, "currentPoints": 100, "totalPoints": 100, "progressPercentage": 100, "imageRes": 0, "imageUrl": "https://learn.mochidemy.com/_next/image?url=https%3A%2F%2Fmochien3.1-api.mochidemy.com%2Fpublic%2Fimages%2Flesson%2FTACB_lesson_17.webp&w=256&q=70", "description": "Cardinal numbers and counting", "isCompleted": true },
-    { "id": "18", "title": "Ordinal Numbers", "lessonNumber": 18, "advancedLevel": 25, "currentPoints": 44, "totalPoints": 100, "progressPercentage": 44, "imageRes": 0, "imageUrl": "https://learn.mochidemy.com/_next/image?url=https%3A%2F%2Fmochien3.1-api.mochidemy.com%2Fpublic%2Fimages%2Flesson%2FTACB_lesson_37.webp&w=256&q=70", "description": "First, second, third and other ordinal numbers", "isCompleted": false },
-    { "id": "19", "title": "Days in a week", "lessonNumber": 19, "advancedLevel": 15, "currentPoints": 100, "totalPoints": 100, "progressPercentage": 100, "imageRes": 0, "imageUrl": "https://learn.mochidemy.com/_next/image?url=https%3A%2F%2Fmochien3.1-api.mochidemy.com%2Fpublic%2Fimages%2Flesson%2FTACB_lesson_95.webp&w=256&q=70", "description": "Days of the week and weekly schedule", "isCompleted": true },
-    { "id": "20", "title": "Talking about time", "lessonNumber": 20, "advancedLevel": 30, "currentPoints": 72, "totalPoints": 100, "progressPercentage": 72, "imageRes": 0, "imageUrl": "https://learn.mochidemy.com/_next/image?url=https%3A%2F%2Fmochien3.1-api.mochidemy.com%2Fpublic%2Fimages%2Flesson%2FTACB_lesson_4.webp&w=256&q=70", "description": "Time expressions and talking about time", "isCompleted": false }
+    {
+      "id": "1",
+      "title": "Schools",
+      "description": "Learn vocabulary about schools and educational institutions",
+      "imageUrl": "https://learn.mochidemy.com/_next/image?url=https%3A%2F%2Fmochien3.1-api.mochidemy.com%2Fpublic%2Fimages%2Flesson%2FTACB_lesson_35.png&w=3840&q=75",
+      "vocabulary": ["school", "teacher", "student", "classroom", "homework", "lesson", "education", "principal", "library", "cafeteria"]
+    },
+    {
+      "id": "2",
+      "title": "Examination",
+      "description": "Vocabulary and phrases related to exams and testing",
+      "imageUrl": "https://learn.mochidemy.com/_next/image?url=https%3A%2F%2Fmochien3.1-api.mochidemy.com%2Fpublic%2Fimages%2Flesson%2FTACB_lesson_36.png&w=3840&q=75",
+      "vocabulary": ["exam", "test", "quiz", "grade", "score", "study", "review", "answer", "question", "certificate"]
+    },
+    {
+      "id": "3",
+      "title": "Extracurricular Activities",
+      "description": "Learn about activities outside of regular classes",
+      "imageUrl": "https://learn.mochidemy.com/_next/image?url=https%3A%2F%2Fmochien3.1-api.mochidemy.com%2Fpublic%2Fimages%2Flesson%2FTACB_lesson_2.webp&w=256&q=70",
+      "vocabulary": ["club", "sports", "music", "drama", "competition", "tournament", "practice", "performance", "team", "activity"]
+    },
+    {
+      "id": "4",
+      "title": "School Stationery",
+      "description": "Essential school supplies and stationery items",
+      "imageUrl": "https://learn.mochidemy.com/_next/image?url=https%3A%2F%2Fmochien3.1-api.mochidemy.com%2Fpublic%2Fimages%2Flesson%2FTACB_lesson_31.webp&w=256&q=70",
+      "vocabulary": ["pen", "pencil", "notebook", "eraser", "ruler", "book", "paper", "calculator", "backpack", "scissors"]
+    },
+    {
+      "id": "5",
+      "title": "School Subjects",
+      "description": "Different academic subjects taught in school",
+      "imageUrl": "https://learn.mochidemy.com/_next/image?url=https%3A%2F%2Fmochien3.1-api.mochidemy.com%2Fpublic%2Fimages%2Flesson%2FTACB_lesson_32.webp&w=256&q=70",
+      "vocabulary": ["mathematics", "science", "history", "geography", "literature", "physics", "chemistry", "biology", "art", "music"]
+    },
+    {
+      "id": "6",
+      "title": "Classroom",
+      "description": "Classroom objects and learning environment",
+      "imageUrl": "https://learn.mochidemy.com/_next/image?url=https%3A%2F%2Fmochien3.1-api.mochidemy.com%2Fpublic%2Fimages%2Flesson%2FTACB_lesson_33.webp&w=256&q=70",
+      "vocabulary": ["desk", "chair", "blackboard", "whiteboard", "window", "door", "ceiling", "floor", "wall", "projector"]
+    },
+    {
+      "id": "7",
+      "title": "Universities",
+      "description": "Higher education institutions and university life",
+      "imageUrl": "https://learn.mochidemy.com/_next/image?url=https%3A%2F%2Fmochien3.1-api.mochidemy.com%2Fpublic%2Fimages%2Flesson%2FTACB_lesson_34.webp&w=256&q=70",
+      "vocabulary": ["university", "college", "professor", "degree", "campus", "lecture", "semester", "dormitory", "graduation", "research"]
+    },
+    {
+      "id": "8",
+      "title": "Body",
+      "description": "Parts of the human body and related vocabulary",
+      "imageUrl": "https://learn.mochidemy.com/_next/image?url=https%3A%2F%2Fmochien3.1-api.mochidemy.com%2Fpublic%2Fimages%2Flesson%2FTACB_lesson_8.webp&w=256&q=70",
+      "vocabulary": ["head", "hand", "foot", "eye", "ear", "nose", "mouth", "arm", "leg", "finger"]
+    },
+    {
+      "id": "9",
+      "title": "Appearance",
+      "description": "Describing physical appearance and looks",
+      "imageUrl": "https://learn.mochidemy.com/_next/image?url=https%3A%2F%2Fmochien3.1-api.mochidemy.com%2Fpublic%2Fimages%2Flesson%2FTACB_lesson_9.webp&w=256&q=70",
+      "vocabulary": ["tall", "short", "beautiful", "handsome", "pretty", "ugly", "thin", "fat", "young", "old"]
+    },
+    {
+      "id": "10",
+      "title": "Characteristics",
+      "description": "Personality traits and character descriptions",
+      "imageUrl": "https://learn.mochidemy.com/_next/image?url=https%3A%2F%2Fmochien3.1-api.mochidemy.com%2Fpublic%2Fimages%2Flesson%2FTACB_lesson_10.webp&w=256&q=70",
+      "vocabulary": ["kind", "smart", "funny", "brave", "honest", "friendly", "polite", "generous", "patient", "creative"]
+    },
+    {
+      "id": "11",
+      "title": "Age",
+      "description": "Age-related vocabulary and expressions",
+      "imageUrl": "https://learn.mochidemy.com/_next/image?url=https%3A%2F%2Fmochien3.1-api.mochidemy.com%2Fpublic%2Fimages%2Flesson%2FTACB_lesson_11.webp&w=256&q=70",
+      "vocabulary": ["young", "old", "baby", "child", "teenager", "adult", "elderly", "middle-aged", "infant", "senior"]
+    },
+    {
+      "id": "12",
+      "title": "Feelings",
+      "description": "Emotions and feelings vocabulary",
+      "imageUrl": "https://learn.mochidemy.com/_next/image?url=https%3A%2F%2Fmochien3.1-api.mochidemy.com%2Fpublic%2Fimages%2Flesson%2FTACB_lesson_12.webp&w=256&q=70",
+      "vocabulary": ["happy", "sad", "angry", "excited", "worried", "surprised", "scared", "proud", "jealous", "confused"]
+    },
+    {
+      "id": "13",
+      "title": "Family",
+      "description": "Family members and relationships",
+      "imageUrl": "https://learn.mochidemy.com/_next/image?url=https%3A%2F%2Fmochien3.1-api.mochidemy.com%2Fpublic%2Fimages%2Flesson%2FTACB_lesson_13.webp&w=256&q=70",
+      "vocabulary": ["mother", "father", "sister", "brother", "grandmother", "grandfather", "aunt", "uncle", "cousin", "parent"]
+    },
+    {
+      "id": "14",
+      "title": "Relationships",
+      "description": "Different types of relationships and social connections",
+      "imageUrl": "https://learn.mochidemy.com/_next/image?url=https%3A%2F%2Fmochien3.1-api.mochidemy.com%2Fpublic%2Fimages%2Flesson%2FTACB_lesson_14.webp&w=256&q=70",
+      "vocabulary": ["friend", "neighbor", "colleague", "classmate", "partner", "boyfriend", "girlfriend", "husband", "wife", "acquaintance"]
+    },
+    {
+      "id": "15",
+      "title": "Colours",
+      "description": "Basic colors and color-related vocabulary",
+      "imageUrl": "https://learn.mochidemy.com/_next/image?url=https%3A%2F%2Fmochien3.1-api.mochidemy.com%2Fpublic%2Fimages%2Flesson%2FTACB_lesson_6.webp&w=256&q=70",
+      "vocabulary": ["red", "blue", "green", "yellow", "black", "white", "purple", "orange", "pink", "brown"]
+    },
+    {
+      "id": "16",
+      "title": "Shapes",
+      "description": "Geometric shapes and form descriptions",
+      "imageUrl": "https://learn.mochidemy.com/_next/image?url=https%3A%2F%2Fmochien3.1-api.mochidemy.com%2Fpublic%2Fimages%2Flesson%2FTACB_lesson_7.webp&w=256&q=70",
+      "vocabulary": ["circle", "square", "triangle", "rectangle", "oval", "diamond", "star", "heart", "pentagon", "hexagon"]
+    },
+    {
+      "id": "17",
+      "title": "Numbers",
+      "description": "Cardinal numbers and counting",
+      "imageUrl": "https://learn.mochidemy.com/_next/image?url=https%3A%2F%2Fmochien3.1-api.mochidemy.com%2Fpublic%2Fimages%2Flesson%2FTACB_lesson_17.webp&w=256&q=70",
+      "vocabulary": ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"]
+    },
+    {
+      "id": "18",
+      "title": "Ordinal Numbers",
+      "description": "First, second, third and other ordinal numbers",
+      "imageUrl": "https://learn.mochidemy.com/_next/image?url=https%3A%2F%2Fmochien3.1-api.mochidemy.com%2Fpublic%2Fimages%2Flesson%2FTACB_lesson_37.webp&w=256&q=70",
+      "vocabulary": ["first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth", "ninth", "tenth"]
+    },
+    {
+      "id": "19",
+      "title": "Days in a week",
+      "description": "Days of the week and weekly schedule",
+      "imageUrl": "https://learn.mochidemy.com/_next/image?url=https%3A%2F%2Fmochien3.1-api.mochidemy.com%2Fpublic%2Fimages%2Flesson%2FTACB_lesson_95.webp&w=256&q=70",
+      "vocabulary": ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday", "weekday", "weekend", "week"]
+    },
+    {
+      "id": "20",
+      "title": "Talking about time",
+      "description": "Time expressions and talking about time",
+      "imageUrl": "https://learn.mochidemy.com/_next/image?url=https%3A%2F%2Fmochien3.1-api.mochidemy.com%2Fpublic%2Fimages%2Flesson%2FTACB_lesson_4.webp&w=256&q=70",
+      "vocabulary": ["hour", "minute", "second", "morning", "afternoon", "evening", "night", "today", "yesterday", "tomorrow"]
+    }
   ]
 }

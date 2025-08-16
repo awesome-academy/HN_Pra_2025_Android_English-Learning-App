@@ -14,6 +14,5 @@ data class Word(
     val example: String = "",
     val soundUrl: String = "",
     val imageUrl: String = "",
-    val lessonId: String = "",
-    val difficulty: String = "easy"
+    val lessonId: String = ""
 ) : Parcelable

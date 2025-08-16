@@ -14,11 +14,11 @@ object JsonUtils {
     /**
      * Read JSON file from assets and parse it to List<Lesson>
      */
-    fun loadLessonsFromAssets(context: Context, fileName: String = "lessons.json"): List<Lesson> {
+    fun loadLessonsFromAssets(context: Context?, fileName: String = "lessons.json"): List<Lesson> {
         return try {
             Log.d(TAG, "Loading lessons from assets: $fileName")
 
-            val jsonString = loadJsonFromAssets(context, fileName)
+            val jsonString = loadJsonFromAssets(context!!, fileName)
             if (jsonString.isEmpty()) {
                 Log.e(TAG, "JSON string is empty")
                 return emptyList()
@@ -65,11 +65,11 @@ object JsonUtils {
                 val lesson = Lesson(
                     id = lessonJson.getString("id"),
                     title = lessonJson.getString("title"),
-                    lessonNumber = lessonJson.getInt("lessonNumber"),
-                    description = lessonJson.optString("description", ""),
-                    totalPoints = lessonJson.getInt("totalPoints"),
-                    imageRes = lessonJson.optInt("imageRes", 0),
-                    imageUrl = lessonJson.optString("imageUrl", "")
+                    description = lessonJson.getString("description"),
+                    imageUrl = lessonJson.getString("imageUrl"),
+                    vocabulary = lessonJson.getJSONArray("vocabulary").run {
+                        (0 until length()).map { getString(it) }
+                    }
                 )
                 lessons.add(lesson)
             }

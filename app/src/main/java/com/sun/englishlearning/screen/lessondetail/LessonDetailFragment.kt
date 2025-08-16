@@ -112,9 +112,7 @@ class LessonDetailFragment : Fragment(), LessonDetailContract.View {
             textLessonTitle.text = lesson.title
 
             // Set lesson details
-            textLessonNumber.text = "Lesson: ${lesson.lessonNumber}"
-            textAdvancedLevel.text = "Level: ${lesson.difficulty.name}"
-            textLessonPoints.text = "Total Points: ${lesson.totalPoints}"
+            textLessonPoints.text = "Topic: ${lesson.title}"
             textLessonDescription.text = lesson.description
 
             // Set progress using UserLessonProgress if available

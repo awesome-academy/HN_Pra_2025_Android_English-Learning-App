@@ -31,7 +31,7 @@ import kotlinx.coroutines.launch
 class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 
     private val userProgressRepository: UserLessonProgressRepository = UserLessonProgressRepositoryImpl()
-    private val lessonRepository: LessonRepository = LessonRepositoryImpl(userProgressRepository)
+    private lateinit var lessonRepository: LessonRepository
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
     private var suggestedLessons: List<Lesson> = emptyList()
     private var currentSuggestedIndex = 0
@@ -47,11 +47,13 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     }
 
     override fun initView() {
+        // Initialize lesson repository with context
+        lessonRepository = LessonRepositoryImpl(requireContext(), userProgressRepository)
+
         setupClickListeners()
         updateGreeting()
         setupSuggestedCourse()
         setupCoursesSection()
-        
     }
 
     override fun initData() {
@@ -85,7 +87,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     private fun updateGreeting() {
         val currentUser = auth.currentUser
         val displayName = currentUser?.displayName
-        
+
         if (displayName.isNullOrBlank()) {
             // Fallback to email if display name is not available
             val email = currentUser?.email
@@ -240,12 +242,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
                 showRecentLessonsLoading()
                 val userId = getCurrentUserId()
                 val recentLessonsResult = lessonRepository.getRecentlyLearnedLessons(userId, 2)
-                
+
                 hideRecentLessonsLoading()
-                
+
                 if (recentLessonsResult.isSuccess) {
                     val recentLessonsWithProgress = recentLessonsResult.getOrNull() ?: emptyList()
-                    
+
                     if (recentLessonsWithProgress.isEmpty()) {
                         showEmptyRecentLessonsState()
                     } else {
@@ -261,7 +263,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
             }
         }
     }
-    
+
     private fun showRecentLessonsLoading() {
         // Show loading indicator
         viewBinding.pbRecentLessonsLoading.visibility = View.VISIBLE
@@ -270,11 +272,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
         viewBinding.cvRecentLesson2.visibility = View.GONE
         viewBinding.llRecentLessonsEmpty.visibility = View.GONE
     }
-    
+
     private fun hideRecentLessonsLoading() {
         viewBinding.pbRecentLessonsLoading.visibility = View.GONE
     }
-    
+
     private fun showEmptyRecentLessonsState() {
         // Hide loading and lesson cards
         viewBinding.pbRecentLessonsLoading.visibility = View.GONE
@@ -283,14 +285,14 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
         // Show empty state
         viewBinding.llRecentLessonsEmpty.visibility = View.VISIBLE
     }
-    
+
     private fun showRecentLessonsData() {
         // Hide loading and empty state
         viewBinding.pbRecentLessonsLoading.visibility = View.GONE
         viewBinding.llRecentLessonsEmpty.visibility = View.GONE
         // Lesson cards will be shown by updateRecentLessonsUI
     }
-    
+
     private fun updateRecentLessonsUI(recentLessons: List<Pair<Lesson, UserLessonProgress>>) {
         if (recentLessons.isNotEmpty()) {
             // Update first lesson
@@ -304,7 +306,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
                 viewBinding.tvRecentLesson1Difficulty,
                 viewBinding.tvRecentLesson1Progress
             )
-            
+
             // Update second lesson if available
             if (recentLessons.size > 1) {
                 val (lesson2, progress2) = recentLessons[1]
@@ -327,7 +329,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
             viewBinding.cvRecentLesson2.visibility = View.GONE
         }
     }
-    
+
     private fun updateLessonCard(
         lesson: Lesson,
         progress: UserLessonProgress,
@@ -340,7 +342,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     ) {
         // Show the card
         cardView.visibility = View.VISIBLE
-        
+
         // Load lesson image
         Glide.with(this)
             .load(lesson.imageUrl)
@@ -348,26 +350,26 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
             .error(R.drawable.img_ob1)
             .centerCrop()
             .into(imageView)
-        
+
         // Set lesson title
         titleView.text = lesson.title
-        
+
         // Set total word count in this lesson
-        numberView.text = "${lesson.wordIds.size} words"
-        
-        // Set difficulty level and score
-        difficultyView.text = "${lesson.difficulty.name}: ${progress.bestScore}"
-        
+        numberView.text = "${lesson.vocabulary.size} words"
+
+        // Set lesson info and score
+        difficultyView.text = "Score: ${progress.bestScore}"
+
         // Set words learned out of total words in lesson
-        progressView.text = "${progress.wordsLearned}/${lesson.wordIds.size}"
-        
+        progressView.text = "${progress.wordsLearned}/${lesson.vocabulary.size}"
+
         // Set click listener to navigate to lesson detail
         cardView.setOnClickListener {
             val action = HomeFragmentDirections.actionHomeToLessonDetail(lesson)
             findNavController().navigate(action)
         }
     }
-    
+
     private fun createCategoriesFromLessons(lessons: List<Lesson>): List<CourseCategory> {
         // Create categories directly from lessons using their title and imageUrl
         return lessons.take(3).map { lesson ->

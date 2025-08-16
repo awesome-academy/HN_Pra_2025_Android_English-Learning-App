@@ -49,14 +49,23 @@ class CoursesPresenter : CoursesContract.Presenter {
         view?.showLoading()
         coroutineScope.launch {
             try {
-                // For now, get all lessons and filter for completed ones
+                // Get all lessons and filter for completed ones using UserLessonProgress
                 val lessonsResult = lessonRepository.getAllLessons()
                 if (lessonsResult.isSuccess) {
                     val lessons = lessonsResult.getOrNull() ?: emptyList()
-                    // TODO: Add logic to check completion status from UserLessonProgress
-                    val completedLessons = emptyList<Lesson>() // Placeholder
-                    view?.hideLoading()
-                    view?.showCompletedLessons(completedLessons)
+                    val userId = getCurrentUserId()
+                    val completedProgressResult = userProgressRepository.getCompletedLessons(userId)
+                    
+                    if (completedProgressResult.isSuccess) {
+                        val completedProgress = completedProgressResult.getOrNull() ?: emptyList()
+                        val completedLessonIds = completedProgress.map { it.lessonId }.toSet()
+                        val completedLessons = lessons.filter { it.id in completedLessonIds }
+                        view?.hideLoading()
+                        view?.showCompletedLessons(completedLessons)
+                    } else {
+                        view?.hideLoading()
+                        view?.showCompletedLessons(emptyList())
+                    }
                 } else {
                     view?.hideLoading()
                     view?.showError("Error loading completed lessons")
@@ -107,5 +116,11 @@ class CoursesPresenter : CoursesContract.Presenter {
 
     override fun onStop() {
 
+    }
+    
+    private fun getCurrentUserId(): String {
+        // TODO: Implement proper user identification logic
+        // This could come from SharedPreferences, Firebase Auth, or session management
+        return "user_${System.currentTimeMillis() % 1000}" // Temporary placeholder
     }
 }

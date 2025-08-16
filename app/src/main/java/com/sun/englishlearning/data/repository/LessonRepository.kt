@@ -141,9 +141,27 @@ class LessonRepositoryImpl(
 
     override suspend fun updateLesson(lesson: Lesson): Result<Unit> {
         return try {
+            val lessonMap = mapOf(
+                "courseId" to lesson.courseId,
+                "title" to lesson.title,
+                "lessonNumber" to lesson.lessonNumber,
+                "description" to lesson.description,
+                "duration" to lesson.duration,
+                "difficulty" to lesson.difficulty.name,
+                "totalPoints" to lesson.totalPoints,
+                "wordIds" to lesson.wordIds,
+                "exercises" to lesson.exercises,
+                "videoUrl" to lesson.videoUrl,
+                "audioUrl" to lesson.audioUrl,
+                "imageRes" to lesson.imageRes,
+                "imageUrl" to lesson.imageUrl,
+                "isActive" to lesson.isActive,
+                "createdAt" to lesson.createdAt
+            )
+            
             db.collection("lessons")
                 .document(lesson.id)
-                .set(lesson.copy(isStarted = false)) // Don't store isStarted status
+                .update(lessonMap)
                 .await()
             Result.success(Unit)
         } catch (e: Exception) {

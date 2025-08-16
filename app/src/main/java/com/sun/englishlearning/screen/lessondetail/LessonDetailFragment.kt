@@ -116,8 +116,8 @@ class LessonDetailFragment : Fragment(), LessonDetailContract.View {
             textLessonPoints.text = "Total Points: ${lesson.totalPoints}"
             textLessonDescription.text = lesson.description
 
-            // Set progress (placeholder since progress is in UserLessonProgress)
-            progressLesson.progress = 0
+            // Set progress using UserLessonProgress if available
+            loadUserProgress(lesson.id)
 
             // Load lesson image
             if (lesson.imageUrl.isNotEmpty()) {
@@ -187,5 +187,11 @@ class LessonDetailFragment : Fragment(), LessonDetailContract.View {
             Log.e(TAG, "Error navigating to flashcard", e)
             Toast.makeText(requireContext(), "Failed to open flashcard: ${e.message}", Toast.LENGTH_SHORT).show()
         }
+    }
+    
+    private fun loadUserProgress(lessonId: String) {
+        // TODO: Implement actual user progress loading
+        // For now, set a placeholder progress
+        viewBinding.progressLesson.progress = 25 // 25% as example
     }
 }

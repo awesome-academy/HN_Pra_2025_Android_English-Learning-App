@@ -76,7 +76,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
         coroutineScope.launch {
             try {
                 // Get lessons that user has not started (suggested lessons)
-                val lessonsResult = lessonRepository.getSuggestedLessons("dummy_user_id") // TODO: Get actual user ID
+                val userId = getCurrentUserId()
+                val lessonsResult = lessonRepository.getSuggestedLessons(userId)
                 if (lessonsResult.isSuccess) {
                     suggestedLessons = lessonsResult.getOrNull() ?: emptyList()
                     if (suggestedLessons.isNotEmpty()) {
@@ -113,6 +114,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
                 Toast.makeText(context, "Opening lesson: ${lesson.title}", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+    
+    private fun getCurrentUserId(): String {
+        // TODO: Implement proper user identification logic
+        // This could come from SharedPreferences, Firebase Auth, or session management
+        return "user_${System.currentTimeMillis() % 1000}" // Temporary placeholder
     }
 
 }

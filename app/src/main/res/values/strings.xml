@@ -46,7 +46,7 @@
 
     <!-- Review Screen Strings -->
     <string name="your_vocabulary">Your vocabulary</string>
-    <string name="week_words">Week words</string>
+    <string name="weak_words">Weak words</string>
     <string name="today_words">Today words</string>
     <string name="medium_words">Medium words</string>
     <string name="strong_words">Strong words</string>

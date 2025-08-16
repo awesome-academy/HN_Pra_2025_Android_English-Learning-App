@@ -2,6 +2,7 @@ package com.sun.englishlearning.screen.savedwords
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.sun.englishlearning.data.model.SavedWord
 import com.sun.englishlearning.databinding.ItemSavedWordBinding
@@ -13,7 +14,7 @@ class SavedWordsAdapter(
 
     enum class Action {
         PLAY_SOUND,
-        TOGGLE_FAVORITE
+        REMOVE_WORD
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SavedWordViewHolder {
@@ -43,12 +44,9 @@ class SavedWordsAdapter(
                     onAction(savedWord, Action.PLAY_SOUND)
                 }
                 
-                ivFavorite.setOnClickListener {
-                    onAction(savedWord, Action.TOGGLE_FAVORITE)
+                btnRemoveWord.setOnClickListener {
+                    onAction(savedWord, Action.REMOVE_WORD)
                 }
-                
-                // TODO: Set favorite visual state when isFavorite property is added to SavedWord model
-                ivFavorite.alpha = 0.5f
             }
         }
     }

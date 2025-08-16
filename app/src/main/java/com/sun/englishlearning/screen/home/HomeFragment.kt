@@ -140,7 +140,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
             
             // Handle click on suggested course card
             root.setOnClickListener {
-                Toast.makeText(context, "Opening lesson: ${lesson.title}", Toast.LENGTH_SHORT).show()
+                val action = HomeFragmentDirections.actionHomeToLessonDetail(lesson)
+                findNavController().navigate(action)
             }
         }
     }

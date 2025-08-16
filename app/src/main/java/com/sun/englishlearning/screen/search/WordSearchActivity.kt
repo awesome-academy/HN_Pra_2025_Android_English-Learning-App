@@ -108,7 +108,6 @@ class WordSearchActivity : BaseActivity<ActivityWordSearchBinding>() {
             tvIpa.text = result.ipa
             tvPartOfSpeech.text = result.partOfSpeech
             tvDefinition.text = result.definition
-            tvExample.text = "\"${result.example}\""
 
             updateFavoriteButton(result.isFavorite)
         }

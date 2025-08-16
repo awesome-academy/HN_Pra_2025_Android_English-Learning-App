@@ -5,6 +5,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.sun.englishlearning.data.model.Lesson
+import com.sun.englishlearning.data.model.UserLessonProgress
 import com.sun.englishlearning.utils.JsonUtils
 import kotlinx.coroutines.tasks.await
 

@@ -355,13 +355,13 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
         titleView.text = lesson.title
 
         // Set total word count in this lesson
-        numberView.text = "${lesson.wordIds.size} words"
+        numberView.text = "${lesson.vocabulary.size} words"
 
-        // Set difficulty level and score
-        difficultyView.text = "${lesson.difficulty.name}: ${progress.bestScore}"
+        // Set lesson info and score
+        difficultyView.text = "Score: ${progress.bestScore}"
 
         // Set words learned out of total words in lesson
-        progressView.text = "${progress.wordsLearned}/${lesson.wordIds.size}"
+        progressView.text = "${progress.wordsLearned}/${lesson.vocabulary.size}"
 
         // Set click listener to navigate to lesson detail
         cardView.setOnClickListener {

@@ -17,23 +17,24 @@ class CoursesPresenter : CoursesContract.Presenter {
     private var context: Context? = null
     private var isOngoingTabSelected = true
     private val userProgressRepository: UserLessonProgressRepository = UserLessonProgressRepositoryImpl()
-    private val lessonRepository: LessonRepository = LessonRepositoryImpl(userProgressRepository)
+    private var lessonRepository: LessonRepository? = null
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
     fun setContext(context: Context) {
         this.context = context
-        lessonRepository = LessonRepositoryImpl(context, UserLessonProgressRepositoryImpl())
+        lessonRepository = LessonRepositoryImpl(context, userProgressRepository)
     }
 
     override fun loadOngoingLessons() {
         view?.showLoading()
         coroutineScope.launch {
+            // Use lessonRepository safely
+            val repo = lessonRepository ?: return@launch
             try {
                 // For now, get all lessons and filter for started ones
-                val lessonsResult = lessonRepository.getAllLessons()
+                val lessonsResult = repo.getAllLessons()
                 if (lessonsResult.isSuccess) {
                     val lessons = lessonsResult.getOrNull() ?: emptyList()
-                    val ongoingLessons = lessons.filter { it.isStarted }
                     view?.hideLoading()
                     view?.showOngoingLessons(lessons)
                 } else {

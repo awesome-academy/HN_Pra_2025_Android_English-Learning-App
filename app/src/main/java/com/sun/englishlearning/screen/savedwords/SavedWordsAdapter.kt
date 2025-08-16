@@ -44,15 +44,9 @@ class SavedWordsAdapter(
                     onAction(savedWord, Action.PLAY_SOUND)
                 }
                 
-                ivFavorite.setOnClickListener {
+                btnRemoveWord.setOnClickListener {
                     onAction(savedWord, Action.REMOVE_WORD)
                 }
-                
-                // Set as delete/remove icon (red color to indicate remove action)
-                ivFavorite.setColorFilter(
-                    ContextCompat.getColor(binding.root.context, android.R.color.holo_red_dark)
-                )
-                ivFavorite.alpha = 1.0f
             }
         }
     }

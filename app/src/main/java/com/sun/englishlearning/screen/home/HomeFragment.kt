@@ -139,8 +139,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     
     private fun checkAuthenticationAndLoadData() {
         val currentUser = auth.currentUser
-        println("HomeFragment: Checking authentication - User: ${currentUser?.uid}")
-        Toast.makeText(context, "Auth check: ${if (currentUser != null) "Logged in" else "Not logged in"}", Toast.LENGTH_SHORT).show()
         
         if (currentUser == null) {
             // User is not signed in, show message and redirect to login
@@ -148,7 +146,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
             redirectToLogin()
         } else {
             // User is signed in, load the data
-            println("HomeFragment: User authenticated, calling loadCourseCategories()")
             loadCourseCategories()
         }
     }
@@ -161,7 +158,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     }
     
     private fun setupCoursesSection() {
-        println("HomeFragment: Setting up courses section...")
         coursesAdapter = CourseCategoryAdapter { category ->
             onCategoryClicked(category)
         }
@@ -170,55 +166,39 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
             layoutManager = GridLayoutManager(context, 3)
             adapter = coursesAdapter
         }
-        println("HomeFragment: Courses section setup complete")
-        Toast.makeText(context, "RecyclerView setup complete", Toast.LENGTH_SHORT).show()
     }
     
     private fun loadCourseCategories() {
-        println("HomeFragment: loadCourseCategories() called!")
-        Toast.makeText(context, "Loading courses...", Toast.LENGTH_SHORT).show()
         showCoursesLoading()
         coroutineScope.launch {
             try {
-                println("HomeFragment: Starting to load course categories...")
                 val lessonsResult = lessonRepository.getAllLessons()
                 hideCoursesLoading()
                 
-                println("HomeFragment: Result success: ${lessonsResult.isSuccess}")
-                
                 if (lessonsResult.isSuccess) {
                     val allLessons = lessonsResult.getOrNull() ?: emptyList()
-                    println("HomeFragment: Found ${allLessons.size} lessons")
                     
                     if (allLessons.isEmpty()) {
                         Toast.makeText(context, "No lessons found in database", Toast.LENGTH_SHORT).show()
-                        // Create test categories for debugging
                         val testCategories = createTestCategories()
                         coursesAdapter.updateCategories(testCategories)
-                        println("HomeFragment: Created test categories")
                     } else {
                         val categories = createCategoriesFromLessons(allLessons)
-                        println("HomeFragment: Created ${categories.size} categories")
                         
                         if (categories.isEmpty()) {
                             Toast.makeText(context, "No course categories available", Toast.LENGTH_SHORT).show()
-                            // Create test categories for debugging
                             val testCategories = createTestCategories()
                             coursesAdapter.updateCategories(testCategories)
                         } else {
                             coursesAdapter.updateCategories(categories)
-                            println("HomeFragment: Updated adapter with categories")
                         }
                     }
                 } else {
                     val error = lessonsResult.exceptionOrNull()
-                    println("HomeFragment: Error loading lessons: ${error?.message}")
                     Toast.makeText(context, "Failed to load courses: ${error?.message}", Toast.LENGTH_LONG).show()
                 }
             } catch (e: Exception) {
                 hideCoursesLoading()
-                println("HomeFragment: Exception: ${e.message}")
-                e.printStackTrace()
                 Toast.makeText(context, "Error loading courses: ${e.message}", Toast.LENGTH_LONG).show()
             }
         }
@@ -258,8 +238,14 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     }
     
     private fun onCategoryClicked(category: CourseCategory) {
-        Toast.makeText(context, "Clicked: ${category.title} (${category.lessons.size} lessons)", Toast.LENGTH_SHORT).show()
-        // TODO: Navigate to lessons list for this category
+        // Navigate to lesson detail with the lesson from the category
+        if (category.lessons.isNotEmpty()) {
+            val lesson = category.lessons.first()
+            val action = HomeFragmentDirections.actionHomeToLessonDetail(lesson)
+            findNavController().navigate(action)
+        } else {
+            Toast.makeText(context, "No lesson available for ${category.title}", Toast.LENGTH_SHORT).show()
+        }
     }
     
     private fun showCoursesLoading() {

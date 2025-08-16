@@ -224,7 +224,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     
     private fun createCategoriesFromLessons(lessons: List<Lesson>): List<CourseCategory> {
         // Create categories directly from lessons using their title and imageUrl
-        return lessons.take(4).map { lesson ->
+        return lessons.take(3).map { lesson ->
             CourseCategory(
                 title = lesson.title,
                 imageUrl = lesson.imageUrl.takeIf { it.isNotBlank() } 
@@ -250,11 +250,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
             CourseCategory(
                 title = "Test Academic",
                 imageUrl = "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400",
-                lessons = emptyList()
-            ),
-            CourseCategory(
-                title = "Test Travel",
-                imageUrl = "https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=400",
                 lessons = emptyList()
             )
         )

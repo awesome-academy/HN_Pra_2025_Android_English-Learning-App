@@ -5,11 +5,15 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class Word(
-    var id: String = "",
-    var name: String = "",
-    var definition: String = "",
-    var soundUrl: String = "",
-    var example: String = "",
-    var phonetic: String = "",
-    var partOfSpeech: String = ""
-) : Parcelable
+    val id: String = "",
+    val word: String = "",
+    val definition: String = "",
+    val pronunciation: String = "",
+    val phonetic: String = "",
+    val partOfSpeech: String = "",
+    val example: String = "",
+    val soundUrl: String = "",
+    val imageUrl: String = "",
+    val lessonId: String = "",
+    val difficulty: String = "easy"
+)

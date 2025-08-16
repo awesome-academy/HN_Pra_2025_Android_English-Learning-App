@@ -24,7 +24,7 @@ class ReviewFragment : BaseFragment<FragmentReviewBinding>() {
     private fun setupClickListeners() {
         with(viewBinding) {
             cardWeekWords.setOnClickListener {
-                Toast.makeText(context, "Week words clicked", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Weak words clicked", Toast.LENGTH_SHORT).show()
             }
 
 

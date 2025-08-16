@@ -45,7 +45,7 @@
                 android:orientation="horizontal"
                 android:layout_marginBottom="@dimen/dp_16">
 
-                <!-- Week words card -->
+                <!-- Weak words card -->
                 <androidx.cardview.widget.CardView
                     android:id="@+id/card_week_words"
                     android:layout_width="match_parent"

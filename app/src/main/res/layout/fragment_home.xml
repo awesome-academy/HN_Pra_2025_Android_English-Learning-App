@@ -312,7 +312,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Chưa có bài học gần đây"
+                android:text="@string/recent_lessons_empty_title"
                 style="@style/TextMedium.16sp"
                 android:textColor="#6B7280"
                 android:layout_marginBottom="@dimen/dp_8" />
@@ -320,7 +320,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Bắt đầu học để xem tiến trình của bạn tại đây"
+                android:text="@string/recent_lessons_empty_subtitle"
                 style="@style/TextRegular.14sp"
                 android:textColor="#9CA3AF"
                 android:textAlignment="center" />

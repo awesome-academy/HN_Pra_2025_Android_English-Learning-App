@@ -90,8 +90,13 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
             // Fallback to email if display name is not available
             val email = currentUser?.email
             val userName = if (!email.isNullOrBlank()) {
-                // Extract name part from email (before @)
-                email.substringBefore("@").replaceFirstChar { it.uppercase() }
+                // Extract name part from email (before @) with validation
+                val namePart = email.substringBefore("@")
+                if (namePart.isNotBlank()) {
+                    namePart.replaceFirstChar { it.uppercase() }
+                } else {
+                    "User"
+                }
             } else {
                 "User" // Default fallback
             }

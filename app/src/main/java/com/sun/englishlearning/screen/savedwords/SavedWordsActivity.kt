@@ -4,16 +4,27 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
+import android.view.View
+import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.firebase.auth.FirebaseAuth
 import com.sun.englishlearning.data.model.SavedWord
+import com.sun.englishlearning.data.model.WordType
+import com.sun.englishlearning.data.repository.SavedWordsRepository
+import com.sun.englishlearning.data.repository.SavedWordsRepositoryImpl
 import com.sun.englishlearning.databinding.ActivitySavedWordsBinding
 import com.sun.englishlearning.utils.base.BaseActivity
+import kotlinx.coroutines.launch
 
 class SavedWordsActivity : BaseActivity<ActivitySavedWordsBinding>() {
 
     private lateinit var savedWordsAdapter: SavedWordsAdapter
     private var allSavedWords = mutableListOf<SavedWord>()
     private var filteredSavedWords = mutableListOf<SavedWord>()
+    
+    private val savedWordsRepository: SavedWordsRepository = SavedWordsRepositoryImpl()
+    private val auth: FirebaseAuth = FirebaseAuth.getInstance()
 
     override fun inflateBinding(inflater: LayoutInflater): ActivitySavedWordsBinding {
         return ActivitySavedWordsBinding.inflate(inflater)
@@ -23,10 +34,10 @@ class SavedWordsActivity : BaseActivity<ActivitySavedWordsBinding>() {
         setupRecyclerView()
         setupClickListeners()
         setupSearchView()
-        loadSampleData()
     }
 
     override fun initData() {
+        loadSavedWords()
     }
 
     private fun setupRecyclerView() {
@@ -79,103 +90,64 @@ class SavedWordsActivity : BaseActivity<ActivitySavedWordsBinding>() {
         savedWordsAdapter.notifyDataSetChanged()
     }
 
-    private fun loadSampleData() {
-        allSavedWords.addAll(
-            listOf(
-                SavedWord(
-                    id = "1",
-                    userId = "sample",
-                    word = "as many as",
-                    ipa = "",
-                    partOfSpeech = "phrase",
-                    definition = "as many as",
-                    soundUrl = "",
-                    example = "I have as many books as you do."
-                ),
-                SavedWord(
-                    id = "2",
-                    userId = "sample",
-                    word = "City break",
-                    ipa = "",
-                    partOfSpeech = "noun",
-                    definition = "City break",
-                    soundUrl = "",
-                    example = "We're planning a city break to Paris."
-                ),
-                SavedWord(
-                    id = "3",
-                    userId = "sample",
-                    word = "Cosmopolitan",
-                    ipa = "",
-                    partOfSpeech = "adjective",
-                    definition = "Cosmopolitan",
-                    soundUrl = "",
-                    example = "New York is a cosmopolitan city."
-                ),
-                SavedWord(
-                    id = "4",
-                    userId = "sample",
-                    word = "Crowded",
-                    ipa = "",
-                    partOfSpeech = "adjective",
-                    definition = "Crowded",
-                    soundUrl = "",
-                    example = "The street was very crowded."
-                ),
-                SavedWord(
-                    id = "5",
-                    userId = "sample",
-                    word = "Embassy",
-                    ipa = "",
-                    partOfSpeech = "noun",
-                    definition = "Embassy",
-                    soundUrl = "",
-                    example = "The embassy is located downtown."
-                ),
-                SavedWord(
-                    id = "6",
-                    userId = "sample",
-                    word = "Getaway",
-                    ipa = "",
-                    partOfSpeech = "noun",
-                    definition = "Getaway",
-                    soundUrl = "",
-                    example = "We need a weekend getaway."
-                ),
-                SavedWord(
-                    id = "7",
-                    userId = "sample",
-                    word = "Disappointing",
-                    ipa = "",
-                    partOfSpeech = "adjective",
-                    definition = "Disappointing",
-                    soundUrl = "",
-                    example = "The movie was disappointing."
-                ),
-                SavedWord(
-                    id = "8",
-                    userId = "sample",
-                    word = "Jaw-dropping",
-                    ipa = "",
-                    partOfSpeech = "adjective",
-                    definition = "Jaw-dropping",
-                    soundUrl = "",
-                    example = "The view was absolutely jaw-dropping."
-                ),
-                SavedWord(
-                    id = "9",
-                    userId = "sample",
-                    word = "Lively",
-                    ipa = "",
-                    partOfSpeech = "adjective",
-                    definition = "Lively",
-                    soundUrl = "",
-                    example = "The market was very lively."
-                )
-            )
-        )
-        filteredSavedWords.addAll(allSavedWords)
-        savedWordsAdapter.notifyDataSetChanged()
+    private fun loadSavedWords() {
+        val currentUser = auth.currentUser
+        if (currentUser == null) {
+            Toast.makeText(this, "Please login to view saved words", Toast.LENGTH_SHORT).show()
+            finish()
+            return
+        }
+
+        showLoading()
+
+        lifecycleScope.launch {
+            try {
+                // Get words with type SAVED (type 1)
+                val result = savedWordsRepository.getUserWordsByType(currentUser.uid, WordType.SAVED)
+                
+                if (result.isSuccess) {
+                    val savedWords = result.getOrNull() ?: emptyList()
+                    allSavedWords.clear()
+                    allSavedWords.addAll(savedWords)
+                    
+                    filteredSavedWords.clear()
+                    filteredSavedWords.addAll(allSavedWords)
+                    
+                    runOnUiThread {
+                        savedWordsAdapter.notifyDataSetChanged()
+                        hideLoading()
+                        
+                        if (savedWords.isEmpty()) {
+                            showEmptyState()
+                        }
+                    }
+                } else {
+                    runOnUiThread {
+                        hideLoading()
+                        showEmptyState()
+                        Toast.makeText(this@SavedWordsActivity, "Failed to load saved words", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            } catch (e: Exception) {
+                runOnUiThread {
+                    hideLoading()
+                    showEmptyState()
+                    Toast.makeText(this@SavedWordsActivity, "Error loading saved words: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    private fun showLoading() {
+        // You can add a loading indicator if the layout has one
+    }
+
+    private fun hideLoading() {
+        // Hide loading indicator
+    }
+
+    private fun showEmptyState() {
+        // You can show an empty state message if the layout supports it
     }
 
     private fun playWordSound(soundUrl: String) {

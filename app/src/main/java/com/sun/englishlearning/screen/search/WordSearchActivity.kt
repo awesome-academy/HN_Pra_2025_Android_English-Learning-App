@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import com.sun.englishlearning.data.model.WordSearchResult
 import com.sun.englishlearning.data.model.SavedWord
 import com.sun.englishlearning.data.model.WordType
@@ -100,7 +101,7 @@ class WordSearchActivity : BaseActivity<ActivityWordSearchBinding>() {
             try {
                 val result = dictionaryRepository.searchWord(query)
                 if (result.isSuccess) {
-                    showSearchResult(result.getOrNull()!!)
+                    result.getOrNull()?.let { showSearchResult(it) } ?: showError()
                 } else {
                     showError()
                     Toast.makeText(this@WordSearchActivity, "Word not found", Toast.LENGTH_SHORT).show()
@@ -260,9 +261,9 @@ class WordSearchActivity : BaseActivity<ActivityWordSearchBinding>() {
             text = if (isSaved) "Remove Word" else "Save Word"
             setBackgroundColor(
                 if (isSaved) {
-                    resources.getColor(android.R.color.holo_red_light, null)
+                    ContextCompat.getColor(this@WordSearchActivity, android.R.color.holo_red_light)
                 } else {
-                    resources.getColor(android.R.color.holo_blue_light, null)
+                    ContextCompat.getColor(this@WordSearchActivity, android.R.color.holo_blue_light)
                 }
             )
         }

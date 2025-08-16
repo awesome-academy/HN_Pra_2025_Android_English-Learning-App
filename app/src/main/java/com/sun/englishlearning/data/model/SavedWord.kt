@@ -11,18 +11,17 @@ enum class WordType(val value: Int) {
 }
 
 data class SavedWord(
-    var id: String = "",
-    var userId: String = "",
-    var word: String = "",
-    var ipa: String = "",
-    var partOfSpeech: String = "",
-    var definition: String = "",
-    var example: String = "",
-    var soundUrl: String = "",
-    @get:PropertyName("wordType") @set:PropertyName("wordType") var wordType: Int = WordType.SAVED.value,
-
-    var createdAt: Date = Date(),
-    var updatedAt: Date = Date()
+    val id: String = "",
+    val userId: String = "",
+    val word: String = "",
+    val ipa: String = "",
+    val partOfSpeech: String = "",
+    val definition: String = "",
+    val example: String = "",
+    val soundUrl: String = "",
+    @get:PropertyName("wordType") @set:PropertyName("wordType") val wordType: Int = WordType.SAVED.value,
+    val createdAt: Date = Date(),
+    val updatedAt: Date = Date()
 )
 
 

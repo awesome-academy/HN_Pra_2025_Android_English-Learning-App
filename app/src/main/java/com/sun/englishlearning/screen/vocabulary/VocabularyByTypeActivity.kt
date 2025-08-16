@@ -2,9 +2,12 @@ package com.sun.englishlearning.screen.vocabulary
 
 import android.content.Context
 import android.content.Intent
+import android.media.AudioManager
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
@@ -23,6 +26,7 @@ class VocabularyByTypeActivity : BaseActivity<ActivityVocabularyByTypeBinding>()
     private var wordsList = mutableListOf<SavedWord>()
     private val savedWordsRepository: SavedWordsRepository = SavedWordsRepositoryImpl()
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
+    private var mediaPlayer: MediaPlayer? = null
 
     private lateinit var wordType: WordType
     private lateinit var typeTitle: String
@@ -72,10 +76,10 @@ class VocabularyByTypeActivity : BaseActivity<ActivityVocabularyByTypeBinding>()
         wordsAdapter = SavedWordsAdapter(wordsList) { savedWord, action ->
             when (action) {
                 SavedWordsAdapter.Action.PLAY_SOUND -> {
-                    // Handle sound play
+                    playWordSound(savedWord.soundUrl)
                 }
                 SavedWordsAdapter.Action.REMOVE_WORD -> {
-                    // Handle word removal
+                    removeWord(savedWord)
                 }
             }
         }
@@ -134,5 +138,65 @@ class VocabularyByTypeActivity : BaseActivity<ActivityVocabularyByTypeBinding>()
             layoutEmptyState.visibility = View.VISIBLE
             tvEmptyMessage.text = "No $typeTitle found"
         }
+    }
+
+    private fun playWordSound(soundUrl: String) {
+        if (soundUrl.isEmpty()) {
+            Toast.makeText(this, "No audio available for this word", Toast.LENGTH_SHORT).show()
+            return
+        }
+        
+        try {
+            mediaPlayer?.release()
+            mediaPlayer = MediaPlayer().apply {
+                setAudioStreamType(AudioManager.STREAM_MUSIC)
+                setDataSource(soundUrl)
+                setOnPreparedListener { 
+                    start()
+                    Toast.makeText(this@VocabularyByTypeActivity, "Playing pronunciation...", Toast.LENGTH_SHORT).show()
+                }
+                setOnErrorListener { _, _, _ ->
+                    Toast.makeText(this@VocabularyByTypeActivity, "Unable to play audio", Toast.LENGTH_SHORT).show()
+                    false
+                }
+                prepareAsync()
+            }
+        } catch (e: Exception) {
+            Toast.makeText(this, "Unable to play sound: ${e.message}", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun removeWord(savedWord: SavedWord) {
+        lifecycleScope.launch {
+            try {
+                val result = savedWordsRepository.deleteWord(savedWord.id)
+                if (result.isSuccess) {
+                    runOnUiThread {
+                        // Remove from local list
+                        wordsList.removeAll { it.id == savedWord.id }
+                        wordsAdapter.notifyDataSetChanged()
+                        
+                        Toast.makeText(this@VocabularyByTypeActivity, "Word removed successfully", Toast.LENGTH_SHORT).show()
+                        
+                        if (wordsList.isEmpty()) {
+                            showEmptyState()
+                        }
+                    }
+                } else {
+                    runOnUiThread {
+                        Toast.makeText(this@VocabularyByTypeActivity, "Failed to remove word", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            } catch (e: Exception) {
+                runOnUiThread {
+                    Toast.makeText(this@VocabularyByTypeActivity, "Error removing word: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mediaPlayer?.release()
     }
 }

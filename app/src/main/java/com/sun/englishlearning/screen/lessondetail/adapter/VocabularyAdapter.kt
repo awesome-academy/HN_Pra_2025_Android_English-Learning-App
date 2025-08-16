@@ -39,7 +39,7 @@ class VocabularyAdapter(
         fun bind(word: Word) {
             binding.apply {
                 // Set word name
-                textWordName.text = word.name
+                textWordName.text = word.word
 
                 // Sound button click listener
                 btnSound.setOnClickListener {

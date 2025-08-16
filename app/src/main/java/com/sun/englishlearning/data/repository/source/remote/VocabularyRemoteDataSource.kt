@@ -50,7 +50,7 @@ class VocabularyRemoteDataSource {
     private fun createFallbackWord(word: String): Word {
         return Word(
             id = word.hashCode().toString(),
-            name = word,
+            word = word,
             definition = "Definition not available",
             soundUrl = "",
             example = "Example not available",

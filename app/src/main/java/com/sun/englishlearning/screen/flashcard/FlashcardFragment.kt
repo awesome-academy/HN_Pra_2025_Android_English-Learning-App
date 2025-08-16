@@ -61,8 +61,8 @@ class FlashcardFragment : Fragment() {
     private fun setupWordData() {
         binding.apply {
             // Set word name
-            textWordName.text = word.name
-            textWordName.contentDescription = "English word: ${word.name}"
+            textWordName.text = word.word
+            textWordName.contentDescription = "English word: ${word.word}"
 
             // Set definition
             val definition = if (word.definition.isNotEmpty()) {
@@ -102,9 +102,9 @@ class FlashcardFragment : Fragment() {
 
             // Set audio button content description
             btnAudio.contentDescription = if (word.soundUrl.isNotEmpty()) {
-                "Play pronunciation for ${word.name}"
+                "Play pronunciation for ${word.word}"
             } else {
-                "Audio not available for ${word.name}"
+                "Audio not available for ${word.word}"
             }
         }
     }

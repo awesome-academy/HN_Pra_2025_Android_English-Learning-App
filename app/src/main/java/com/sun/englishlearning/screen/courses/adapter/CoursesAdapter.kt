@@ -46,14 +46,14 @@ class CoursesAdapter(
                 // Set lesson number
                 textLessonNumber.text = "Lesson: ${lesson.lessonNumber}"
                 
-                // Set advanced level
-                textAdvancedLevel.text = "Advanced: ${lesson.advancedLevel}"
+                // Set difficulty level
+                textAdvancedLevel.text = "Level: ${lesson.difficulty.name}"
                 
-                // Set points
-                textLessonPoints.text = "points: ${lesson.currentPoints} / ${lesson.totalPoints}"
+                // Set points (only show total points since current points is in UserLessonProgress)
+                textLessonPoints.text = "Total Points: ${lesson.totalPoints}"
                 
-                // Set progress
-                progressLesson.progress = lesson.progressPercentage
+                // Set progress (placeholder since progress is in UserLessonProgress)
+                progressLesson.progress = 0
 
                 // Load lesson image using Glide
                 if (lesson.imageUrl.isNotEmpty()) {

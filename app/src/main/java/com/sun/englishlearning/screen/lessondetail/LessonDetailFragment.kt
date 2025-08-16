@@ -112,12 +112,12 @@ class LessonDetailFragment : Fragment(), LessonDetailContract.View {
 
             // Set lesson details
             textLessonNumber.text = "Lesson: ${lesson.lessonNumber}"
-            textAdvancedLevel.text = "Advanced: ${lesson.advancedLevel}"
-            textLessonPoints.text = "points: ${lesson.currentPoints} / ${lesson.totalPoints}"
+            textAdvancedLevel.text = "Level: ${lesson.difficulty.name}"
+            textLessonPoints.text = "Total Points: ${lesson.totalPoints}"
             textLessonDescription.text = lesson.description
 
-            // Set progress
-            progressLesson.progress = lesson.progressPercentage
+            // Set progress (placeholder since progress is in UserLessonProgress)
+            progressLesson.progress = 0
 
             // Load lesson image
             if (lesson.imageUrl.isNotEmpty()) {
@@ -147,12 +147,12 @@ class LessonDetailFragment : Fragment(), LessonDetailContract.View {
     }
 
     override fun playWordSound(word: Word) {
-        Toast.makeText(requireContext(), "Playing sound for: ${word.name}", Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireContext(), "Playing sound for: ${word.word}", Toast.LENGTH_SHORT).show()
         // TODO: Implement actual sound playing
     }
 
     override fun showWordDetail(word: Word) {
-        Toast.makeText(requireContext(), "Word: ${word.name}", Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireContext(), "Word: ${word.word}", Toast.LENGTH_SHORT).show()
         // TODO: Implement word detail functionality
     }
 

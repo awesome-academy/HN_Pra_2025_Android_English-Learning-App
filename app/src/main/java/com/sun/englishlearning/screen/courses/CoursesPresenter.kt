@@ -1,59 +1,69 @@
 package com.sun.englishlearning.screen.courses
 
 import android.content.Context
-import android.os.Handler
-import android.os.Looper
 import com.sun.englishlearning.data.model.Lesson
 import com.sun.englishlearning.data.repository.LessonRepository
-import kotlin.concurrent.thread
+import com.sun.englishlearning.data.repository.LessonRepositoryImpl
+import com.sun.englishlearning.data.repository.UserLessonProgressRepository
+import com.sun.englishlearning.data.repository.UserLessonProgressRepositoryImpl
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class CoursesPresenter : CoursesContract.Presenter {
 
     private var view: CoursesContract.View? = null
     private var context: Context? = null
     private var isOngoingTabSelected = true
-    private val mainHandler = Handler(Looper.getMainLooper())
+    private val userProgressRepository: UserLessonProgressRepository = UserLessonProgressRepositoryImpl()
+    private val lessonRepository: LessonRepository = LessonRepositoryImpl(userProgressRepository)
+    private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
     fun setContext(context: Context) {
         this.context = context
     }
 
     override fun loadOngoingLessons() {
-        context?.let { ctx ->
-            view?.showLoading()
-            thread {
-                try {
-                    val lessons = LessonRepository.getOngoingLessons(ctx)
-                    mainHandler.post {
-                        view?.hideLoading()
-                        view?.showOngoingLessons(lessons)
-                    }
-                } catch (e: Exception) {
-                    mainHandler.post {
-                        view?.hideLoading()
-                        view?.showError(e.message ?: "Error loading ongoing lessons")
-                    }
+        view?.showLoading()
+        coroutineScope.launch {
+            try {
+                // For now, get all lessons and filter for started ones
+                val lessonsResult = lessonRepository.getAllLessons()
+                if (lessonsResult.isSuccess) {
+                    val lessons = lessonsResult.getOrNull() ?: emptyList()
+                    val ongoingLessons = lessons.filter { it.isStarted }
+                    view?.hideLoading()
+                    view?.showOngoingLessons(ongoingLessons)
+                } else {
+                    view?.hideLoading()
+                    view?.showError("Error loading ongoing lessons")
                 }
+            } catch (e: Exception) {
+                view?.hideLoading()
+                view?.showError(e.message ?: "Error loading ongoing lessons")
             }
         }
     }
 
     override fun loadCompletedLessons() {
-        context?.let { ctx ->
-            view?.showLoading()
-            thread {
-                try {
-                    val lessons = LessonRepository.getCompletedLessons(ctx)
-                    mainHandler.post {
-                        view?.hideLoading()
-                        view?.showCompletedLessons(lessons)
-                    }
-                } catch (e: Exception) {
-                    mainHandler.post {
-                        view?.hideLoading()
-                        view?.showError(e.message ?: "Error loading completed lessons")
-                    }
+        view?.showLoading()
+        coroutineScope.launch {
+            try {
+                // For now, get all lessons and filter for completed ones
+                val lessonsResult = lessonRepository.getAllLessons()
+                if (lessonsResult.isSuccess) {
+                    val lessons = lessonsResult.getOrNull() ?: emptyList()
+                    // TODO: Add logic to check completion status from UserLessonProgress
+                    val completedLessons = emptyList<Lesson>() // Placeholder
+                    view?.hideLoading()
+                    view?.showCompletedLessons(completedLessons)
+                } else {
+                    view?.hideLoading()
+                    view?.showError("Error loading completed lessons")
                 }
+            } catch (e: Exception) {
+                view?.hideLoading()
+                view?.showError(e.message ?: "Error loading completed lessons")
             }
         }
     }
@@ -74,17 +84,11 @@ class CoursesPresenter : CoursesContract.Presenter {
     }
 
     override fun refreshLessons() {
-        context?.let { ctx ->
-            thread {
-                LessonRepository.refreshCache(ctx)
-                mainHandler.post {
-                    if (isOngoingTabSelected) {
-                        loadOngoingLessons()
-                    } else {
-                        loadCompletedLessons()
-                    }
-                }
-            }
+        // Simply reload the current tab since we don't have a cache to refresh
+        if (isOngoingTabSelected) {
+            loadOngoingLessons()
+        } else {
+            loadCompletedLessons()
         }
     }
 

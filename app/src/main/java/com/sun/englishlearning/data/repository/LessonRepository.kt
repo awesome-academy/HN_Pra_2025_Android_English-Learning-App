@@ -89,17 +89,6 @@ class LessonRepositoryImpl(
         }
     }
 
-    override suspend fun createLesson(lesson: Lesson): Result<Unit> {
-        return try {
-            db.collection("lessons")
-                .document(lesson.id)
-                .set(lesson)
-                .await()
-            Result.success(Unit)
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
-    }
 
     override suspend fun getLessonsForUser(userId: String): Result<List<Lesson>> {
         return try {

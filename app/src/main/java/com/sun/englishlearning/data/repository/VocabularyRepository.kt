@@ -93,9 +93,22 @@ class WordRepositoryImpl : WordRepository {
 
     override suspend fun updateWord(word: Word): Result<Unit> {
         return try {
+            val wordMap = mapOf(
+                "word" to word.word,
+                "definition" to word.definition,
+                "pronunciation" to word.pronunciation,
+                "phonetic" to word.phonetic,
+                "partOfSpeech" to word.partOfSpeech,
+                "example" to word.example,
+                "soundUrl" to word.soundUrl,
+                "imageUrl" to word.imageUrl,
+                "lessonId" to word.lessonId,
+                "difficulty" to word.difficulty
+            )
+            
             db.collection("words")
                 .document(word.id)
-                .set(word)
+                .update(wordMap)
                 .await()
             Result.success(Unit)
         } catch (e: Exception) {

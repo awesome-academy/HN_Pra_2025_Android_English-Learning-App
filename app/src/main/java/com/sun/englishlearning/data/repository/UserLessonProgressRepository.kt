@@ -121,9 +121,29 @@ class UserLessonProgressRepositoryImpl : UserLessonProgressRepository {
 
     override suspend fun updateProgress(progress: UserLessonProgress): Result<Unit> {
         return try {
+            val progressMap = mapOf(
+                "userId" to progress.userId,
+                "lessonId" to progress.lessonId,
+                "isStarted" to progress.isStarted,
+                "isCompleted" to progress.isCompleted,
+                "currentPoints" to progress.currentPoints,
+                "totalPoints" to progress.totalPoints,
+                "progressPercentage" to progress.progressPercentage,
+                "timeSpentMinutes" to progress.timeSpentMinutes,
+                "attempts" to progress.attempts,
+                "bestScore" to progress.bestScore,
+                "wordsLearned" to progress.wordsLearned,
+                "totalWords" to progress.totalWords,
+                "completedExercises" to progress.completedExercises,
+                "learnedWordIds" to progress.learnedWordIds,
+                "startedAt" to progress.startedAt,
+                "completedAt" to progress.completedAt,
+                "lastAccessedAt" to progress.lastAccessedAt
+            )
+            
             db.collection("userLessonProgress")
                 .document(progress.id)
-                .set(progress)
+                .update(progressMap)
                 .await()
             Result.success(Unit)
         } catch (e: Exception) {

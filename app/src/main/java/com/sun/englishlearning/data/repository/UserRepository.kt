@@ -43,9 +43,24 @@ class UserRepositoryImpl : UserRepository {
 
     override suspend fun updateUser(user: User): Result<Unit> {
         return try {
+            val userMap = mapOf(
+                "email" to user.email,
+                "displayName" to user.displayName,
+                "photoURL" to user.photoURL,
+                "provider" to user.provider,
+                "isEmailVerified" to user.isEmailVerified,
+                "currentLevel" to user.currentLevel,
+                "totalPoints" to user.totalPoints,
+                "streak" to user.streak,
+                "lessonsCompleted" to user.lessonsCompleted,
+                "wordsLearned" to user.wordsLearned,
+                "lastActiveAt" to user.lastActiveAt,
+                "preferences" to user.preferences
+            )
+            
             db.collection("users")
                 .document(user.id)
-                .set(user)
+                .update(userMap)
                 .await()
             Result.success(Unit)
         } catch (e: Exception) {

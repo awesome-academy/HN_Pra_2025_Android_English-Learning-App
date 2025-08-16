@@ -1,9 +1,11 @@
 package com.sun.englishlearning.screen.courses
 
 import android.content.Context
+import com.google.firebase.auth.FirebaseAuth
 import com.sun.englishlearning.data.model.Lesson
 import com.sun.englishlearning.data.repository.LessonRepository
 import com.sun.englishlearning.data.repository.LessonRepositoryImpl
+import com.sun.englishlearning.data.repository.UserLessonProgressRepository
 import com.sun.englishlearning.data.repository.UserLessonProgressRepositoryImpl
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -14,7 +16,8 @@ class CoursesPresenter : CoursesContract.Presenter {
     private var view: CoursesContract.View? = null
     private var context: Context? = null
     private var isOngoingTabSelected = true
-    private lateinit var lessonRepository: LessonRepository
+    private val userProgressRepository: UserLessonProgressRepository = UserLessonProgressRepositoryImpl()
+    private val lessonRepository: LessonRepository = LessonRepositoryImpl(userProgressRepository)
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
     fun setContext(context: Context) {
@@ -26,10 +29,11 @@ class CoursesPresenter : CoursesContract.Presenter {
         view?.showLoading()
         coroutineScope.launch {
             try {
+                // For now, get all lessons and filter for started ones
                 val lessonsResult = lessonRepository.getAllLessons()
                 if (lessonsResult.isSuccess) {
                     val lessons = lessonsResult.getOrNull() ?: emptyList()
-                    // All lessons are "ongoing" since user hasn't started any yet
+                    val ongoingLessons = lessons.filter { it.isStarted }
                     view?.hideLoading()
                     view?.showOngoingLessons(lessons)
                 } else {
@@ -97,5 +101,11 @@ class CoursesPresenter : CoursesContract.Presenter {
 
     override fun onStop() {
 
+    }
+    
+    private fun getCurrentUserId(): String {
+        // TODO: Implement proper user identification logic
+        // This could come from SharedPreferences, Firebase Auth, or session management
+        return "user_${System.currentTimeMillis() % 1000}" // Temporary placeholder
     }
 }

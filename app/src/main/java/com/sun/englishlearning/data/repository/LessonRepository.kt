@@ -152,69 +152,43 @@ class LessonRepositoryImpl(
 
     override suspend fun getRecentlyLearnedLessons(userId: String, limit: Int): Result<List<Pair<Lesson, UserLessonProgress>>> {
         return try {
-            println("=== GETTING RECENT LESSONS ===")
-            println("Looking for userId: $userId")
-            
             // Get user progress ordered by lastAccessedAt (most recent first)
             val progressResult = userLessonProgressRepository.getUserProgressByUser(userId)
             if (progressResult.isFailure) {
-                println("Failed to get user progress: ${progressResult.exceptionOrNull()?.message}")
                 return Result.success(emptyList()) // Return empty list if no progress found
             }
-            println("Found progressResult total progress records ${progressResult}")
             
             val userProgress = progressResult.getOrNull() ?: emptyList()
-            println("Found ${userProgress.size} total progress records")
-
-            userProgress.forEach { progress ->
-                println("Progress: lessonId=${progress.lessonId}, isStarted=${progress.isStarted}, lastAccessed=${progress.lastAccessedAt}")
-            }
             
             // Get the most recent progress records (limit to specified number)
             val recentProgress = userProgress
                 .filter { it.isStarted } // Only lessons that have been started
                 .take(limit)
             
-            println("Filtered to ${recentProgress.size} started lessons")
-            
             if (recentProgress.isEmpty()) {
-                println("No started lessons found")
                 return Result.success(emptyList())
             }
             
             // Get all lessons
             val allLessonsResult = getAllLessons()
             if (allLessonsResult.isFailure) {
-                println("Failed to get all lessons")
                 return Result.success(emptyList())
             }
             
             val allLessons = allLessonsResult.getOrNull() ?: emptyList()
-            println("Found ${allLessons.size} total lessons")
-            
-            // Debug: Show all lesson IDs for comparison
-            println("Available lesson IDs: ${allLessons.map { it.id }}")
-            println("Progress lesson IDs: ${recentProgress.map { it.lessonId }}")
             
             // Combine lessons with their progress data
             val recentLessonsWithProgress = recentProgress.mapNotNull { progress ->
                 val lesson = allLessons.find { it.id == progress.lessonId }
                 if (lesson != null) {
-                    println("✓ Matched lesson: ${lesson.title} (${lesson.id}) with progress")
                     Pair(lesson, progress)
                 } else {
-                    println("✗ No lesson found for lessonId: ${progress.lessonId}")
-                    println("  Available lessons: ${allLessons.map { "${it.id} (${it.title})" }}")
                     null
                 }
             }
             
-            println("Returning ${recentLessonsWithProgress.size} recent lessons")
-            println("==============================")
             Result.success(recentLessonsWithProgress)
         } catch (e: Exception) {
-            println("Exception in getRecentlyLearnedLessons: ${e.message}")
-            e.printStackTrace()
             Result.failure(e)
         }
     }

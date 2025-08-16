@@ -55,11 +55,6 @@ class UserLessonProgressRepositoryImpl : UserLessonProgressRepository {
 
     override suspend fun getUserProgressByUser(userId: String): Result<List<UserLessonProgress>> {
         return try {
-            println("=== QUERYING USER PROGRESS ===")
-            println("Querying userLessonProgress collection for userId: $userId")
-            
-            println("Looking for user progress data...")
-            
             // Since we know the exact userIds in the database, let's match them directly
             val databaseUserId = "3NdXAZX1mFNam089ZdefJjYVd5t2"  // The actual userId in the database
             
@@ -69,29 +64,20 @@ class UserLessonProgressRepositoryImpl : UserLessonProgressRepository {
                 .get()
                 .await()
 
-            println("Query with authenticated userId found: ${snapshot.documents.size} documents")
-            
             // If no documents found with authenticated userId, try with database userId
             if (snapshot.documents.isEmpty()) {
-                println("No documents found with authenticated userId. Trying with database userId...")
-                
                 snapshot = db.collection("userLessonProgress")
                     .whereEqualTo("userId", databaseUserId)
                     .get()
                     .await()
-                
-                println("Query with database userId found: ${snapshot.documents.size} documents")
             }
             
             val progressList = snapshot.documents.mapNotNull { document ->
                 document.toObject(UserLessonProgress::class.java)?.copy(id = document.id)
             }.sortedByDescending { it.lastAccessedAt }  // Sort in code instead of database
             
-            println("Successfully retrieved ${progressList.size} UserLessonProgress objects")
             Result.success(progressList)
         } catch (e: Exception) {
-            println("Exception in getUserProgressByUser: ${e.message}")
-            e.printStackTrace()
             Result.failure(e)
         }
     }

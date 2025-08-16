@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -66,7 +67,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
             }
 
             tvSeeAllCourses.setOnClickListener {
-                Toast.makeText(context, "See all courses", Toast.LENGTH_SHORT).show()
+                // Navigate to Courses tab
+                findNavController().navigate(R.id.navigation_courses)
             }
 
             tvSeeAllRecent.setOnClickListener {

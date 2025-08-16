@@ -46,20 +46,42 @@
         android:padding="@dimen/dp_16"
         android:background="@android:color/white">
 
-        <EditText
-            android:id="@+id/et_search_word"
+        <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="@dimen/dp_48"
             android:layout_weight="1"
-            android:background="@drawable/bg_rounded_card"
-            android:hint="Enter word to search..."
-            android:textSize="@dimen/sp_16"
-            android:textColor="@android:color/black"
-            android:textColorHint="#999999"
-            android:padding="@dimen/dp_12"
-            android:singleLine="true"
-            android:imeOptions="actionSearch"
-            android:layout_marginEnd="@dimen/dp_8" />
+            android:layout_marginEnd="@dimen/dp_8">
+
+            <EditText
+                android:id="@+id/et_search_word"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/bg_rounded_card"
+                android:hint="Enter word to search..."
+                android:textSize="@dimen/sp_16"
+                android:textColor="@android:color/black"
+                android:textColorHint="#999999"
+                android:paddingStart="@dimen/dp_12"
+                android:paddingEnd="@dimen/dp_40"
+                android:paddingTop="@dimen/dp_12"
+                android:paddingBottom="@dimen/dp_12"
+                android:singleLine="true"
+                android:imeOptions="actionSearch" />
+
+            <ImageView
+                android:id="@+id/btn_clear_search"
+                android:layout_width="@dimen/dp_24"
+                android:layout_height="@dimen/dp_24"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/dp_8"
+                android:src="@android:drawable/ic_menu_close_clear_cancel"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:padding="@dimen/dp_4"
+                android:visibility="gone"
+                app:tint="#999999" />
+
+        </RelativeLayout>
 
         <Button
             android:id="@+id/btn_search"

@@ -3,6 +3,8 @@ package com.sun.englishlearning.screen.search
 import android.content.Intent
 import android.media.AudioManager
 import android.media.MediaPlayer
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -58,6 +60,10 @@ class WordSearchActivity : BaseActivity<ActivityWordSearchBinding>() {
         binding.btnSaveWord.setOnClickListener {
             currentWordResult?.let { toggleSaveWord(it) }
         }
+
+        binding.btnClearSearch.setOnClickListener {
+            binding.etSearchWord.text.clear()
+        }
     }
 
     private fun setupSearchInput() {
@@ -69,6 +75,16 @@ class WordSearchActivity : BaseActivity<ActivityWordSearchBinding>() {
                 false
             }
         }
+
+        binding.etSearchWord.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                binding.btnClearSearch.visibility = if (s?.isNotEmpty() == true) View.VISIBLE else View.GONE
+            }
+
+            override fun afterTextChanged(s: Editable?) {}
+        })
     }
 
     private fun performSearch() {

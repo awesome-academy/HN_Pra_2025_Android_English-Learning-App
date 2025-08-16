@@ -55,22 +55,13 @@ class UserLessonProgressRepositoryImpl : UserLessonProgressRepository {
 
     override suspend fun getUserProgressByUser(userId: String): Result<List<UserLessonProgress>> {
         return try {
-            // Since we know the exact userIds in the database, let's match them directly
-            val databaseUserId = "3NdXAZX1mFNam089ZdefJjYVd5t2"  // The actual userId in the database
-            
             // First try with authenticated userId
             var snapshot = db.collection("userLessonProgress")
                 .whereEqualTo("userId", userId)
                 .get()
                 .await()
 
-            // If no documents found with authenticated userId, try with database userId
-            if (snapshot.documents.isEmpty()) {
-                snapshot = db.collection("userLessonProgress")
-                    .whereEqualTo("userId", databaseUserId)
-                    .get()
-                    .await()
-            }
+
             
             val progressList = snapshot.documents.mapNotNull { document ->
                 document.toObject(UserLessonProgress::class.java)?.copy(id = document.id)

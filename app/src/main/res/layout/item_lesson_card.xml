@@ -53,69 +53,6 @@
                 android:textSize="@dimen/sp_18"
                 tools:text="Friends Series" />
 
-            <!-- Lesson Details Row -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/dp_12"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <!-- Lesson Number -->
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/dp_16"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="@dimen/dp_16"
-                        android:layout_height="@dimen/dp_16"
-                        android:layout_marginEnd="@dimen/dp_4"
-                        android:src="@drawable/ic_book"
-                        android:tint="@color/lesson_number_icon"
-                        tools:ignore="UseAppTint" />
-
-                    <TextView
-                        android:id="@+id/text_lesson_number"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="sans-serif"
-                        android:textColor="@color/lesson_subtitle_text"
-                        android:textSize="@dimen/sp_14"
-                        tools:text="Lesson: 3" />
-
-                </LinearLayout>
-
-                <!-- Advanced Level -->
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="@dimen/dp_16"
-                        android:layout_height="@dimen/dp_16"
-                        android:layout_marginEnd="@dimen/dp_4"
-                        android:src="@drawable/ic_star"
-                        android:tint="@color/advanced_star_icon"
-                        tools:ignore="UseAppTint" />
-
-                    <TextView
-                        android:id="@+id/text_advanced_level"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="sans-serif"
-                        android:textColor="@color/lesson_subtitle_text"
-                        android:textSize="@dimen/sp_14"
-                        tools:text="Advanced: 45" />
-
-                </LinearLayout>
-
-            </LinearLayout>
-
             <!-- Progress Bar -->
             <ProgressBar
                 android:id="@+id/progress_lesson"

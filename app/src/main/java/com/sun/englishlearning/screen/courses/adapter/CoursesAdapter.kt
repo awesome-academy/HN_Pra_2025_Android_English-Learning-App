@@ -43,12 +43,6 @@ class CoursesAdapter(
                 // Set lesson title
                 textLessonTitle.text = lesson.title
                 
-                // Set lesson number
-                textLessonNumber.text = "Lesson: ${lesson.lessonNumber}"
-                
-                // Set advanced level
-                textAdvancedLevel.text = "Advanced: ${lesson.advancedLevel}"
-                
                 // Set points
                 textLessonPoints.text = "points: ${lesson.currentPoints} / ${lesson.totalPoints}"
                 

@@ -71,7 +71,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/sp_14"
-                android:textColor="@color/text_color_suggest_course" />
+                android:textColor="@color/black" />
 
         </LinearLayout>
 

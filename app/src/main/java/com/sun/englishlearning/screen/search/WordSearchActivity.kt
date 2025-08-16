@@ -8,16 +8,18 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import com.sun.englishlearning.data.model.WordSearchResult
+import com.sun.englishlearning.data.repository.DictionaryRepository
+import com.sun.englishlearning.data.repository.DictionaryRepositoryImpl
 import com.sun.englishlearning.databinding.ActivityWordSearchBinding
 import com.sun.englishlearning.utils.base.BaseActivity
 import kotlinx.coroutines.*
-import kotlin.random.Random
 
 class WordSearchActivity : BaseActivity<ActivityWordSearchBinding>() {
 
     private var searchJob: Job? = null
     private var mediaPlayer: MediaPlayer? = null
     private var currentWordResult: WordSearchResult? = null
+    private val dictionaryRepository: DictionaryRepository = DictionaryRepositoryImpl()
 
     override fun inflateBinding(inflater: LayoutInflater): ActivityWordSearchBinding {
         return ActivityWordSearchBinding.inflate(inflater)
@@ -71,11 +73,16 @@ class WordSearchActivity : BaseActivity<ActivityWordSearchBinding>() {
         searchJob = CoroutineScope(Dispatchers.Main).launch {
             showLoading()
             try {
-                delay(1500) // Simulate network delay
-                val result = searchWord(query)
-                showSearchResult(result)
+                val result = dictionaryRepository.searchWord(query)
+                if (result.isSuccess) {
+                    showSearchResult(result.getOrNull()!!)
+                } else {
+                    showError()
+                    Toast.makeText(this@WordSearchActivity, "Word not found", Toast.LENGTH_SHORT).show()
+                }
             } catch (e: Exception) {
                 showError()
+                Toast.makeText(this@WordSearchActivity, "Network error. Please try again.", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -116,65 +123,30 @@ class WordSearchActivity : BaseActivity<ActivityWordSearchBinding>() {
         }
     }
 
-    private suspend fun searchWord(word: String): WordSearchResult {
-        // Simulate API call with mock data
-        return withContext(Dispatchers.IO) {
-            // Mock dictionary data - in real app, this would be an API call
-            when (word.lowercase()) {
-                "hello" -> WordSearchResult(
-                    word = "hello",
-                    ipa = "/həˈloʊ/",
-                    partOfSpeech = "interjection",
-                    definition = "used as a greeting or to begin a phone conversation",
-                    example = "hello there, Katie!",
-                    soundUrl = "https://example.com/hello.mp3",
-                    isFavorite = false
-                )
-                "example" -> WordSearchResult(
-                    word = "example",
-                    ipa = "/ɪɡˈzæm.pəl/",
-                    partOfSpeech = "noun",
-                    definition = "a thing characteristic of its kind or illustrating a general rule",
-                    example = "it is a good example of how European action can produce results",
-                    soundUrl = "https://example.com/example.mp3",
-                    isFavorite = false
-                )
-                "search" -> WordSearchResult(
-                    word = "search",
-                    ipa = "/sɜːrtʃ/",
-                    partOfSpeech = "verb",
-                    definition = "try to find something by looking or otherwise seeking carefully and thoroughly",
-                    example = "I searched for the missing keys everywhere",
-                    soundUrl = "https://example.com/search.mp3",
-                    isFavorite = false
-                )
-                else -> {
-                    // Generate a mock result for any other word
-                    WordSearchResult(
-                        word = word,
-                        ipa = "/ˈwɜːrd/",
-                        partOfSpeech = "noun",
-                        definition = "A single distinct meaningful element of speech or writing",
-                        example = "The word '$word' has a specific meaning",
-                        soundUrl = "https://example.com/word.mp3",
-                        isFavorite = false
-                    )
-                }
-            }
-        }
-    }
 
     private fun playWordSound(soundUrl: String) {
+        if (soundUrl.isEmpty()) {
+            Toast.makeText(this, "No audio available for this word", Toast.LENGTH_SHORT).show()
+            return
+        }
+        
         try {
             mediaPlayer?.release()
             mediaPlayer = MediaPlayer().apply {
                 setAudioStreamType(AudioManager.STREAM_MUSIC)
-                // In a real app, you would load the actual audio URL
-                // For now, we'll just show a toast
-                Toast.makeText(this@WordSearchActivity, "Playing pronunciation...", Toast.LENGTH_SHORT).show()
+                setDataSource(soundUrl)
+                setOnPreparedListener { 
+                    start()
+                    Toast.makeText(this@WordSearchActivity, "Playing pronunciation...", Toast.LENGTH_SHORT).show()
+                }
+                setOnErrorListener { _, _, _ ->
+                    Toast.makeText(this@WordSearchActivity, "Unable to play audio", Toast.LENGTH_SHORT).show()
+                    false
+                }
+                prepareAsync()
             }
         } catch (e: Exception) {
-            Toast.makeText(this, "Unable to play sound", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Unable to play sound: ${e.message}", Toast.LENGTH_SHORT).show()
         }
     }
 

@@ -27,9 +27,6 @@ class ReviewFragment : BaseFragment<FragmentReviewBinding>() {
                 Toast.makeText(context, "Week words clicked", Toast.LENGTH_SHORT).show()
             }
 
-            cardTodayWords.setOnClickListener {
-                Toast.makeText(context, "Today words clicked", Toast.LENGTH_SHORT).show()
-            }
 
             cardMediumWords.setOnClickListener {
                 Toast.makeText(context, "Medium words clicked", Toast.LENGTH_SHORT).show()

@@ -48,10 +48,8 @@
                 <!-- Week words card -->
                 <androidx.cardview.widget.CardView
                     android:id="@+id/card_week_words"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="@dimen/dp_120"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="@dimen/dp_8"
                     app:cardCornerRadius="@dimen/dp_12"
                     app:cardElevation="@dimen/dp_2">
 
@@ -79,39 +77,6 @@
 
                 </androidx.cardview.widget.CardView>
 
-                <!-- Today words card -->
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/card_today_words"
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/dp_120"
-                    android:layout_weight="1"
-                    android:layout_marginStart="@dimen/dp_8"
-                    app:cardCornerRadius="@dimen/dp_12"
-                    app:cardElevation="@dimen/dp_2">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical"
-                        android:padding="@dimen/dp_16">
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="1"
-                            android:background="@drawable/bg_yellow_card" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/today_words"
-                            style="@style/TextSemiBold.14sp"
-                            android:textColor="@color/black"
-                            android:layout_marginTop="@dimen/dp_12" />
-
-                    </LinearLayout>
-
-                </androidx.cardview.widget.CardView>
 
             </LinearLayout>
 

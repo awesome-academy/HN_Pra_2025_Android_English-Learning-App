@@ -1,5 +1,6 @@
 package com.sun.englishlearning.data.repository
 
+import android.util.Log
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.sun.englishlearning.data.model.UserLessonProgress
@@ -19,6 +20,10 @@ interface UserLessonProgressRepository {
 
 class UserLessonProgressRepositoryImpl : UserLessonProgressRepository {
     private val db = Firebase.firestore
+    
+    companion object {
+        private const val TAG = "UserLessonProgressRepository"
+    }
 
     override suspend fun getUserLessonProgress(userId: String, lessonId: String): Result<UserLessonProgress?> {
         return try {
@@ -55,17 +60,14 @@ class UserLessonProgressRepositoryImpl : UserLessonProgressRepository {
 
     override suspend fun getUserProgressByUser(userId: String): Result<List<UserLessonProgress>> {
         return try {
-            // First try with authenticated userId
-            var snapshot = db.collection("userLessonProgress")
+            val snapshot = db.collection("userLessonProgress")
                 .whereEqualTo("userId", userId)
                 .get()
                 .await()
-
-
             
             val progressList = snapshot.documents.mapNotNull { document ->
                 document.toObject(UserLessonProgress::class.java)?.copy(id = document.id)
-            }.sortedByDescending { it.lastAccessedAt }  // Sort in code instead of database
+            }.sortedByDescending { it.lastAccessedAt }
             
             Result.success(progressList)
         } catch (e: Exception) {
@@ -112,25 +114,17 @@ class UserLessonProgressRepositoryImpl : UserLessonProgressRepository {
 
     override suspend fun createProgress(progress: UserLessonProgress): Result<Unit> {
         return try {
-            println("=== CREATING PROGRESS RECORD ===")
-            println("Document ID: ${progress.id}")
-            println("User ID: ${progress.userId}")
-            println("Lesson ID: ${progress.lessonId}")
-            println("Is Started: ${progress.isStarted}")
-            println("Best Score: ${progress.bestScore}")
-            println("Words Learned: ${progress.wordsLearned}")
+            Log.d(TAG, "Creating progress record for user: ${progress.userId}, lesson: ${progress.lessonId}")
             
             db.collection("userLessonProgress")
                 .document(progress.id)
                 .set(progress)
                 .await()
                 
-            println("✓ Successfully created progress record")
-            println("===============================")
+            Log.d(TAG, "Successfully created progress record: ${progress.id}")
             Result.success(Unit)
         } catch (e: Exception) {
-            println("✗ Failed to create progress record: ${e.message}")
-            println("===============================")
+            Log.e(TAG, "Failed to create progress record: ${e.message}", e)
             Result.failure(e)
         }
     }

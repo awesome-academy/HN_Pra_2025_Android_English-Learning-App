@@ -52,10 +52,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
         setupSuggestedCourse()
         setupCoursesSection()
         
-        // Debug: Show current user info immediately
-        val currentUser = auth.currentUser
-        val userId = currentUser?.uid ?: "anonymous_user"
-        Toast.makeText(context, "User ID: $userId", Toast.LENGTH_LONG).show()
     }
 
     override fun initData() {

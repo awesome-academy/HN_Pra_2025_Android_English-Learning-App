@@ -12,6 +12,8 @@ import java.util.Date
 interface SavedWordsRepository {
     suspend fun saveWord(savedWord: SavedWord): Result<String>
     suspend fun getUserSavedWords(userId: String): Result<List<SavedWord>>
+    suspend fun getUserWordsByType(userId: String, wordType: WordType): Result<List<SavedWord>>
+    suspend fun getWordCountByType(userId: String, wordType: WordType): Result<Int>
     suspend fun deleteWord(wordId: String): Result<Unit>
     suspend fun updateWordType(wordId: String, wordType: WordType): Result<Unit>
     suspend fun isWordSaved(userId: String, word: String): Result<Boolean>
@@ -66,6 +68,47 @@ class SavedWordsRepositoryImpl : SavedWordsRepository {
             Result.success(savedWords)
         } catch (e: Exception) {
             Log.e(TAG, "Error getting saved words: ${e.message}", e)
+            Result.failure(e)
+        }
+    }
+    
+    override suspend fun getUserWordsByType(userId: String, wordType: WordType): Result<List<SavedWord>> {
+        return try {
+            Log.d(TAG, "Getting words by type: ${wordType.name} for user: $userId")
+            
+            val snapshot = db.collection(COLLECTION_NAME)
+                .whereEqualTo("userId", userId)
+                .whereEqualTo("wordType", wordType.value)
+                .get()
+                .await()
+            
+            val savedWords = snapshot.documents.mapNotNull { document ->
+                document.toObject(SavedWord::class.java)?.copy(id = document.id)
+            }.sortedByDescending { it.createdAt }
+            
+            Log.d(TAG, "Found ${savedWords.size} words of type ${wordType.name} for user: $userId")
+            Result.success(savedWords)
+        } catch (e: Exception) {
+            Log.e(TAG, "Error getting words by type: ${e.message}", e)
+            Result.failure(e)
+        }
+    }
+    
+    override suspend fun getWordCountByType(userId: String, wordType: WordType): Result<Int> {
+        return try {
+            Log.d(TAG, "Getting word count by type: ${wordType.name} for user: $userId")
+            
+            val snapshot = db.collection(COLLECTION_NAME)
+                .whereEqualTo("userId", userId)
+                .whereEqualTo("wordType", wordType.value)
+                .get()
+                .await()
+            
+            val count = snapshot.size()
+            Log.d(TAG, "Found $count words of type ${wordType.name} for user: $userId")
+            Result.success(count)
+        } catch (e: Exception) {
+            Log.e(TAG, "Error getting word count by type: ${e.message}", e)
             Result.failure(e)
         }
     }

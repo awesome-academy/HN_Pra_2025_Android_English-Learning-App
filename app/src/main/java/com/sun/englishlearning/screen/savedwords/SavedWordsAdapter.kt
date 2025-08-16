@@ -47,7 +47,8 @@ class SavedWordsAdapter(
                     onAction(savedWord, Action.TOGGLE_FAVORITE)
                 }
                 
-                ivFavorite.alpha = if (savedWord.isFavorite) 1.0f else 0.5f
+                // TODO: Set favorite visual state when isFavorite property is added to SavedWord model
+                ivFavorite.alpha = 0.5f
             }
         }
     }

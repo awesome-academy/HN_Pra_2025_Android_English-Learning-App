@@ -8,8 +8,13 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import com.sun.englishlearning.data.model.WordSearchResult
+import com.sun.englishlearning.data.model.SavedWord
+import com.sun.englishlearning.data.model.WordType
 import com.sun.englishlearning.data.repository.DictionaryRepository
 import com.sun.englishlearning.data.repository.DictionaryRepositoryImpl
+import com.sun.englishlearning.data.repository.SavedWordsRepository
+import com.sun.englishlearning.data.repository.SavedWordsRepositoryImpl
+import com.google.firebase.auth.FirebaseAuth
 import com.sun.englishlearning.databinding.ActivityWordSearchBinding
 import com.sun.englishlearning.utils.base.BaseActivity
 import kotlinx.coroutines.*
@@ -19,7 +24,10 @@ class WordSearchActivity : BaseActivity<ActivityWordSearchBinding>() {
     private var searchJob: Job? = null
     private var mediaPlayer: MediaPlayer? = null
     private var currentWordResult: WordSearchResult? = null
+    private var isWordSaved: Boolean = false
     private val dictionaryRepository: DictionaryRepository = DictionaryRepositoryImpl()
+    private val savedWordsRepository: SavedWordsRepository = SavedWordsRepositoryImpl()
+    private val auth: FirebaseAuth = FirebaseAuth.getInstance()
 
     override fun inflateBinding(inflater: LayoutInflater): ActivityWordSearchBinding {
         return ActivityWordSearchBinding.inflate(inflater)
@@ -46,8 +54,9 @@ class WordSearchActivity : BaseActivity<ActivityWordSearchBinding>() {
             currentWordResult?.let { playWordSound(it.soundUrl) }
         }
 
-        binding.btnFavorite.setOnClickListener {
-            currentWordResult?.let { toggleFavorite(it) }
+
+        binding.btnSaveWord.setOnClickListener {
+            currentWordResult?.let { toggleSaveWord(it) }
         }
     }
 
@@ -109,8 +118,10 @@ class WordSearchActivity : BaseActivity<ActivityWordSearchBinding>() {
             tvPartOfSpeech.text = result.partOfSpeech
             tvDefinition.text = result.definition
 
-            updateFavoriteButton(result.isFavorite)
         }
+        
+        // Check if word is already saved
+        checkIfWordIsSaved(result.word)
     }
 
     private fun showError() {
@@ -149,26 +160,93 @@ class WordSearchActivity : BaseActivity<ActivityWordSearchBinding>() {
         }
     }
 
-    private fun toggleFavorite(wordResult: WordSearchResult) {
-        val newFavoriteState = !wordResult.isFavorite
-        currentWordResult = wordResult.copy(isFavorite = newFavoriteState)
-        updateFavoriteButton(newFavoriteState)
 
-        if (newFavoriteState) {
-            // Here you would save to favorites database
-            Toast.makeText(this, "Added to favorites", Toast.LENGTH_SHORT).show()
-        } else {
-            Toast.makeText(this, "Removed from favorites", Toast.LENGTH_SHORT).show()
+    private fun checkIfWordIsSaved(word: String) {
+        val currentUser = auth.currentUser
+        if (currentUser == null) {
+            updateSaveButton(false)
+            return
+        }
+
+        CoroutineScope(Dispatchers.Main).launch {
+            try {
+                val savedWordResult = savedWordsRepository.isWordSavedWithType(
+                    currentUser.uid, 
+                    word, 
+                    WordType.SAVED
+                )
+                
+                if (savedWordResult.isSuccess) {
+                    val savedWord = savedWordResult.getOrNull()
+                    isWordSaved = savedWord != null
+                    updateSaveButton(isWordSaved)
+                }
+            } catch (e: Exception) {
+                updateSaveButton(false)
+            }
         }
     }
 
-    private fun updateFavoriteButton(isFavorite: Boolean) {
-        binding.btnFavorite.apply {
-            setColorFilter(
-                if (isFavorite) {
-                    resources.getColor(android.R.color.holo_red_dark, null)
+    private fun toggleSaveWord(wordResult: WordSearchResult) {
+        val currentUser = auth.currentUser
+        if (currentUser == null) {
+            Toast.makeText(this, "Please login to save words", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        CoroutineScope(Dispatchers.Main).launch {
+            try {
+                if (isWordSaved) {
+                    // Delete the word
+                    val deleteResult = savedWordsRepository.deleteWordByUserAndName(
+                        currentUser.uid,
+                        wordResult.word,
+                        WordType.SAVED
+                    )
+                    
+                    if (deleteResult.isSuccess) {
+                        isWordSaved = false
+                        updateSaveButton(false)
+                        Toast.makeText(this@WordSearchActivity, "Word removed from saved list", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(this@WordSearchActivity, "Failed to remove word", Toast.LENGTH_SHORT).show()
+                    }
                 } else {
-                    resources.getColor(android.R.color.darker_gray, null)
+                    // Save the word
+                    val savedWord = SavedWord(
+                        userId = currentUser.uid,
+                        word = wordResult.word,
+                        ipa = wordResult.ipa,
+                        partOfSpeech = wordResult.partOfSpeech,
+                        definition = wordResult.definition,
+                        example = wordResult.example,
+                        soundUrl = wordResult.soundUrl,
+                        wordType = WordType.SAVED.value
+                    )
+
+                    val saveResult = savedWordsRepository.saveWord(savedWord)
+                    if (saveResult.isSuccess) {
+                        isWordSaved = true
+                        updateSaveButton(true)
+                        Toast.makeText(this@WordSearchActivity, "Word saved successfully!", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(this@WordSearchActivity, "Failed to save word", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            } catch (e: Exception) {
+                Toast.makeText(this@WordSearchActivity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun updateSaveButton(isSaved: Boolean) {
+        binding.btnSaveWord.apply {
+            text = if (isSaved) "Remove Word" else "Save Word"
+            setBackgroundColor(
+                if (isSaved) {
+                    resources.getColor(android.R.color.holo_red_light, null)
+                } else {
+                    resources.getColor(android.R.color.holo_blue_light, null)
                 }
             )
         }

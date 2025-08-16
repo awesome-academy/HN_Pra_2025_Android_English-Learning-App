@@ -84,63 +84,90 @@ class SavedWordsActivity : BaseActivity<ActivitySavedWordsBinding>() {
             listOf(
                 SavedWord(
                     id = "1",
+                    userId = "sample",
                     word = "as many as",
+                    ipa = "",
+                    partOfSpeech = "phrase",
                     definition = "as many as",
                     soundUrl = "",
                     example = "I have as many books as you do."
                 ),
                 SavedWord(
                     id = "2",
+                    userId = "sample",
                     word = "City break",
+                    ipa = "",
+                    partOfSpeech = "noun",
                     definition = "City break",
                     soundUrl = "",
                     example = "We're planning a city break to Paris."
                 ),
                 SavedWord(
                     id = "3",
+                    userId = "sample",
                     word = "Cosmopolitan",
+                    ipa = "",
+                    partOfSpeech = "adjective",
                     definition = "Cosmopolitan",
                     soundUrl = "",
                     example = "New York is a cosmopolitan city."
                 ),
                 SavedWord(
                     id = "4",
+                    userId = "sample",
                     word = "Crowded",
+                    ipa = "",
+                    partOfSpeech = "adjective",
                     definition = "Crowded",
                     soundUrl = "",
                     example = "The street was very crowded."
                 ),
                 SavedWord(
                     id = "5",
+                    userId = "sample",
                     word = "Embassy",
+                    ipa = "",
+                    partOfSpeech = "noun",
                     definition = "Embassy",
                     soundUrl = "",
                     example = "The embassy is located downtown."
                 ),
                 SavedWord(
                     id = "6",
+                    userId = "sample",
                     word = "Getaway",
+                    ipa = "",
+                    partOfSpeech = "noun",
                     definition = "Getaway",
                     soundUrl = "",
                     example = "We need a weekend getaway."
                 ),
                 SavedWord(
                     id = "7",
+                    userId = "sample",
                     word = "Disappointing",
+                    ipa = "",
+                    partOfSpeech = "adjective",
                     definition = "Disappointing",
                     soundUrl = "",
                     example = "The movie was disappointing."
                 ),
                 SavedWord(
                     id = "8",
+                    userId = "sample",
                     word = "Jaw-dropping",
+                    ipa = "",
+                    partOfSpeech = "adjective",
                     definition = "Jaw-dropping",
                     soundUrl = "",
                     example = "The view was absolutely jaw-dropping."
                 ),
                 SavedWord(
                     id = "9",
+                    userId = "sample",
                     word = "Lively",
+                    ipa = "",
+                    partOfSpeech = "adjective",
                     definition = "Lively",
                     soundUrl = "",
                     example = "The market was very lively."
@@ -155,17 +182,7 @@ class SavedWordsActivity : BaseActivity<ActivitySavedWordsBinding>() {
     }
 
     private fun toggleFavorite(savedWord: SavedWord) {
-        val index = allSavedWords.indexOfFirst { it.id == savedWord.id }
-        if (index != -1) {
-            val updatedWord = allSavedWords[index].copy(isFavorite = !allSavedWords[index].isFavorite)
-            allSavedWords[index] = updatedWord
-            
-            val filteredIndex = filteredSavedWords.indexOfFirst { it.id == savedWord.id }
-            if (filteredIndex != -1) {
-                filteredSavedWords[filteredIndex] = updatedWord
-                savedWordsAdapter.notifyItemChanged(filteredIndex)
-            }
-        }
+        // TODO: Implement favorite functionality when isFavorite property is added to SavedWord model
     }
 }
 

@@ -1,12 +1,27 @@
 package com.sun.englishlearning.data.model
 
+import com.google.firebase.firestore.PropertyName
+import java.util.Date
+
+enum class WordType(val value: Int) {
+    SAVED(1),
+    WEAK(2),
+    MEDIUM(3),
+    STRONG(4)
+}
+
 data class SavedWord(
     val id: String = "",
+    val userId: String = "",
     val word: String = "",
+    val ipa: String = "",
+    val partOfSpeech: String = "",
     val definition: String = "",
-    val soundUrl: String = "",
     val example: String = "",
-    val isFavorite: Boolean = true
+    val soundUrl: String = "",
+    @get:PropertyName("wordType") @set:PropertyName("wordType") val wordType: Int = WordType.SAVED.value,
+    val createdAt: Date = Date(),
+    val updatedAt: Date = Date()
 )
 
 

@@ -1,19 +1,30 @@
 package com.sun.englishlearning.screen.home
 
 import android.content.Intent
-import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.sun.englishlearning.R
-import com.sun.englishlearning.data.model.SuggestedCourse
+import com.sun.englishlearning.data.model.Lesson
+import com.sun.englishlearning.data.repository.LessonRepository
+import com.sun.englishlearning.data.repository.LessonRepositoryImpl
+import com.sun.englishlearning.data.repository.UserLessonProgressRepository
+import com.sun.englishlearning.data.repository.UserLessonProgressRepositoryImpl
 import com.sun.englishlearning.databinding.FragmentHomeBinding
 import com.sun.englishlearning.databinding.ItemSuggestedCourseBinding
 import com.sun.englishlearning.screen.search.WordSearchActivity
 import com.sun.englishlearning.utils.base.BaseFragment
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class HomeFragment : BaseFragment<FragmentHomeBinding>() {
+
+    private val userProgressRepository: UserLessonProgressRepository = UserLessonProgressRepositoryImpl()
+    private val lessonRepository: LessonRepository = LessonRepositoryImpl(userProgressRepository)
+    private val coroutineScope = CoroutineScope(Dispatchers.Main)
+    private var suggestedLessons: List<Lesson> = emptyList()
+    private var currentSuggestedIndex = 0
 
     override fun inflateViewBinding(inflater: LayoutInflater, container: ViewGroup?): FragmentHomeBinding {
         return FragmentHomeBinding.inflate(inflater, container, false)
@@ -58,68 +69,57 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     }
 
     private fun setupSuggestedCourse() {
-        val suggestedCourse = getSampleSuggestedCourse()
-        updateSuggestedCourseCard(suggestedCourse)
+        loadSuggestedLessons()
     }
 
-    private fun refreshSuggestedCourse() {
-        val newSuggestedCourse = getRandomSuggestedCourse()
-        updateSuggestedCourseCard(newSuggestedCourse)
-        Toast.makeText(context, "Refreshing suggestions", Toast.LENGTH_SHORT).show()
-    }
-
-    private fun updateSuggestedCourseCard(course: SuggestedCourse) {
-        val suggestedCourseBinding = ItemSuggestedCourseBinding.bind(viewBinding.suggestedCourseCard.root)
-        
-        suggestedCourseBinding.apply {
-            tvCourseTitle.text = course.title
-            tvCourseSubtitle.text = course.subtitle
-            ivCourseImage.setImageResource(course.imageResId)
-            
-            // Handle click on suggested course card
-            root.setOnClickListener {
-                Toast.makeText(context, "Opening course: ${course.title}", Toast.LENGTH_SHORT).show()
+    private fun loadSuggestedLessons() {
+        coroutineScope.launch {
+            try {
+                // Get lessons that user has not started (suggested lessons)
+                val userId = getCurrentUserId()
+                val lessonsResult = lessonRepository.getSuggestedLessons(userId)
+                if (lessonsResult.isSuccess) {
+                    suggestedLessons = lessonsResult.getOrNull() ?: emptyList()
+                    if (suggestedLessons.isNotEmpty()) {
+                        updateSuggestedCourseCard(suggestedLessons[0])
+                    }
+                }
+            } catch (e: Exception) {
+                Toast.makeText(context, "Error loading suggestions", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
-    private fun getSampleSuggestedCourse(): SuggestedCourse {
-        return SuggestedCourse(
-            id = "1",
-            title = "How to Conversation in the office with your colleagues",
-            subtitle = "At Work vocabulary",
-            imageResId = R.drawable.img_ob3,
-            isCompleted = true,
-            category = "Business",
-            difficulty = "Intermediate",
-            estimatedTime = "30 min"
-        )
+    private fun refreshSuggestedCourse() {
+        if (suggestedLessons.isNotEmpty()) {
+            currentSuggestedIndex = (currentSuggestedIndex + 1) % suggestedLessons.size
+            updateSuggestedCourseCard(suggestedLessons[currentSuggestedIndex])
+        } else {
+            loadSuggestedLessons()
+        }
+        Toast.makeText(context, "Refreshing suggestions", Toast.LENGTH_SHORT).show()
     }
 
-    private fun getRandomSuggestedCourse(): SuggestedCourse {
-        val courses = listOf(
-            SuggestedCourse(
-                id = "1",
-                title = "How to Conversation in the office with your colleagues",
-                subtitle = "At Work vocabulary",
-                imageResId = R.drawable.img_ob3,
-                isCompleted = true
-            ),
-            SuggestedCourse(
-                id = "2",
-                title = "Essential Travel English for Your Next Trip",
-                subtitle = "Travel vocabulary",
-                imageResId = R.drawable.img_ob1,
-                isCompleted = false
-            ),
-            SuggestedCourse(
-                id = "3",
-                title = "Daily English Conversation Practice",
-                subtitle = "Speaking practice",
-                imageResId = R.drawable.img_ob2,
-                isCompleted = false
-            )
-        )
-        return courses.random()
+    private fun updateSuggestedCourseCard(lesson: Lesson) {
+        val suggestedCourseBinding = ItemSuggestedCourseBinding.bind(viewBinding.suggestedCourseCard.root)
+        
+        suggestedCourseBinding.apply {
+            tvCourseTitle.text = lesson.title
+            tvCourseSubtitle.text = lesson.description
+            // Use a default image or the lesson's image resource
+            ivCourseImage.setImageResource(if (lesson.imageRes != 0) lesson.imageRes else R.drawable.img_ob3)
+            
+            // Handle click on suggested course card
+            root.setOnClickListener {
+                Toast.makeText(context, "Opening lesson: ${lesson.title}", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
+    
+    private fun getCurrentUserId(): String {
+        // TODO: Implement proper user identification logic
+        // This could come from SharedPreferences, Firebase Auth, or session management
+        return "user_${System.currentTimeMillis() % 1000}" // Temporary placeholder
+    }
+
 }

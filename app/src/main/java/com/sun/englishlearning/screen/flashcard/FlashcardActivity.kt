@@ -227,7 +227,7 @@ class FlashcardActivity : BaseActivity<ActivityFlashcardBinding>() {
             // Show message that audio is not available
             android.widget.Toast.makeText(
                 this,
-                "Audio pronunciation not available for '${word.name}'",
+                "Audio pronunciation not available for '${word.word}'",
                 android.widget.Toast.LENGTH_SHORT
             ).show()
         }

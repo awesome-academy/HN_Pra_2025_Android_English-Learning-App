@@ -3,8 +3,6 @@ package com.sun.englishlearning.screen.lessondetail
 import android.content.Context
 import com.sun.englishlearning.data.model.Lesson
 import com.sun.englishlearning.data.model.Word
-import com.sun.englishlearning.data.repository.VocabularyRepository
-import com.sun.englishlearning.data.repository.source.remote.OnResultListener
 
 class LessonDetailPresenter : LessonDetailContract.Presenter {
 
@@ -24,39 +22,45 @@ class LessonDetailPresenter : LessonDetailContract.Presenter {
     }
 
     override fun loadVocabulary(lessonId: String) {
-        context?.let { ctx ->
-            view?.showLoading()
-
-            // Use API-based vocabulary loading
-            VocabularyRepository.getVocabularyByLessonId(ctx, lessonId, object : OnResultListener<List<Word>> {
-                override fun onSuccess(data: List<Word>) {
-                    currentVocabulary = data
-                    view?.hideLoading()
-                    view?.showVocabulary(data)
-                }
-
-                override fun onError(error: String) {
-                    view?.hideLoading()
-                    // Fallback to synchronous method if API fails
-                    val fallbackVocabulary = VocabularyRepository.getVocabularyByLessonId(lessonId)
-                    if (fallbackVocabulary.isNotEmpty()) {
-                        currentVocabulary = fallbackVocabulary
-                        view?.showVocabulary(fallbackVocabulary)
-                    } else {
-                        view?.showError(error)
-                    }
-                }
-
-                override fun onLoading() {
-                    view?.showLoading()
-                }
-            })
-        } ?: run {
-            // Fallback if no context
-            val fallbackVocabulary = VocabularyRepository.getVocabularyByLessonId(lessonId)
-            currentVocabulary = fallbackVocabulary
-            view?.showVocabulary(fallbackVocabulary)
+        view?.showLoading()
+        
+        try {
+            // For now, create sample vocabulary data
+            // TODO: Implement actual vocabulary loading from lesson data
+            val sampleVocabulary = createSampleVocabulary(lessonId)
+            currentVocabulary = sampleVocabulary
+            view?.hideLoading()
+            view?.showVocabulary(sampleVocabulary)
+        } catch (e: Exception) {
+            view?.hideLoading()
+            view?.showError("Error loading vocabulary: ${e.message}")
         }
+    }
+    
+    private fun createSampleVocabulary(lessonId: String): List<Word> {
+        // Sample vocabulary data - replace with actual data loading
+        return listOf(
+            Word(
+                id = "1",
+                word = "Hello",
+                definition = "A greeting",
+                pronunciation = "/həˈloʊ/",
+                phonetic = "həˈloʊ",
+                partOfSpeech = "interjection",
+                example = "Hello, how are you?",
+                lessonId = lessonId
+            ),
+            Word(
+                id = "2", 
+                word = "World",
+                definition = "The earth and all its inhabitants",
+                pronunciation = "/wɜːrld/",
+                phonetic = "wɜːrld",
+                partOfSpeech = "noun",
+                example = "The world is beautiful.",
+                lessonId = lessonId
+            )
+        )
     }
 
     override fun onBackClicked() {
@@ -65,11 +69,11 @@ class LessonDetailPresenter : LessonDetailContract.Presenter {
 
     override fun onWordClicked(word: Word) {
         try {
-            android.util.Log.d("LessonDetailPresenter", "Word clicked: ${word.name}")
+            android.util.Log.d("LessonDetailPresenter", "Word clicked: ${word.word}")
             android.util.Log.d("LessonDetailPresenter", "Current vocabulary size: ${currentVocabulary.size}")
 
             // Find the index of the clicked word in the current vocabulary list
-            val wordIndex = currentVocabulary.indexOfFirst { it.name == word.name }
+            val wordIndex = currentVocabulary.indexOfFirst { it.word == word.word }
             android.util.Log.d("LessonDetailPresenter", "Word index found: $wordIndex")
 
             if (wordIndex != -1) {

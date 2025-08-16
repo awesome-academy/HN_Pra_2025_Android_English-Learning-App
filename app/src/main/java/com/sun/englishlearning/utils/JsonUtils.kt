@@ -66,14 +66,10 @@ object JsonUtils {
                     id = lessonJson.getString("id"),
                     title = lessonJson.getString("title"),
                     lessonNumber = lessonJson.getInt("lessonNumber"),
-                    advancedLevel = lessonJson.getInt("advancedLevel"),
-                    currentPoints = lessonJson.getInt("currentPoints"),
-                    totalPoints = lessonJson.getInt("totalPoints"),
-                    progressPercentage = lessonJson.getInt("progressPercentage"),
-                    imageRes = lessonJson.optInt("imageRes", 0),
-                    imageUrl = lessonJson.optString("imageUrl", ""),
                     description = lessonJson.optString("description", ""),
-                    isCompleted = lessonJson.getBoolean("isCompleted")
+                    totalPoints = lessonJson.getInt("totalPoints"),
+                    imageRes = lessonJson.optInt("imageRes", 0),
+                    imageUrl = lessonJson.optString("imageUrl", "")
                 )
                 lessons.add(lesson)
             }

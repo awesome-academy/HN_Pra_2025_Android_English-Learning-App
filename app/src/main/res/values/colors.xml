@@ -29,6 +29,7 @@
     <color name="tab_text_color">#FF2563EB</color>
     <color name="tab_text_inactive">#FF666666</color>
     <color name="red">#E53535</color>
+    <color name="text_color_suggest_course">#666666</color>
 
     <!-- Modern Flashcard Color Palette -->
     <color name="flashcard_primary">#6366F1</color>

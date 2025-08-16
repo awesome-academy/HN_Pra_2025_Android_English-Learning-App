@@ -66,7 +66,7 @@ class ParseDataWithJson {
             
             val wordResult = Word(
                 id = word.hashCode().toString(),
-                name = word,
+                word = word,
                 definition = definition,
                 soundUrl = audioUrl,
                 example = example,

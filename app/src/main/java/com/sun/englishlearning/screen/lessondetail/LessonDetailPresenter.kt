@@ -3,6 +3,8 @@ package com.sun.englishlearning.screen.lessondetail
 import android.content.Context
 import com.sun.englishlearning.data.model.Lesson
 import com.sun.englishlearning.data.model.Word
+import com.sun.englishlearning.data.repository.source.VocabularyDataSource
+import com.sun.englishlearning.data.repository.source.remote.OnResultListener
 
 class LessonDetailPresenter : LessonDetailContract.Presenter {
 
@@ -10,6 +12,7 @@ class LessonDetailPresenter : LessonDetailContract.Presenter {
     private var currentLesson: Lesson? = null
     private var currentVocabulary: List<Word> = emptyList()
     private var context: Context? = null
+    private val vocabularyDataSource = VocabularyDataSource()
 
     fun setContext(context: Context) {
         this.context = context
@@ -23,29 +26,21 @@ class LessonDetailPresenter : LessonDetailContract.Presenter {
 
     override fun loadVocabulary(lessonId: String) {
         view?.showLoading()
-
-        try {
-            // Create vocabulary from current lesson data
-            val vocabulary = currentLesson?.vocabulary?.mapIndexed { index, word ->
-                Word(
-                    id = "${lessonId}_$index",
-                    word = word,
-                    definition = "Definition for $word",
-                    pronunciation = "/$word/",
-                    phonetic = word,
-                    partOfSpeech = "noun",
-                    example = "Example sentence with $word.",
-                    lessonId = lessonId
-                )
-            } ?: emptyList()
-
-            currentVocabulary = vocabulary
-            view?.hideLoading()
-            view?.showVocabulary(vocabulary)
-        } catch (e: Exception) {
-            view?.hideLoading()
-            view?.showError("Error loading vocabulary: ${e.message}")
-        }
+        val context = this.context ?: return
+        vocabularyDataSource.getVocabularyForLesson(context, lessonId, object : OnResultListener<List<Word>> {
+            override fun onLoading() {
+                view?.showLoading()
+            }
+            override fun onSuccess(result: List<Word>) {
+                currentVocabulary = result
+                view?.hideLoading()
+                view?.showVocabulary(result)
+            }
+            override fun onError(error: String) {
+                view?.hideLoading()
+                view?.showError("Error loading vocabulary: $error")
+            }
+        })
     }
 
 

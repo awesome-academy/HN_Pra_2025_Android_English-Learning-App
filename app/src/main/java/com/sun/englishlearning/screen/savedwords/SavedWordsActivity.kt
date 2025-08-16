@@ -116,27 +116,21 @@ class SavedWordsActivity : BaseActivity<ActivitySavedWordsBinding>() {
                     filteredSavedWords.clear()
                     filteredSavedWords.addAll(allSavedWords)
                     
-                    runOnUiThread {
-                        savedWordsAdapter.notifyDataSetChanged()
-                        hideLoading()
-                        
-                        if (savedWords.isEmpty()) {
-                            showEmptyState()
-                        }
+                    savedWordsAdapter.notifyDataSetChanged()
+                    hideLoading()
+                    
+                    if (savedWords.isEmpty()) {
+                        showEmptyState()
                     }
                 } else {
-                    runOnUiThread {
-                        hideLoading()
-                        showEmptyState()
-                        Toast.makeText(this@SavedWordsActivity, "Failed to load saved words", Toast.LENGTH_SHORT).show()
-                    }
-                }
-            } catch (e: Exception) {
-                runOnUiThread {
                     hideLoading()
                     showEmptyState()
-                    Toast.makeText(this@SavedWordsActivity, "Error loading saved words: ${e.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@SavedWordsActivity, "Failed to load saved words", Toast.LENGTH_SHORT).show()
                 }
+            } catch (e: Exception) {
+                hideLoading()
+                showEmptyState()
+                Toast.makeText(this@SavedWordsActivity, "Error loading saved words: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -184,27 +178,21 @@ class SavedWordsActivity : BaseActivity<ActivitySavedWordsBinding>() {
             try {
                 val result = savedWordsRepository.deleteWord(savedWord.id)
                 if (result.isSuccess) {
-                    runOnUiThread {
-                        // Remove from local lists
-                        allSavedWords.removeAll { it.id == savedWord.id }
-                        filteredSavedWords.removeAll { it.id == savedWord.id }
-                        savedWordsAdapter.notifyDataSetChanged()
-                        
-                        Toast.makeText(this@SavedWordsActivity, "Word removed from saved list", Toast.LENGTH_SHORT).show()
-                        
-                        if (filteredSavedWords.isEmpty()) {
-                            showEmptyState()
-                        }
+                    // Remove from local lists
+                    allSavedWords.removeAll { it.id == savedWord.id }
+                    filteredSavedWords.removeAll { it.id == savedWord.id }
+                    savedWordsAdapter.notifyDataSetChanged()
+                    
+                    Toast.makeText(this@SavedWordsActivity, "Word removed from saved list", Toast.LENGTH_SHORT).show()
+                    
+                    if (filteredSavedWords.isEmpty()) {
+                        showEmptyState()
                     }
                 } else {
-                    runOnUiThread {
-                        Toast.makeText(this@SavedWordsActivity, "Failed to remove word", Toast.LENGTH_SHORT).show()
-                    }
+                    Toast.makeText(this@SavedWordsActivity, "Failed to remove word", Toast.LENGTH_SHORT).show()
                 }
             } catch (e: Exception) {
-                runOnUiThread {
-                    Toast.makeText(this@SavedWordsActivity, "Error removing word: ${e.message}", Toast.LENGTH_SHORT).show()
-                }
+                Toast.makeText(this@SavedWordsActivity, "Error removing word: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
     }

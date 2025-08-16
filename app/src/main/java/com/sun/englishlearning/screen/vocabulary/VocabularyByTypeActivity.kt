@@ -171,26 +171,20 @@ class VocabularyByTypeActivity : BaseActivity<ActivityVocabularyByTypeBinding>()
             try {
                 val result = savedWordsRepository.deleteWord(savedWord.id)
                 if (result.isSuccess) {
-                    runOnUiThread {
-                        // Remove from local list
-                        wordsList.removeAll { it.id == savedWord.id }
-                        wordsAdapter.notifyDataSetChanged()
-                        
-                        Toast.makeText(this@VocabularyByTypeActivity, "Word removed successfully", Toast.LENGTH_SHORT).show()
-                        
-                        if (wordsList.isEmpty()) {
-                            showEmptyState()
-                        }
+                    // Remove from local list
+                    wordsList.removeAll { it.id == savedWord.id }
+                    wordsAdapter.notifyDataSetChanged()
+                    
+                    Toast.makeText(this@VocabularyByTypeActivity, "Word removed successfully", Toast.LENGTH_SHORT).show()
+                    
+                    if (wordsList.isEmpty()) {
+                        showEmptyState()
                     }
                 } else {
-                    runOnUiThread {
-                        Toast.makeText(this@VocabularyByTypeActivity, "Failed to remove word", Toast.LENGTH_SHORT).show()
-                    }
+                    Toast.makeText(this@VocabularyByTypeActivity, "Failed to remove word", Toast.LENGTH_SHORT).show()
                 }
             } catch (e: Exception) {
-                runOnUiThread {
-                    Toast.makeText(this@VocabularyByTypeActivity, "Error removing word: ${e.message}", Toast.LENGTH_SHORT).show()
-                }
+                Toast.makeText(this@VocabularyByTypeActivity, "Error removing word: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
     }

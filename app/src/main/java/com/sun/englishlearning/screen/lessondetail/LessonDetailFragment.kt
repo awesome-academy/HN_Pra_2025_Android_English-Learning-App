@@ -111,8 +111,6 @@ class LessonDetailFragment : Fragment(), LessonDetailContract.View {
             textLessonTitle.text = lesson.title
 
             // Set lesson details
-            textLessonNumber.text = "Lesson ID: ${lesson.id}"
-            textAdvancedLevel.text = "Vocabulary: ${lesson.vocabulary.size} words"
             textLessonPoints.text = "Topic: ${lesson.title}"
             textLessonDescription.text = lesson.description
 

@@ -45,12 +45,6 @@ class CoursesAdapter(
                 // Set lesson title
                 textLessonTitle.text = lesson.title
 
-                // Set lesson number and description
-                textLessonNumber.text = "Lesson #${lesson.id}"
-
-                // Set vocabulary count
-                textAdvancedLevel.text = "${lesson.vocabulary.size} words"
-
                 // Set progress - 0% for ongoing lessons (not started yet)
                 val progress = userProgressMap[lesson.id] ?: 0
                 progressLesson.progress = progress

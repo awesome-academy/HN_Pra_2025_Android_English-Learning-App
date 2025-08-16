@@ -8,6 +8,7 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import com.sun.englishlearning.data.model.WordSearchResult
+import com.sun.englishlearning.utils.DialogUtils
 import com.sun.englishlearning.databinding.ActivityWordSearchBinding
 import com.sun.englishlearning.utils.base.BaseActivity
 import kotlinx.coroutines.*
@@ -63,7 +64,10 @@ class WordSearchActivity : BaseActivity<ActivityWordSearchBinding>() {
     private fun performSearch() {
         val query = binding.etSearchWord.text.toString().trim()
         if (query.isEmpty()) {
-            Toast.makeText(this, "Please enter a word to search", Toast.LENGTH_SHORT).show()
+            DialogUtils.showErrorDialog(
+                context = this,
+                message = "Please enter a word to search"
+            )
             return
         }
 
@@ -174,7 +178,10 @@ class WordSearchActivity : BaseActivity<ActivityWordSearchBinding>() {
                 Toast.makeText(this@WordSearchActivity, "Playing pronunciation...", Toast.LENGTH_SHORT).show()
             }
         } catch (e: Exception) {
-            Toast.makeText(this, "Unable to play sound", Toast.LENGTH_SHORT).show()
+            DialogUtils.showErrorDialog(
+                context = this,
+                message = "Unable to play sound"
+            )
         }
     }
 

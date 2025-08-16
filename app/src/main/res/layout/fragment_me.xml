@@ -42,6 +42,7 @@
                 android:background="@drawable/bg_avatar"
                 android:padding="@dimen/dp_4"
                 android:scaleType="centerCrop"
+                android:src="@drawable/avatar"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/ic_settings" />
 
@@ -83,7 +84,7 @@
                     android:fontFamily="@font/nunito_bold"
                     android:textColor="@color/text_dark_gray"
                     android:textSize="@dimen/sp_12"
-                    tools:text="Ha Noi" />
+                    android:text="@string/location_hanoi" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tv_speak_level"
@@ -95,7 +96,7 @@
                     android:fontFamily="@font/nunito_bold"
                     android:textColor="@color/text_dark_gray"
                     android:textSize="@dimen/sp_12"
-                    tools:text="Speak English at beginner level " />
+                    android:text="@string/speak_level_beginner" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tv_lean"
@@ -107,7 +108,7 @@
                     android:fontFamily="@font/nunito_bold"
                     android:textColor="@color/text_dark_gray"
                     android:textSize="@dimen/sp_12"
-                    tools:text="Learning English" />
+                    android:text="@string/learning_english" />
 
             </androidx.appcompat.widget.LinearLayoutCompat>
         </androidx.constraintlayout.widget.ConstraintLayout>

@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import com.sun.englishlearning.utils.DialogUtils
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sun.englishlearning.R
@@ -129,7 +130,10 @@ class CoursesFragment : Fragment(), CoursesContract.View {
     }
 
     override fun showError(message: String) {
-        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+        DialogUtils.showErrorDialog(
+            context = requireContext(),
+            message = message
+        )
     }
 
     override fun navigateToLessonDetail(lesson: Lesson) {

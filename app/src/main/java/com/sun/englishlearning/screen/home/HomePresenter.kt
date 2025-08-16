@@ -1,8 +1,10 @@
 package com.sun.englishlearning.screen.home
 
 import android.content.Context
-import com.sun.englishlearning.api.LessonApiService
 import com.sun.englishlearning.data.model.Lesson
+import com.sun.englishlearning.data.repository.LessonRepository
+import com.sun.englishlearning.data.repository.LessonRepositoryImpl
+import com.sun.englishlearning.data.repository.UserLessonProgressRepositoryImpl
 import com.sun.englishlearning.screen.home.adapter.CourseCategory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -18,15 +20,18 @@ interface HomeView {
 
 class HomePresenter(private val view: HomeView, private val context: Context) {
 
-    private val lessonApiService = LessonApiService(context)
+    private val lessonRepository: LessonRepository = LessonRepositoryImpl(
+        context,
+        UserLessonProgressRepositoryImpl()
+    )
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
     
     fun loadCourseCategories() {
         view.showLoading()
         coroutineScope.launch {
             try {
-                val lessonsResult = lessonApiService.getAllLessons()
-                
+                val lessonsResult = lessonRepository.getAllLessons()
+
                 if (lessonsResult.isSuccess) {
                     val allLessons = lessonsResult.getOrNull() ?: emptyList()
                     val categories = createCategoriesFromLessons(allLessons)

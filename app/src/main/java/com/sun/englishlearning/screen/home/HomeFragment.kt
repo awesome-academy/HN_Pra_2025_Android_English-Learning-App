@@ -75,8 +75,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
             }
 
             tvSeeAllRecent.setOnClickListener {
-                // Navigate to view all recent lessons (could be implemented later)
-                Toast.makeText(context, "View all recent lessons", Toast.LENGTH_SHORT).show()
+                // Navigate to Courses tab
+                findNavController().navigate(R.id.navigation_courses)
             }
 
             ivRefresh.setOnClickListener {

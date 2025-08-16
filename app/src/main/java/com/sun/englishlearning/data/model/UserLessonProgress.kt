@@ -1,24 +1,25 @@
 package com.sun.englishlearning.data.model
 
+import com.google.firebase.firestore.PropertyName
 import java.util.Date
 
 data class UserLessonProgress(
-    val id: String = "",
-    val userId: String = "",
-    val lessonId: String = "",
-    val isStarted: Boolean = false,
-    val isCompleted: Boolean = false,
-    val currentPoints: Int = 0,
-    val totalPoints: Int = 100,
-    val progressPercentage: Int = 0,
-    val timeSpentMinutes: Int = 0,
-    val attempts: Int = 0,
-    val bestScore: Int = 0,
-    val wordsLearned: Int = 0,
-    val totalWords: Int = 0,
-    val completedExercises: List<String> = emptyList(),
-    val learnedWordIds: List<String> = emptyList(),
-    val startedAt: Date = Date(),
-    val completedAt: Date? = null,
-    val lastAccessedAt: Date = Date()
+    var id: String = "",
+    var userId: String = "",
+    var lessonId: String = "",
+    @get:PropertyName("isStarted") @set:PropertyName("isStarted") var isStarted: Boolean = false,
+    @get:PropertyName("isCompleted") @set:PropertyName("isCompleted") var isCompleted: Boolean = false,
+    var currentPoints: Int = 0,
+    var totalPoints: Int = 100,
+    var progressPercentage: Int = 0,
+    var timeSpentMinutes: Int = 0,
+    var attempts: Int = 0,
+    var bestScore: Int = 0,
+    var wordsLearned: Int = 0,
+    var totalWords: Int = 0,
+    var completedExercises: List<String> = emptyList(),
+    var learnedWordIds: List<String> = emptyList(),
+    var startedAt: Date = Date(),
+    var completedAt: Date? = null,
+    var lastAccessedAt: Date = Date()
 )

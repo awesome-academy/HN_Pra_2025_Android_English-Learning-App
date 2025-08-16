@@ -1,5 +1,6 @@
 package com.sun.englishlearning.data.repository
 
+import android.util.Log
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.sun.englishlearning.data.model.UserLessonProgress
@@ -19,6 +20,10 @@ interface UserLessonProgressRepository {
 
 class UserLessonProgressRepositoryImpl : UserLessonProgressRepository {
     private val db = Firebase.firestore
+    
+    companion object {
+        private const val TAG = "UserLessonProgressRepository"
+    }
 
     override suspend fun getUserLessonProgress(userId: String, lessonId: String): Result<UserLessonProgress?> {
         return try {
@@ -57,13 +62,13 @@ class UserLessonProgressRepositoryImpl : UserLessonProgressRepository {
         return try {
             val snapshot = db.collection("userLessonProgress")
                 .whereEqualTo("userId", userId)
-                .orderBy("lastAccessedAt", com.google.firebase.firestore.Query.Direction.DESCENDING)
                 .get()
                 .await()
-
+            
             val progressList = snapshot.documents.mapNotNull { document ->
                 document.toObject(UserLessonProgress::class.java)?.copy(id = document.id)
-            }
+            }.sortedByDescending { it.lastAccessedAt }
+            
             Result.success(progressList)
         } catch (e: Exception) {
             Result.failure(e)
@@ -109,12 +114,17 @@ class UserLessonProgressRepositoryImpl : UserLessonProgressRepository {
 
     override suspend fun createProgress(progress: UserLessonProgress): Result<Unit> {
         return try {
+            Log.d(TAG, "Creating progress record for user: ${progress.userId}, lesson: ${progress.lessonId}")
+            
             db.collection("userLessonProgress")
                 .document(progress.id)
                 .set(progress)
                 .await()
+                
+            Log.d(TAG, "Successfully created progress record: ${progress.id}")
             Result.success(Unit)
         } catch (e: Exception) {
+            Log.e(TAG, "Failed to create progress record: ${e.message}", e)
             Result.failure(e)
         }
     }

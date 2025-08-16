@@ -5,6 +5,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.sun.englishlearning.data.model.Lesson
 import com.sun.englishlearning.data.model.LessonDifficulty
+import com.sun.englishlearning.data.model.UserLessonProgress
 import kotlinx.coroutines.tasks.await
 
 interface LessonRepository {
@@ -14,6 +15,7 @@ interface LessonRepository {
     suspend fun getLesson(lessonId: String): Result<Lesson?>
     suspend fun getLessonsForUser(userId: String): Result<List<Lesson>>
     suspend fun getSuggestedLessons(userId: String): Result<List<Lesson>>
+    suspend fun getRecentlyLearnedLessons(userId: String, limit: Int = 2): Result<List<Pair<Lesson, UserLessonProgress>>>
     suspend fun createLesson(lesson: Lesson): Result<Unit>
     suspend fun updateLesson(lesson: Lesson): Result<Unit>
 }
@@ -143,6 +145,49 @@ class LessonRepositoryImpl(
             val suggestedLessons = allLessons.filter { !it.isStarted }
             
             Result.success(suggestedLessons)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun getRecentlyLearnedLessons(userId: String, limit: Int): Result<List<Pair<Lesson, UserLessonProgress>>> {
+        return try {
+            // Get user progress ordered by lastAccessedAt (most recent first)
+            val progressResult = userLessonProgressRepository.getUserProgressByUser(userId)
+            if (progressResult.isFailure) {
+                return Result.success(emptyList()) // Return empty list if no progress found
+            }
+            
+            val userProgress = progressResult.getOrNull() ?: emptyList()
+            
+            // Get the most recent progress records (limit to specified number)
+            val recentProgress = userProgress
+                .filter { it.isStarted } // Only lessons that have been started
+                .take(limit)
+            
+            if (recentProgress.isEmpty()) {
+                return Result.success(emptyList())
+            }
+            
+            // Get all lessons
+            val allLessonsResult = getAllLessons()
+            if (allLessonsResult.isFailure) {
+                return Result.success(emptyList())
+            }
+            
+            val allLessons = allLessonsResult.getOrNull() ?: emptyList()
+            
+            // Combine lessons with their progress data
+            val recentLessonsWithProgress = recentProgress.mapNotNull { progress ->
+                val lesson = allLessons.find { it.id == progress.lessonId }
+                if (lesson != null) {
+                    Pair(lesson, progress)
+                } else {
+                    null
+                }
+            }
+            
+            Result.success(recentLessonsWithProgress)
         } catch (e: Exception) {
             Result.failure(e)
         }

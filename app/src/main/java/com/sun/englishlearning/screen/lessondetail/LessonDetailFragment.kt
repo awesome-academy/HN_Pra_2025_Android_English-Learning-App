@@ -108,19 +108,24 @@ class LessonDetailFragment : Fragment(), LessonDetailContract.View {
     override fun displayLessonInfo(lesson: Lesson) {
         viewBinding.apply {
             // Set lesson title
-            textLessonTitle.text = lesson.title
+            textLessonTitle.text = lesson.name
 
-            // Set lesson details
-            textLessonPoints.text = "points: ${lesson.currentPoints} / ${lesson.totalPoints}"
+            // Set lesson details - use default values since Lesson doesn't have currentPoints/progressPercentage
+            // These should come from UserLessonProgress in a real implementation
+            val currentPoints = 0 // TODO: Get from UserLessonProgress
+            val progressPercentage = 0 // TODO: Get from UserLessonProgress
+            val totalPoints = 100 // Default total points
+
+            textLessonPoints.text = "points: $currentPoints / $totalPoints"
             textLessonDescription.text = lesson.description
 
             // Set progress
-            progressLesson.progress = lesson.progressPercentage
+            progressLesson.progress = progressPercentage
 
             // Load lesson image
-            if (lesson.imageUrl.isNotEmpty()) {
+            if (lesson.image.isNotEmpty()) {
                 Glide.with(requireContext())
-                    .load(lesson.imageUrl)
+                    .load(lesson.image)
                     .apply(RequestOptions().transform(RoundedCorners(24)))
                     .placeholder(R.drawable.ic_launcher_background)
                     .error(R.drawable.ic_launcher_background)
@@ -145,12 +150,12 @@ class LessonDetailFragment : Fragment(), LessonDetailContract.View {
     }
 
     override fun playWordSound(word: Word) {
-        Toast.makeText(requireContext(), "Playing sound for: ${word.name}", Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireContext(), "Playing sound for: ${word.word}", Toast.LENGTH_SHORT).show()
         // TODO: Implement actual sound playing
     }
 
     override fun showWordDetail(word: Word) {
-        Toast.makeText(requireContext(), "Word: ${word.name}", Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireContext(), "Word: ${word.word}", Toast.LENGTH_SHORT).show()
         // TODO: Implement word detail functionality
     }
 

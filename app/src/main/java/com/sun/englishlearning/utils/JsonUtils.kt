@@ -62,14 +62,20 @@ object JsonUtils {
 
             for (i in 0 until lessonsArray.length()) {
                 val lessonJson = lessonsArray.getJSONObject(i)
+
+                // Parse vocabulary array
+                val vocabularyArray = lessonJson.getJSONArray("vocabulary")
+                val vocabulary = mutableListOf<String>()
+                for (j in 0 until vocabularyArray.length()) {
+                    vocabulary.add(vocabularyArray.getString(j))
+                }
+
                 val lesson = Lesson(
                     id = lessonJson.getString("id"),
-                    title = lessonJson.getString("title"),
-                    lessonNumber = lessonJson.getInt("lessonNumber"),
+                    name = lessonJson.getString("name"),
                     description = lessonJson.optString("description", ""),
-                    totalPoints = lessonJson.getInt("totalPoints"),
-                    imageRes = lessonJson.optInt("imageRes", 0),
-                    imageUrl = lessonJson.optString("imageUrl", "")
+                    image = lessonJson.optString("image", ""),
+                    vocabulary = vocabulary
                 )
                 lessons.add(lesson)
             }

@@ -21,7 +21,7 @@ import kotlinx.coroutines.launch
 class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 
     private val userProgressRepository: UserLessonProgressRepository = UserLessonProgressRepositoryImpl()
-    private val lessonRepository: LessonRepository = LessonRepositoryImpl(userProgressRepository)
+    private val lessonRepository: LessonRepository = LessonRepositoryImpl()
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
     private var suggestedLessons: List<Lesson> = emptyList()
     private var currentSuggestedIndex = 0
@@ -75,9 +75,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     private fun loadSuggestedLessons() {
         coroutineScope.launch {
             try {
-                // Get lessons that user has not started (suggested lessons)
-                val userId = getCurrentUserId()
-                val lessonsResult = lessonRepository.getSuggestedLessons(userId)
+                // Get all lessons (suggested logic should be based on UserLessonProgress)
+                val lessonsResult = lessonRepository.getAllLessons()
                 if (lessonsResult.isSuccess) {
                     suggestedLessons = lessonsResult.getOrNull() ?: emptyList()
                     if (suggestedLessons.isNotEmpty()) {
@@ -104,14 +103,14 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
         val suggestedCourseBinding = ItemSuggestedCourseBinding.bind(viewBinding.suggestedCourseCard.root)
         
         suggestedCourseBinding.apply {
-            tvCourseTitle.text = lesson.title
+            tvCourseTitle.text = lesson.name
             tvCourseSubtitle.text = lesson.description
-            // Use a default image or the lesson's image resource
-            ivCourseImage.setImageResource(if (lesson.imageRes != 0) lesson.imageRes else R.drawable.img_ob3)
-            
+            // Use a default image since imageRes is no longer available
+            ivCourseImage.setImageResource(R.drawable.img_ob3)
+
             // Handle click on suggested course card
             root.setOnClickListener {
-                Toast.makeText(context, "Opening lesson: ${lesson.title}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Opening lesson: ${lesson.name}", Toast.LENGTH_SHORT).show()
             }
         }
     }

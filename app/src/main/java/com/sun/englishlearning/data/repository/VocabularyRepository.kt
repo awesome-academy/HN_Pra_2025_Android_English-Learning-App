@@ -127,11 +127,4 @@ class WordRepositoryImpl : WordRepository {
             Result.failure(e)
         }
     }
-
-    /**
-     * Check API availability
-     */
-    fun checkApiAvailability(listener: OnResultListener<Boolean>) {
-        vocabularyDataSource.checkApiAvailability(listener)
-    }
 }

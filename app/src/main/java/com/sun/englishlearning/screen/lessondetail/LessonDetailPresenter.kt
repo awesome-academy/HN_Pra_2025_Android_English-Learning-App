@@ -23,44 +23,33 @@ class LessonDetailPresenter : LessonDetailContract.Presenter {
 
     override fun loadVocabulary(lessonId: String) {
         view?.showLoading()
-        
+
         try {
-            // For now, create sample vocabulary data
-            // TODO: Implement actual vocabulary loading from lesson data
-            val sampleVocabulary = createSampleVocabulary(lessonId)
-            currentVocabulary = sampleVocabulary
+            // Load vocabulary from the current lesson's embedded vocabulary list
+            val vocabularyWords = currentLesson?.vocabulary ?: emptyList()
+            val wordObjects = createWordObjectsFromVocabulary(vocabularyWords, lessonId)
+            currentVocabulary = wordObjects
             view?.hideLoading()
-            view?.showVocabulary(sampleVocabulary)
+            view?.showVocabulary(wordObjects)
         } catch (e: Exception) {
             view?.hideLoading()
             view?.showError("Error loading vocabulary: ${e.message}")
         }
     }
     
-    private fun createSampleVocabulary(lessonId: String): List<Word> {
-        // Sample vocabulary data - replace with actual data loading
-        return listOf(
+    private fun createWordObjectsFromVocabulary(vocabularyWords: List<String>, lessonId: String): List<Word> {
+        return vocabularyWords.mapIndexed { index, wordText ->
             Word(
-                id = "1",
-                word = "Hello",
-                definition = "A greeting",
-                pronunciation = "/həˈloʊ/",
-                phonetic = "həˈloʊ",
-                partOfSpeech = "interjection",
-                example = "Hello, how are you?",
-                lessonId = lessonId
-            ),
-            Word(
-                id = "2", 
-                word = "World",
-                definition = "The earth and all its inhabitants",
-                pronunciation = "/wɜːrld/",
-                phonetic = "wɜːrld",
-                partOfSpeech = "noun",
-                example = "The world is beautiful.",
+                id = "${lessonId}_$index",
+                word = wordText,
+                definition = "Definition for $wordText", // Placeholder - could be fetched from API
+                pronunciation = "",
+                phonetic = "",
+                partOfSpeech = "",
+                example = "Example sentence with $wordText", // Placeholder
                 lessonId = lessonId
             )
-        )
+        }
     }
 
     override fun onBackClicked() {
@@ -77,7 +66,7 @@ class LessonDetailPresenter : LessonDetailContract.Presenter {
             android.util.Log.d("LessonDetailPresenter", "Word index found: $wordIndex")
 
             if (wordIndex != -1) {
-                val lessonTitle = currentLesson?.title ?: ""
+                val lessonTitle = currentLesson?.name ?: ""
                 android.util.Log.d("LessonDetailPresenter", "Navigating to flashcard with title: $lessonTitle")
                 view?.navigateToFlashcard(currentVocabulary, wordIndex, lessonTitle)
             } else {

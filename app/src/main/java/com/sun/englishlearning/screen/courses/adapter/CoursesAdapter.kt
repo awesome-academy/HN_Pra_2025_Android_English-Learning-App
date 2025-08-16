@@ -43,19 +43,20 @@ class CoursesAdapter(
         fun bind(lesson: Lesson) {
             binding.apply {
                 // Set lesson title
-                textLessonTitle.text = lesson.title
-                
-                // Set points
-                textLessonPoints.text = "points: ${lesson.totalPoints}"
-                
+                textLessonTitle.text = lesson.name
+
+                // Set points - use default total points since it's not in simplified lesson
+                val totalPoints = 100 // Default total points
+                textLessonPoints.text = "points: $totalPoints"
+
                 // Set progress from UserLessonProgress if available
                 val progress = userProgressMap[lesson.id] ?: 0
                 progressLesson.progress = progress
 
                 // Load lesson image using Glide
-                if (lesson.imageUrl.isNotEmpty()) {
+                if (lesson.image.isNotEmpty()) {
                     Glide.with(binding.root.context)
-                        .load(lesson.imageUrl)
+                        .load(lesson.image)
                         .apply(RequestOptions().transform(RoundedCorners(24)))
                         .placeholder(R.drawable.ic_launcher_background)
                         .error(R.drawable.ic_launcher_background)

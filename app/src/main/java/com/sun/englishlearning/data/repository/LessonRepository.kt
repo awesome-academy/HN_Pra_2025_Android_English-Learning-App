@@ -1,5 +1,6 @@
 package com.sun.englishlearning.data.repository
 
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.sun.englishlearning.data.model.Lesson
@@ -21,18 +22,26 @@ class LessonRepositoryImpl(
     private val userLessonProgressRepository: UserLessonProgressRepository
 ) : LessonRepository {
     private val db = Firebase.firestore
+    private val auth = Firebase.auth
 
     override suspend fun getAllLessons(): Result<List<Lesson>> {
         return try {
+            // Check if user is authenticated
+            val currentUser = auth.currentUser
+            if (currentUser == null) {
+                return Result.failure(Exception("User not authenticated. Please sign in first."))
+            }
+            
+            // Try simple query without orderBy to avoid index issues
             val snapshot = db.collection("lessons")
-                .whereEqualTo("isActive", true)
-                .orderBy("lessonNumber")
                 .get()
                 .await()
 
             val lessons = snapshot.documents.mapNotNull { document ->
                 document.toObject(Lesson::class.java)?.copy(id = document.id)
-            }
+            }.filter { it.isActive } // Filter active lessons in code instead of query
+             .sortedBy { it.lessonNumber } // Sort in code instead of database
+            
             Result.success(lessons)
         } catch (e: Exception) {
             Result.failure(e)
@@ -43,14 +52,14 @@ class LessonRepositoryImpl(
         return try {
             val snapshot = db.collection("lessons")
                 .whereEqualTo("courseId", courseId)
-                .whereEqualTo("isActive", true)
-                .orderBy("lessonNumber")
                 .get()
                 .await()
 
             val lessons = snapshot.documents.mapNotNull { document ->
                 document.toObject(Lesson::class.java)?.copy(id = document.id)
-            }
+            }.filter { it.isActive }
+             .sortedBy { it.lessonNumber }
+             
             Result.success(lessons)
         } catch (e: Exception) {
             Result.failure(e)
@@ -61,14 +70,14 @@ class LessonRepositoryImpl(
         return try {
             val snapshot = db.collection("lessons")
                 .whereEqualTo("difficulty", difficulty.name)
-                .whereEqualTo("isActive", true)
-                .orderBy("lessonNumber")
                 .get()
                 .await()
 
             val lessons = snapshot.documents.mapNotNull { document ->
                 document.toObject(Lesson::class.java)?.copy(id = document.id)
-            }
+            }.filter { it.isActive }
+             .sortedBy { it.lessonNumber }
+             
             Result.success(lessons)
         } catch (e: Exception) {
             Result.failure(e)

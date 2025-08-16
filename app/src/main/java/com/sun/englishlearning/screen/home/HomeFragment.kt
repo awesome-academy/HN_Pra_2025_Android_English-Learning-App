@@ -179,14 +179,14 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
                     val allLessons = lessonsResult.getOrNull() ?: emptyList()
                     
                     if (allLessons.isEmpty()) {
-                        Toast.makeText(context, "No lessons found in database", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "No courses available at the moment", Toast.LENGTH_SHORT).show()
                         val testCategories = createTestCategories()
                         coursesAdapter.updateCategories(testCategories)
                     } else {
                         val categories = createCategoriesFromLessons(allLessons)
                         
                         if (categories.isEmpty()) {
-                            Toast.makeText(context, "No course categories available", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, "No courses available at the moment", Toast.LENGTH_SHORT).show()
                             val testCategories = createTestCategories()
                             coursesAdapter.updateCategories(testCategories)
                         } else {
@@ -194,12 +194,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
                         }
                     }
                 } else {
-                    val error = lessonsResult.exceptionOrNull()
-                    Toast.makeText(context, "Failed to load courses: ${error?.message}", Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, "Unable to load courses. Please try again later.", Toast.LENGTH_LONG).show()
                 }
             } catch (e: Exception) {
                 hideCoursesLoading()
-                Toast.makeText(context, "Error loading courses: ${e.message}", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, "Something went wrong. Please check your connection and try again.", Toast.LENGTH_LONG).show()
             }
         }
     }

@@ -1,6 +1,7 @@
 package com.sun.englishlearning.screen.courses
 
 import android.content.Context
+import com.google.firebase.auth.FirebaseAuth
 import com.sun.englishlearning.data.model.Lesson
 import com.sun.englishlearning.api.LessonApiService
 import kotlinx.coroutines.CoroutineScope
@@ -105,8 +106,8 @@ class CoursesPresenter : CoursesContract.Presenter {
     }
     
     private fun getCurrentUserId(): String {
-        // Using your actual user ID for now
-        return "3NdXAZX1mFNam089ZdefJjYVd5t2"
+        // Get the current user ID from Firebase Authentication
+        return FirebaseAuth.getInstance().currentUser?.uid ?: ""
     }
     
     private fun isLessonCompleted(lessonId: String): Boolean {

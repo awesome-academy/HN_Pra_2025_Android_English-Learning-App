@@ -1,5 +1,7 @@
 package com.sun.englishlearning.screen.savedwords
 
+import android.media.AudioManager
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -25,6 +27,7 @@ class SavedWordsActivity : BaseActivity<ActivitySavedWordsBinding>() {
     
     private val savedWordsRepository: SavedWordsRepository = SavedWordsRepositoryImpl()
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
+    private var mediaPlayer: MediaPlayer? = null
 
     override fun inflateBinding(inflater: LayoutInflater): ActivitySavedWordsBinding {
         return ActivitySavedWordsBinding.inflate(inflater)
@@ -46,8 +49,8 @@ class SavedWordsActivity : BaseActivity<ActivitySavedWordsBinding>() {
                 SavedWordsAdapter.Action.PLAY_SOUND -> {
                     playWordSound(savedWord.soundUrl)
                 }
-                SavedWordsAdapter.Action.TOGGLE_FAVORITE -> {
-                    toggleFavorite(savedWord)
+                SavedWordsAdapter.Action.REMOVE_WORD -> {
+                    removeWord(savedWord)
                 }
             }
         }
@@ -151,10 +154,64 @@ class SavedWordsActivity : BaseActivity<ActivitySavedWordsBinding>() {
     }
 
     private fun playWordSound(soundUrl: String) {
+        if (soundUrl.isEmpty()) {
+            Toast.makeText(this, "No audio available for this word", Toast.LENGTH_SHORT).show()
+            return
+        }
+        
+        try {
+            mediaPlayer?.release()
+            mediaPlayer = MediaPlayer().apply {
+                setAudioStreamType(AudioManager.STREAM_MUSIC)
+                setDataSource(soundUrl)
+                setOnPreparedListener { 
+                    start()
+                    Toast.makeText(this@SavedWordsActivity, "Playing pronunciation...", Toast.LENGTH_SHORT).show()
+                }
+                setOnErrorListener { _, _, _ ->
+                    Toast.makeText(this@SavedWordsActivity, "Unable to play audio", Toast.LENGTH_SHORT).show()
+                    false
+                }
+                prepareAsync()
+            }
+        } catch (e: Exception) {
+            Toast.makeText(this, "Unable to play sound: ${e.message}", Toast.LENGTH_SHORT).show()
+        }
     }
 
-    private fun toggleFavorite(savedWord: SavedWord) {
-        // TODO: Implement favorite functionality when isFavorite property is added to SavedWord model
+    private fun removeWord(savedWord: SavedWord) {
+        lifecycleScope.launch {
+            try {
+                val result = savedWordsRepository.deleteWord(savedWord.id)
+                if (result.isSuccess) {
+                    runOnUiThread {
+                        // Remove from local lists
+                        allSavedWords.removeAll { it.id == savedWord.id }
+                        filteredSavedWords.removeAll { it.id == savedWord.id }
+                        savedWordsAdapter.notifyDataSetChanged()
+                        
+                        Toast.makeText(this@SavedWordsActivity, "Word removed from saved list", Toast.LENGTH_SHORT).show()
+                        
+                        if (filteredSavedWords.isEmpty()) {
+                            showEmptyState()
+                        }
+                    }
+                } else {
+                    runOnUiThread {
+                        Toast.makeText(this@SavedWordsActivity, "Failed to remove word", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            } catch (e: Exception) {
+                runOnUiThread {
+                    Toast.makeText(this@SavedWordsActivity, "Error removing word: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mediaPlayer?.release()
     }
 }
 

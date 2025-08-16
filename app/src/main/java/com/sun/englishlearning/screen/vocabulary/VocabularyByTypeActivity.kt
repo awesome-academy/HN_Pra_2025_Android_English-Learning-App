@@ -74,8 +74,8 @@ class VocabularyByTypeActivity : BaseActivity<ActivityVocabularyByTypeBinding>()
                 SavedWordsAdapter.Action.PLAY_SOUND -> {
                     // Handle sound play
                 }
-                SavedWordsAdapter.Action.TOGGLE_FAVORITE -> {
-                    // Handle favorite toggle
+                SavedWordsAdapter.Action.REMOVE_WORD -> {
+                    // Handle word removal
                 }
             }
         }

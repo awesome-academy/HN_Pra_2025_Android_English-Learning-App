@@ -49,6 +49,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     override fun initView() {
         setupClickListeners()
         updateStudyTime()
+        updateGreeting()
         setupSuggestedCourse()
         setupCoursesSection()
         
@@ -87,6 +88,25 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 
     private fun updateStudyTime() {
         viewBinding.tvStudyTime.text = getString(R.string.study_time_format, 2, 15)
+    }
+    
+    private fun updateGreeting() {
+        val currentUser = auth.currentUser
+        val displayName = currentUser?.displayName
+        
+        if (displayName.isNullOrBlank()) {
+            // Fallback to email if display name is not available
+            val email = currentUser?.email
+            val userName = if (!email.isNullOrBlank()) {
+                // Extract name part from email (before @)
+                email.substringBefore("@").replaceFirstChar { it.uppercase() }
+            } else {
+                "User" // Default fallback
+            }
+            viewBinding.tvGreeting.text = "Hi, $userName👋"
+        } else {
+            viewBinding.tvGreeting.text = "Hi, $displayName👋"
+        }
     }
 
     private fun setupSuggestedCourse() {

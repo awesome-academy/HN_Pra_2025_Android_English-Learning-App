@@ -48,7 +48,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 
     override fun initView() {
         setupClickListeners()
-        updateStudyTime()
         updateGreeting()
         setupSuggestedCourse()
         setupCoursesSection()
@@ -66,9 +65,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
                 startActivity(intent)
             }
 
-            btnLetsStart.setOnClickListener {
-                Toast.makeText(context, "Let's start learning!", Toast.LENGTH_SHORT).show()
-            }
 
             tvSeeAllCourses.setOnClickListener {
                 // Navigate to Courses tab
@@ -86,10 +82,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
         }
     }
 
-    private fun updateStudyTime() {
-        viewBinding.tvStudyTime.text = getString(R.string.study_time_format, 2, 15)
-    }
-    
     private fun updateGreeting() {
         val currentUser = auth.currentUser
         val displayName = currentUser?.displayName

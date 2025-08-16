@@ -68,7 +68,13 @@ class CourseCategoryAdapter(
                 .centerCrop()
                 .into(iconImage)
             
-            lessonCountText.text = "${category.lessons.size} lessons"
+            // Display number of words in the lesson instead of lesson count
+            val wordCount = if (category.lessons.isNotEmpty()) {
+                category.lessons.first().wordIds.size
+            } else {
+                0
+            }
+            lessonCountText.text = "$wordCount words"
             
             itemView.setOnClickListener {
                 onCategoryClick(category)

@@ -14,11 +14,11 @@ object JsonUtils {
     /**
      * Read JSON file from assets and parse it to List<Lesson>
      */
-    fun loadLessonsFromAssets(context: Context, fileName: String = "lessons.json"): List<Lesson> {
+    fun loadLessonsFromAssets(context: Context?, fileName: String = "lessons.json"): List<Lesson> {
         return try {
             Log.d(TAG, "Loading lessons from assets: $fileName")
 
-            val jsonString = loadJsonFromAssets(context, fileName)
+            val jsonString = loadJsonFromAssets(context!!, fileName)
             if (jsonString.isEmpty()) {
                 Log.e(TAG, "JSON string is empty")
                 return emptyList()
@@ -62,20 +62,14 @@ object JsonUtils {
 
             for (i in 0 until lessonsArray.length()) {
                 val lessonJson = lessonsArray.getJSONObject(i)
-
-                // Parse vocabulary array
-                val vocabularyArray = lessonJson.getJSONArray("vocabulary")
-                val vocabulary = mutableListOf<String>()
-                for (j in 0 until vocabularyArray.length()) {
-                    vocabulary.add(vocabularyArray.getString(j))
-                }
-
                 val lesson = Lesson(
                     id = lessonJson.getString("id"),
-                    name = lessonJson.getString("name"),
-                    description = lessonJson.optString("description", ""),
-                    image = lessonJson.optString("image", ""),
-                    vocabulary = vocabulary
+                    title = lessonJson.getString("title"),
+                    description = lessonJson.getString("description"),
+                    imageUrl = lessonJson.getString("imageUrl"),
+                    vocabulary = lessonJson.getJSONArray("vocabulary").run {
+                        (0 until length()).map { getString(it) }
+                    }
                 )
                 lessons.add(lesson)
             }

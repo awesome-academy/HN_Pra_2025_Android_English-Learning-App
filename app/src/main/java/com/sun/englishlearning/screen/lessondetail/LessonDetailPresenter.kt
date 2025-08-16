@@ -25,32 +25,29 @@ class LessonDetailPresenter : LessonDetailContract.Presenter {
         view?.showLoading()
 
         try {
-            // Load vocabulary from the current lesson's embedded vocabulary list
-            val vocabularyWords = currentLesson?.vocabulary ?: emptyList()
-            val wordObjects = createWordObjectsFromVocabulary(vocabularyWords, lessonId)
-            currentVocabulary = wordObjects
+            // Create vocabulary from current lesson data
+            val vocabulary = currentLesson?.vocabulary?.mapIndexed { index, word ->
+                Word(
+                    id = "${lessonId}_$index",
+                    word = word,
+                    definition = "Definition for $word",
+                    pronunciation = "/$word/",
+                    phonetic = word,
+                    partOfSpeech = "noun",
+                    example = "Example sentence with $word.",
+                    lessonId = lessonId
+                )
+            } ?: emptyList()
+
+            currentVocabulary = vocabulary
             view?.hideLoading()
-            view?.showVocabulary(wordObjects)
+            view?.showVocabulary(vocabulary)
         } catch (e: Exception) {
             view?.hideLoading()
             view?.showError("Error loading vocabulary: ${e.message}")
         }
     }
-    
-    private fun createWordObjectsFromVocabulary(vocabularyWords: List<String>, lessonId: String): List<Word> {
-        return vocabularyWords.mapIndexed { index, wordText ->
-            Word(
-                id = "${lessonId}_$index",
-                word = wordText,
-                definition = "Definition for $wordText", // Placeholder - could be fetched from API
-                pronunciation = "",
-                phonetic = "",
-                partOfSpeech = "",
-                example = "Example sentence with $wordText", // Placeholder
-                lessonId = lessonId
-            )
-        }
-    }
+
 
     override fun onBackClicked() {
         view?.navigateBack()
@@ -66,7 +63,7 @@ class LessonDetailPresenter : LessonDetailContract.Presenter {
             android.util.Log.d("LessonDetailPresenter", "Word index found: $wordIndex")
 
             if (wordIndex != -1) {
-                val lessonTitle = currentLesson?.name ?: ""
+                val lessonTitle = currentLesson?.title ?: ""
                 android.util.Log.d("LessonDetailPresenter", "Navigating to flashcard with title: $lessonTitle")
                 view?.navigateToFlashcard(currentVocabulary, wordIndex, lessonTitle)
             } else {

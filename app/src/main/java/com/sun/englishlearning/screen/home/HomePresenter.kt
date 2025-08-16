@@ -1,5 +1,6 @@
 package com.sun.englishlearning.screen.home
 
+import android.content.Context
 import com.sun.englishlearning.api.LessonApiService
 import com.sun.englishlearning.data.model.Lesson
 import com.sun.englishlearning.screen.home.adapter.CourseCategory
@@ -15,9 +16,9 @@ interface HomeView {
     fun navigateToLessonDetail(lesson: Lesson)
 }
 
-class HomePresenter(private val view: HomeView) {
-    
-    private val lessonApiService = LessonApiService()
+class HomePresenter(private val view: HomeView, private val context: Context) {
+
+    private val lessonApiService = LessonApiService(context)
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
     
     fun loadCourseCategories() {

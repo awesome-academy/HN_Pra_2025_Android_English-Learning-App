@@ -37,6 +37,9 @@
             android:name=".screen.savedwords.SavedWordsActivity"
             android:exported="false" />
         <activity
+            android:name=".screen.test.TestLessonsActivity"
+            android:exported="false" />
+        <activity
             android:name=".screen.search.WordSearchActivity"
             android:exported="false" />
         <activity

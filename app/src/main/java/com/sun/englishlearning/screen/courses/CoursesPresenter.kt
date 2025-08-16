@@ -1,9 +1,10 @@
 package com.sun.englishlearning.screen.courses
 
 import android.content.Context
-import com.google.firebase.auth.FirebaseAuth
 import com.sun.englishlearning.data.model.Lesson
-import com.sun.englishlearning.api.LessonApiService
+import com.sun.englishlearning.data.repository.LessonRepository
+import com.sun.englishlearning.data.repository.LessonRepositoryImpl
+import com.sun.englishlearning.data.repository.UserLessonProgressRepositoryImpl
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -13,27 +14,27 @@ class CoursesPresenter : CoursesContract.Presenter {
     private var view: CoursesContract.View? = null
     private var context: Context? = null
     private var isOngoingTabSelected = true
-    private val lessonApiService = LessonApiService()
+    private lateinit var lessonRepository: LessonRepository
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
     fun setContext(context: Context) {
         this.context = context
+        lessonRepository = LessonRepositoryImpl(context, UserLessonProgressRepositoryImpl())
     }
 
     override fun loadOngoingLessons() {
         view?.showLoading()
         coroutineScope.launch {
             try {
-                val userId = getCurrentUserId()
-                val lessonsResult = lessonApiService.getLessonsForUser(userId)
+                val lessonsResult = lessonRepository.getAllLessons()
                 if (lessonsResult.isSuccess) {
                     val lessons = lessonsResult.getOrNull() ?: emptyList()
-                    val ongoingLessons = lessons.filter { it.isStarted && !isLessonCompleted(it.id) }
+                    // All lessons are "ongoing" since user hasn't started any yet
                     view?.hideLoading()
-                    view?.showOngoingLessons(ongoingLessons)
+                    view?.showOngoingLessons(lessons)
                 } else {
                     view?.hideLoading()
-                    view?.showError("Error loading ongoing lessons")
+                    view?.showError("Error loading lessons")
                 }
             } catch (e: Exception) {
                 view?.hideLoading()
@@ -46,17 +47,10 @@ class CoursesPresenter : CoursesContract.Presenter {
         view?.showLoading()
         coroutineScope.launch {
             try {
-                val userId = getCurrentUserId()
-                val lessonsResult = lessonApiService.getLessonsForUser(userId)
-                if (lessonsResult.isSuccess) {
-                    val lessons = lessonsResult.getOrNull() ?: emptyList()
-                    val completedLessons = lessons.filter { isLessonCompleted(it.id) }
-                    view?.hideLoading()
-                    view?.showCompletedLessons(completedLessons)
-                } else {
-                    view?.hideLoading()
-                    view?.showError("Error loading completed lessons")
-                }
+                // For now, no lessons are completed since user hasn't started any
+                val completedLessons = emptyList<Lesson>()
+                view?.hideLoading()
+                view?.showCompletedLessons(completedLessons)
             } catch (e: Exception) {
                 view?.hideLoading()
                 view?.showError(e.message ?: "Error loading completed lessons")
@@ -97,46 +91,11 @@ class CoursesPresenter : CoursesContract.Presenter {
     }
 
     override fun onStart() {
-        // Load initial data
-        onTabSelected(true) // Load ongoing lessons by default
+        // Load initial data - start with ongoing tab
+        onTabSelected(true)
     }
 
     override fun onStop() {
 
-    }
-    
-    private fun getCurrentUserId(): String {
-        // Get the current user ID from Firebase Authentication
-        return FirebaseAuth.getInstance().currentUser?.uid ?: ""
-    }
-    
-    private fun isLessonCompleted(lessonId: String): Boolean {
-        // This would typically check UserLessonProgress, but for now return false
-        // You can implement this logic based on your UserLessonProgress data
-        return false
-    }
-    
-    /**
-     * Simple method to load all lessons from Firebase
-     * This is what you requested - a simple API to get all lessons
-     */
-    fun loadAllLessons() {
-        view?.showLoading()
-        coroutineScope.launch {
-            try {
-                val lessonsResult = lessonApiService.getAllLessons()
-                if (lessonsResult.isSuccess) {
-                    val lessons = lessonsResult.getOrNull() ?: emptyList()
-                    view?.hideLoading()
-                    view?.showOngoingLessons(lessons) // Display all lessons
-                } else {
-                    view?.hideLoading()
-                    view?.showError("Error loading lessons")
-                }
-            } catch (e: Exception) {
-                view?.hideLoading()
-                view?.showError(e.message ?: "Error loading lessons")
-            }
-        }
     }
 }

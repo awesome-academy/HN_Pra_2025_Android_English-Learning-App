@@ -108,24 +108,21 @@ class LessonDetailFragment : Fragment(), LessonDetailContract.View {
     override fun displayLessonInfo(lesson: Lesson) {
         viewBinding.apply {
             // Set lesson title
-            textLessonTitle.text = lesson.name
+            textLessonTitle.text = lesson.title
 
-            // Set lesson details - use default values since Lesson doesn't have currentPoints/progressPercentage
-            // These should come from UserLessonProgress in a real implementation
-            val currentPoints = 0 // TODO: Get from UserLessonProgress
-            val progressPercentage = 0 // TODO: Get from UserLessonProgress
-            val totalPoints = 100 // Default total points
-
-            textLessonPoints.text = "points: $currentPoints / $totalPoints"
+            // Set lesson details
+            textLessonNumber.text = "Lesson ID: ${lesson.id}"
+            textAdvancedLevel.text = "Vocabulary: ${lesson.vocabulary.size} words"
+            textLessonPoints.text = "Topic: ${lesson.title}"
             textLessonDescription.text = lesson.description
 
-            // Set progress
-            progressLesson.progress = progressPercentage
+            // Set progress using UserLessonProgress if available
+            loadUserProgress(lesson.id)
 
             // Load lesson image
-            if (lesson.image.isNotEmpty()) {
+            if (lesson.imageUrl.isNotEmpty()) {
                 Glide.with(requireContext())
-                    .load(lesson.image)
+                    .load(lesson.imageUrl)
                     .apply(RequestOptions().transform(RoundedCorners(24)))
                     .placeholder(R.drawable.ic_launcher_background)
                     .error(R.drawable.ic_launcher_background)
@@ -190,5 +187,11 @@ class LessonDetailFragment : Fragment(), LessonDetailContract.View {
             Log.e(TAG, "Error navigating to flashcard", e)
             Toast.makeText(requireContext(), "Failed to open flashcard: ${e.message}", Toast.LENGTH_SHORT).show()
         }
+    }
+    
+    private fun loadUserProgress(lessonId: String) {
+        // TODO: Implement actual user progress loading
+        // For now, set a placeholder progress
+        viewBinding.progressLesson.progress = 25 // 25% as example
     }
 }

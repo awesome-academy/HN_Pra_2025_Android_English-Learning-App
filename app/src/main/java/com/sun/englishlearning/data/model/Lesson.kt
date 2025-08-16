@@ -4,8 +4,8 @@ import java.io.Serializable
 
 data class Lesson(
     val id: String = "",
-    val name: String = "",
+    val title: String = "",
     val description: String = "",
-    val image: String = "",
+    val imageUrl: String = "",
     val vocabulary: List<String> = emptyList()
 ) : Serializable

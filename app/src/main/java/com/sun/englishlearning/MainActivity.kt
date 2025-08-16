@@ -2,7 +2,6 @@ package com.sun.englishlearning
 
 import android.content.Intent
 import android.view.LayoutInflater
-import android.view.View
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.sun.englishlearning.databinding.ActivityMainBinding
@@ -21,7 +20,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         val navController = navHostFragment.navController
 
         binding.bottomNavigationView.setupWithNavController(navController)
-
     }
 
     override fun initData() {

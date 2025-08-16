@@ -107,7 +107,7 @@ class CoursesFragment : Fragment(), CoursesContract.View {
     private fun setupBackButton() {
         viewBinding.btnBack.setOnClickListener {
             // Handle back button click
-            requireActivity().onBackPressed()
+            findNavController().navigateUp()
         }
     }
 
@@ -122,10 +122,20 @@ class CoursesFragment : Fragment(), CoursesContract.View {
 
     override fun showOngoingLessons(lessons: List<Lesson>) {
         coursesAdapter.updateLessons(lessons)
+
+        // Show empty state message if no lessons
+        if (lessons.isEmpty()) {
+            Toast.makeText(requireContext(), "No ongoing lessons available", Toast.LENGTH_SHORT).show()
+        }
     }
 
     override fun showCompletedLessons(lessons: List<Lesson>) {
         coursesAdapter.updateLessons(lessons)
+
+        // Show empty state message for completed lessons
+        if (lessons.isEmpty()) {
+            Toast.makeText(requireContext(), "No completed lessons yet. Start learning to see progress!", Toast.LENGTH_SHORT).show()
+        }
     }
 
     override fun showError(message: String) {

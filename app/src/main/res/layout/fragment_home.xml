@@ -290,6 +290,43 @@
 
         </LinearLayout>
 
+        <!-- Loading indicator for recent lessons -->
+        <ProgressBar
+            android:id="@+id/pbRecentLessonsLoading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="@dimen/dp_32"
+            android:visibility="gone" />
+
+        <!-- Empty state for recent lessons -->
+        <LinearLayout
+            android:id="@+id/llRecentLessonsEmpty"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_marginBottom="@dimen/dp_32"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Chưa có bài học gần đây"
+                style="@style/TextMedium.16sp"
+                android:textColor="#6B7280"
+                android:layout_marginBottom="@dimen/dp_8" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Bắt đầu học để xem tiến trình của bạn tại đây"
+                style="@style/TextRegular.14sp"
+                android:textColor="#9CA3AF"
+                android:textAlignment="center" />
+
+        </LinearLayout>
+
         <!-- Suggestions Section -->
         <LinearLayout
             android:layout_width="match_parent"

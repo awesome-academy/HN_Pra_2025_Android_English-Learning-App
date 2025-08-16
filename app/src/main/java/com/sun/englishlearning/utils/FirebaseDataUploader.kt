@@ -33,7 +33,7 @@ object FirebaseDataUploader {
             // Upload each lesson to Firebase
             lessons.forEach { lesson ->
                 uploadSingleLesson(lesson)
-                Log.d(TAG, "Uploaded lesson: ${lesson.name}")
+                Log.d(TAG, "Uploaded lesson: ${lesson.title}")
             }
             
             Log.d(TAG, "Successfully uploaded all lessons to Firebase")

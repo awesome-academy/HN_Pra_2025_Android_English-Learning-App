@@ -19,7 +19,7 @@ data class SavedWord(
     val definition: String = "",
     val example: String = "",
     val soundUrl: String = "",
-    @get:PropertyName("wordType") @set:PropertyName("wordType") val wordType: Int = WordType.SAVED.value,
+    @get:PropertyName("wordType") val wordType: Int = WordType.SAVED.value,
     val createdAt: Date = Date(),
     val updatedAt: Date = Date()
 )

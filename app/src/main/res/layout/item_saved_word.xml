@@ -67,15 +67,21 @@
 
             </LinearLayout>
 
-            <!-- Favorite toggle button -->
-            <ImageView
-                android:id="@+id/iv_favorite"
-                android:layout_width="@dimen/dp_24"
-                android:layout_height="@dimen/dp_24"
-                android:src="@drawable/ic_bookmark"
-                android:background="?android:attr/selectableItemBackgroundBorderless"
-                android:padding="@dimen/dp_4"
-                app:tint="@color/red" />
+            <!-- Remove word button -->
+            <Button
+                android:id="@+id/btn_remove_word"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dp_32"
+                android:text="Remove Word"
+                android:textSize="@dimen/sp_12"
+                android:textColor="@android:color/white"
+                android:background="@drawable/bg_purple_button"
+                android:paddingStart="@dimen/dp_12"
+                android:paddingEnd="@dimen/dp_12"
+                android:paddingTop="@dimen/dp_4"
+                android:paddingBottom="@dimen/dp_4"
+                android:minWidth="0dp"
+                android:minHeight="0dp" />
 
         </LinearLayout>
 

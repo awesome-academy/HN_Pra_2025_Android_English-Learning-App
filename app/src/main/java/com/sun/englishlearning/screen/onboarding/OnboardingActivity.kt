@@ -27,7 +27,7 @@ class OnboardingActivity : BaseActivity<ActivityOnboardingBinding>() {
 
         binding.btnGetStarted.setOnClickListener {
             // Mark as onboarding viewed
-            AppPreferences.setFirstLaunch(this, false)
+            AppPreferences.setFirstLaunch(this, true)
 
             // Navigate to the login screen
             val intent = Intent(this, LoginActivity::class.java)

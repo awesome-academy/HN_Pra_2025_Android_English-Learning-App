@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="@color/ripple_color">
+    
+    <item>
+        <layer-list>
+            <!-- Shadow -->
+            <item android:top="1dp" android:left="1dp" android:right="1dp" android:bottom="3dp">
+                <shape android:shape="oval">
+                    <solid android:color="@color/shadow_light" />
+                </shape>
+            </item>
+            
+            <!-- Main Button -->
+            <item android:bottom="2dp">
+                <shape android:shape="oval">
+                    <gradient
+                        android:angle="135"
+                        android:startColor="@color/flashcard_secondary"
+                        android:endColor="@color/flashcard_secondary_light"
+                        android:type="linear" />
+                </shape>
+            </item>
+        </layer-list>
+    </item>
+    
+</ripple>

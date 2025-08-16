@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/flashcard_background"
+    android:orientation="vertical"
+    android:fitsSystemWindows="true">
+
+    <!-- Top Bar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/flashcard_surface"
+        android:elevation="@dimen/dp_8"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="@dimen/dp_16"
+        android:paddingVertical="@dimen/dp_12"
+        android:paddingTop="@dimen/dp_16">
+
+        <!-- Back Button -->
+        <FrameLayout
+            android:layout_width="@dimen/dp_40"
+            android:layout_height="@dimen/dp_40"
+            android:background="@drawable/bg_audio_button_modern"
+            android:clickable="true"
+            android:focusable="true">
+
+            <ImageView
+                android:id="@+id/btn_back"
+                android:layout_width="@dimen/dp_20"
+                android:layout_height="@dimen/dp_20"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_arrow_back"
+                android:contentDescription="@string/go_back_to_lesson"
+                app:tint="@color/white"
+                android:scaleType="centerInside" />
+
+        </FrameLayout>
+
+        <!-- Title -->
+        <TextView
+            android:id="@+id/text_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_16"
+            android:layout_weight="1"
+            android:fontFamily="@font/nunito_bold"
+            android:text="@string/lesson"
+            android:textColor="@color/flashcard_text_primary"
+            android:textSize="@dimen/sp_20"
+            android:maxLines="1"
+            android:ellipsize="end" />
+
+        <!-- Position Indicator -->
+        <TextView
+            android:id="@+id/text_position"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_part_of_speech_modern"
+            android:fontFamily="@font/nunito_bold"
+            android:paddingHorizontal="@dimen/dp_12"
+            android:paddingVertical="@dimen/dp_6"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_12"
+            android:contentDescription="@string/current_flashcard_position"
+            android:elevation="@dimen/dp_4"
+            android:letterSpacing="0.1"
+            tools:text="1 / 10" />
+
+    </LinearLayout>
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/view_pager_flashcards"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:paddingHorizontal="@dimen/dp_4"
+        android:paddingVertical="@dimen/dp_8"
+        android:clipToPadding="false"
+        android:clipChildren="false" />
+
+</LinearLayout>

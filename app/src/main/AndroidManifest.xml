@@ -39,6 +39,9 @@
         <activity
             android:name=".screen.search.WordSearchActivity"
             android:exported="false" />
+        <activity
+            android:name=".screen.flashcard.FlashcardActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

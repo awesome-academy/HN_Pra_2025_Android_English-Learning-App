@@ -1,44 +1,400 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
-    android:orientation="vertical"
-    android:padding="16dp"
+    android:background="@color/background_light_blue"
     tools:context=".screen.me.MeFragment">
 
-    <LinearLayout
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/layout_user_profile"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:gravity="center"
         android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:visibility="visible">
 
-        <TextView
-            android:id="@+id/tv_user_name"
-            android:layout_width="wrap_content"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            tools:text="User Name" />
+            android:background="@color/white"
+            android:paddingHorizontal="@dimen/dp_20"
+            android:paddingTop="@dimen/dp_8"
+            android:paddingBottom="@dimen/dp_16">
 
-        <TextView
-            android:id="@+id/tv_user_email"
-            android:layout_width="wrap_content"
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/ic_settings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/dp_4"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:src="@drawable/ic_setting" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/img_avatar"
+                android:layout_width="@dimen/dp_90"
+                android:layout_height="@dimen/dp_90"
+                android:background="@drawable/bg_avatar"
+                android:padding="@dimen/dp_4"
+                android:scaleType="centerCrop"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ic_settings" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/ic_edit"
+                android:layout_width="@dimen/dp_24"
+                android:layout_height="@dimen/dp_24"
+                android:src="@drawable/ic_edit_avatar"
+                app:layout_constraintBottom_toBottomOf="@id/img_avatar"
+                app:layout_constraintEnd_toEndOf="@id/img_avatar" />
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/ll_user_texts"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_4"
+                android:orientation="vertical"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/img_avatar">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_user"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/ic_user"
+                    android:drawablePadding="@dimen/dp_8"
+                    android:fontFamily="@font/nunito_bold"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/sp_16"
+                    tools:text="User" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_7"
+                    android:drawableStart="@drawable/ic_location"
+                    android:drawablePadding="@dimen/dp_8"
+                    android:fontFamily="@font/nunito_bold"
+                    android:textColor="@color/text_dark_gray"
+                    android:textSize="@dimen/sp_12"
+                    tools:text="Ha Noi" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_speak_level"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_7"
+                    android:drawableStart="@drawable/closebook"
+                    android:drawablePadding="@dimen/dp_8"
+                    android:fontFamily="@font/nunito_bold"
+                    android:textColor="@color/text_dark_gray"
+                    android:textSize="@dimen/sp_12"
+                    tools:text="Speak English at beginner level " />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_lean"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_7"
+                    android:drawableStart="@drawable/openbook"
+                    android:drawablePadding="@dimen/dp_8"
+                    android:fontFamily="@font/nunito_bold"
+                    android:textColor="@color/text_dark_gray"
+                    android:textSize="@dimen/sp_12"
+                    tools:text="Learning English" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            tools:text="user.email@example.com" />
+            android:layout_marginTop="@dimen/dp_16"
+            android:paddingHorizontal="@dimen/dp_20"
+            android:background="@color/white"
+            android:orientation="vertical"
+            android:padding="@dimen/dp_12">
 
-        <Button
-            android:id="@+id/btn_sign_out"
-            android:layout_width="wrap_content"
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:fontFamily="@font/nunito_bold"
+                    android:id="@+id/tv_learning_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_16"
+                    android:textSize="@dimen/sp_18"
+                    android:textColor="@color/black"
+                    android:text="@string/profile_learning" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="@dimen/dp_135"
+                android:layout_height="@dimen/dp_133"
+                android:background="@drawable/bg_card_setting"
+                android:layout_marginTop="@dimen/dp_16">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/iv_language"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_us"
+                    android:layout_marginTop="@dimen/dp_12"
+                    android:layout_marginStart="@dimen/dp_12"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"/>
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_language"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="English"
+                    android:fontFamily="@font/nunito_semibold"
+                    android:layout_marginTop="@dimen/dp_8"
+                    android:textSize="@dimen/sp_14"
+                    android:textColor="@color/black"
+                    app:layout_constraintTop_toBottomOf="@id/iv_language"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginStart="@dimen/dp_12"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_percent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="42%"
+                    android:fontFamily="@font/nunito_bold"
+                    android:textSize="@dimen/sp_14"
+                    android:textColor="@color/black"
+                    app:layout_constraintTop_toBottomOf="@id/tv_language"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginStart="@dimen/dp_12"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_up"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_7"
+                    android:drawableStart="@drawable/ic_up"
+                    android:drawablePadding="@dimen/dp_8"
+                    android:fontFamily="@font/nunito_bold"
+                    android:textColor="@color/green_primary"
+                    android:textSize="@dimen/sp_12"
+                    tools:text="113"
+                    app:layout_constraintTop_toBottomOf="@id/tv_percent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginStart="@dimen/dp_12"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="@string/sign_out_label" />
-    </LinearLayout>
+            android:orientation="vertical"
+            android:background="@color/white"
+            android:paddingHorizontal="@dimen/dp_20"
+            android:layout_marginTop="@dimen/dp_12">
 
-</LinearLayout>
+            <TextView
+                android:fontFamily="@font/nunito_bold"
+                android:id="@+id/tv_days_learned_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_16"
+                android:textSize="@dimen/sp_18"
+                android:textStyle="bold"
+                android:text="@string/profile_days_learned" />
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/layout_progress_circles"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_12"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:foregroundGravity="center"
+                    android:paddingTop="@dimen/dp_2"
+                    android:paddingBottom="@dimen/dp_2">
+
+                    <View
+                        android:id="@+id/prog_day_1"
+                        android:layout_width="@dimen/dp_24"
+                        android:layout_height="@dimen/dp_24"
+                        android:layout_gravity="center"
+                        android:background="@drawable/bg_circle_gray" />
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:foregroundGravity="center"
+                    android:paddingTop="@dimen/dp_2"
+                    android:paddingBottom="@dimen/dp_2">
+                    <View
+                        android:id="@+id/prog_day_2"
+                        android:layout_width="@dimen/dp_24"
+                        android:layout_height="@dimen/dp_24"
+                        android:layout_gravity="center"
+                        android:background="@drawable/bg_circle_gray" />
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:foregroundGravity="center"
+                    android:paddingTop="@dimen/dp_2"
+                    android:paddingBottom="@dimen/dp_2">
+                    <View
+                        android:id="@+id/prog_day_3"
+                        android:layout_width="@dimen/dp_24"
+                        android:layout_height="@dimen/dp_24"
+                        android:layout_gravity="center"
+                        android:background="@drawable/bg_circle_gray" />
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:foregroundGravity="center"
+                    android:paddingTop="@dimen/dp_2"
+                    android:paddingBottom="@dimen/dp_2">
+                    <View
+                        android:id="@+id/prog_day_4"
+                        android:layout_width="@dimen/dp_24"
+                        android:layout_height="@dimen/dp_24"
+                        android:layout_gravity="center"
+                        android:background="@drawable/bg_circle_blue" />
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:foregroundGravity="center"
+                    android:paddingTop="@dimen/dp_2"
+                    android:paddingBottom="@dimen/dp_2">
+                    <View
+                        android:id="@+id/prog_day_5"
+                        android:layout_width="@dimen/dp_24"
+                        android:layout_height="@dimen/dp_24"
+                        android:layout_gravity="center"
+                        android:background="@drawable/bg_circle_gray" />
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:foregroundGravity="center"
+                    android:paddingTop="@dimen/dp_2"
+                    android:paddingBottom="@dimen/dp_2">
+                    <View
+                        android:id="@+id/prog_day_6"
+                        android:layout_width="@dimen/dp_24"
+                        android:layout_height="@dimen/dp_24"
+                        android:layout_gravity="center"
+                        android:background="@drawable/bg_circle_gray" />
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:foregroundGravity="center"
+                    android:paddingTop="@dimen/dp_2"
+                    android:paddingBottom="@dimen/dp_2">
+                    <View
+                        android:id="@+id/prog_day_7"
+                        android:layout_width="@dimen/dp_24"
+                        android:layout_height="@dimen/dp_24"
+                        android:layout_gravity="center"
+                        android:background="@drawable/bg_circle_blue" />
+                </FrameLayout>
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <LinearLayout
+                android:id="@+id/layout_week_labels"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_8"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textSize="@dimen/sp_12"
+                    android:text="@string/weekday_mon"
+                    android:fontFamily="@font/nunito_medium"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textSize="@dimen/sp_12"
+                    android:text="@string/weekday_tue"
+                    android:fontFamily="@font/nunito_medium"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textSize="@dimen/sp_12"
+                    android:text="@string/weekday_wed"
+                    android:fontFamily="@font/nunito_medium"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textSize="@dimen/sp_12"
+                    android:textStyle="bold"
+                    android:text="@string/weekday_thu"
+                    android:fontFamily="@font/nunito_medium"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textSize="@dimen/sp_12"
+                    android:text="@string/weekday_fri"
+                    android:fontFamily="@font/nunito_medium"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textSize="@dimen/sp_12"
+                    android:text="@string/weekday_sat"
+                    android:fontFamily="@font/nunito_medium"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textSize="@dimen/sp_12"
+                    android:textStyle="bold"
+                    android:text="@string/weekday_sun"
+                    android:fontFamily="@font/nunito_medium"/>
+            </LinearLayout>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</androidx.constraintlayout.widget.ConstraintLayout>

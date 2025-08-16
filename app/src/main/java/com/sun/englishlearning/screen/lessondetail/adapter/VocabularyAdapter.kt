@@ -41,21 +41,12 @@ class VocabularyAdapter(
                 // Set word name
                 textWordName.text = word.name
 
-                // Set first letter as initial
-                textWordInitial.text = word.name.firstOrNull()?.toString()?.uppercase() ?: "?"
-
-                // Set definition
-                textDefinition.text = word.definition
-
-                // Set example
-                textExample.text = word.example
-
                 // Sound button click listener
                 btnSound.setOnClickListener {
                     onSoundClick(word)
                 }
 
-                // Card click listener
+                // Card click listener - when user clicks on the word, open flashcard
                 root.setOnClickListener {
                     onWordClick(word)
                 }

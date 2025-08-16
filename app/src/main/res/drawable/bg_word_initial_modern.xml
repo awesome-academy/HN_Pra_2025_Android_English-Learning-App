@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Shadow -->
+    <item android:top="1dp" android:left="1dp" android:right="1dp" android:bottom="3dp">
+        <shape android:shape="oval">
+            <solid android:color="@color/shadow_light" />
+        </shape>
+    </item>
+    
+    <!-- Main Circle -->
+    <item android:bottom="2dp">
+        <shape android:shape="oval">
+            <gradient
+                android:angle="135"
+                android:startColor="@color/flashcard_primary"
+                android:endColor="@color/flashcard_primary_dark"
+                android:type="linear" />
+        </shape>
+    </item>
+</layer-list>

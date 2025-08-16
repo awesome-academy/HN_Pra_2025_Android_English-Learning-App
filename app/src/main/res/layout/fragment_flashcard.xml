@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/flashcard_background"
+    android:padding="@dimen/dp_8">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_flashcard_modern"
+        app:cardBackgroundColor="@color/flashcard_surface"
+        app:cardCornerRadius="@dimen/dp_24"
+        app:cardElevation="@dimen/dp_12"
+        app:cardUseCompatPadding="true">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/dp_24"
+                android:clipToPadding="false">
+
+                <!-- Word Section -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="@dimen/dp_32"
+                    android:paddingVertical="@dimen/dp_16">
+
+                    <!-- Word Name -->
+                    <TextView
+                        android:id="@+id/text_word_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/dp_16"
+                        android:fontFamily="@font/nunito_bold"
+                        android:gravity="center"
+                        android:textColor="@color/flashcard_text_primary"
+                        android:textSize="@dimen/sp_42"
+                        android:contentDescription="@string/english_word"
+                        android:lineSpacingExtra="@dimen/dp_4"
+                        tools:text="School" />
+
+                    <!-- Phonetic and Audio Section -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="@dimen/dp_20"
+                        android:paddingVertical="@dimen/dp_12"
+                        android:layout_marginBottom="@dimen/dp_8"
+                        android:elevation="@dimen/dp_4">
+
+                        <!-- Phonetic Display -->
+                        <TextView
+                            android:id="@+id/text_phonetic"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/dp_16"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/sp_20"
+                            android:contentDescription="@string/phonetic_transcription"
+                            android:textStyle="italic"
+                            tools:text="/skuːl/" />
+
+                        <!-- Audio Button -->
+                        <FrameLayout
+                            android:layout_width="@dimen/dp_45"
+                            android:layout_height="@dimen/dp_45"
+                            android:background="@drawable/bg_audio_button_modern"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:elevation="@dimen/dp_6">
+
+                            <ImageView
+                                android:id="@+id/btn_audio"
+                                android:layout_width="@dimen/dp_28"
+                                android:layout_height="@dimen/dp_28"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_volume"
+                                android:contentDescription="@string/play_pronunciation_audio"
+                                app:tint="@color/white"
+                                android:scaleType="centerInside" />
+
+                        </FrameLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <!-- Part of Speech Badge -->
+                <TextView
+                    android:id="@+id/text_part_of_speech"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="@dimen/dp_24"
+                    android:fontFamily="@font/nunito_bold"
+                    android:paddingHorizontal="@dimen/dp_20"
+                    android:paddingVertical="@dimen/dp_10"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/sp_16"
+                    android:visibility="gone"
+                    android:elevation="@dimen/dp_4"
+                    android:textAllCaps="true"
+                    tools:text="noun"
+                    tools:visibility="visible" />
+
+                <!-- Definition Section -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/dp_24"
+                    android:orientation="vertical"
+                    android:paddingHorizontal="@dimen/dp_4">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/dp_12"
+                        android:fontFamily="@font/nunito_bold"
+                        android:text="@string/definition"
+                        android:textColor="@color/flashcard_primary"
+                        android:textSize="@dimen/sp_18"
+                        android:letterSpacing="0.05" />
+
+                    <TextView
+                        android:id="@+id/text_definition"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/nunito_medium"
+                        android:lineSpacingExtra="@dimen/dp_6"
+                        android:textColor="@color/flashcard_text_primary"
+                        android:textSize="@dimen/sp_20"
+                        tools:text="An institution for educating children and young people" />
+
+                </LinearLayout>
+
+                <!-- Example Section -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_example_modern"
+                    android:orientation="vertical"
+                    android:padding="@dimen/dp_20"
+                    android:elevation="@dimen/dp_2"
+                    android:layout_marginHorizontal="@dimen/dp_4">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="@dimen/dp_12">
+
+                        <ImageView
+                            android:layout_width="@dimen/dp_20"
+                            android:layout_height="@dimen/dp_20"
+                            android:src="@drawable/ic_star"
+                            android:layout_marginEnd="@dimen/dp_8"
+                            app:tint="@color/flashcard_secondary" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/nunito_bold"
+                            android:text="Example"
+                            android:textColor="@color/flashcard_secondary"
+                            android:textSize="@dimen/sp_18" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/text_example"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/nunito_regular"
+                        android:fontStyle="italic"
+                        android:lineSpacingExtra="@dimen/dp_6"
+                        android:textColor="@color/flashcard_text_secondary"
+                        android:textSize="@dimen/sp_18"
+                        tools:text="I go to school every day to learn new things." />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </ScrollView>
+
+    </androidx.cardview.widget.CardView>
+
+</FrameLayout>

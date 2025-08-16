@@ -41,6 +41,16 @@
         android:id="@+id/navigation_me"
         android:name="com.sun.englishlearning.screen.me.MeFragment"
         android:label="@string/title_me"
-        tools:layout="@layout/fragment_me" />
+        tools:layout="@layout/fragment_me">
+        <action
+            android:id="@+id/action_navigation_me_to_navigation_profile"
+            app:destination="@id/navigation_profile" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_profile"
+        android:name="com.sun.englishlearning.screen.me.ProfileFragment"
+        android:label="@string/profile_title"
+        tools:layout="@layout/fragment_profile" />
 
 </navigation>

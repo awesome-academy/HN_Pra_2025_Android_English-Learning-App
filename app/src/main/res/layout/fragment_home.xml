@@ -449,60 +449,13 @@
 
         </LinearLayout>
 
-        <!-- Suggestion Card -->
-        <androidx.cardview.widget.CardView
+        <!-- Suggested Course Card -->
+        <include
+            android:id="@+id/suggested_course_card"
+            layout="@layout/item_suggested_course"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardCornerRadius="@dimen/dp_12"
-            app:cardElevation="@dimen/dp_2"
-            android:layout_marginBottom="@dimen/dp_16">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="@dimen/dp_16">
-
-                <ImageView
-                    android:layout_width="@dimen/dp_80"
-                    android:layout_height="@dimen/dp_80"
-                    android:src="@drawable/img_ob3"
-                    android:scaleType="centerCrop"
-                    android:layout_marginEnd="@dimen/dp_16" />
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:gravity="center_vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/conversation_office"
-                        style="@style/TextSemiBold.14sp"
-                        android:textColor="@color/black"
-                        android:layout_marginBottom="@dimen/dp_4" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/at_work_vocabulary"
-                        style="@style/TextRegular.12sp"
-                        android:textColor="#6B7280" />
-
-                </LinearLayout>
-
-                <ImageView
-                    android:layout_width="@dimen/dp_24"
-                    android:layout_height="@dimen/dp_24"
-                    android:src="@drawable/bg_progress_blue"
-                    android:layout_gravity="center_vertical" />
-
-            </LinearLayout>
-
-        </androidx.cardview.widget.CardView>
+            android:layout_marginBottom="@dimen/dp_16" />
 
     </LinearLayout>
 

@@ -137,12 +137,16 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     
     private fun checkAuthenticationAndLoadData() {
         val currentUser = auth.currentUser
+        println("HomeFragment: Checking authentication - User: ${currentUser?.uid}")
+        Toast.makeText(context, "Auth check: ${if (currentUser != null) "Logged in" else "Not logged in"}", Toast.LENGTH_SHORT).show()
+        
         if (currentUser == null) {
             // User is not signed in, show message and redirect to login
             Toast.makeText(context, "Please sign in to access course content", Toast.LENGTH_LONG).show()
             redirectToLogin()
         } else {
             // User is signed in, load the data
+            println("HomeFragment: User authenticated, calling loadCourseCategories()")
             loadCourseCategories()
         }
     }
@@ -155,81 +159,105 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     }
     
     private fun setupCoursesSection() {
+        println("HomeFragment: Setting up courses section...")
         coursesAdapter = CourseCategoryAdapter { category ->
             onCategoryClicked(category)
         }
         
         viewBinding.rvCourseCategories.apply {
-            layoutManager = GridLayoutManager(context, 2)
+            layoutManager = GridLayoutManager(context, 3)
             adapter = coursesAdapter
         }
+        println("HomeFragment: Courses section setup complete")
+        Toast.makeText(context, "RecyclerView setup complete", Toast.LENGTH_SHORT).show()
     }
     
     private fun loadCourseCategories() {
+        println("HomeFragment: loadCourseCategories() called!")
+        Toast.makeText(context, "Loading courses...", Toast.LENGTH_SHORT).show()
         showCoursesLoading()
         coroutineScope.launch {
             try {
+                println("HomeFragment: Starting to load course categories...")
                 val lessonsResult = lessonRepository.getAllLessons()
                 hideCoursesLoading()
                 
+                println("HomeFragment: Result success: ${lessonsResult.isSuccess}")
+                
                 if (lessonsResult.isSuccess) {
                     val allLessons = lessonsResult.getOrNull() ?: emptyList()
+                    println("HomeFragment: Found ${allLessons.size} lessons")
+                    
                     if (allLessons.isEmpty()) {
                         Toast.makeText(context, "No lessons found in database", Toast.LENGTH_SHORT).show()
+                        // Create test categories for debugging
+                        val testCategories = createTestCategories()
+                        coursesAdapter.updateCategories(testCategories)
+                        println("HomeFragment: Created test categories")
                     } else {
                         val categories = createCategoriesFromLessons(allLessons)
+                        println("HomeFragment: Created ${categories.size} categories")
+                        
                         if (categories.isEmpty()) {
                             Toast.makeText(context, "No course categories available", Toast.LENGTH_SHORT).show()
+                            // Create test categories for debugging
+                            val testCategories = createTestCategories()
+                            coursesAdapter.updateCategories(testCategories)
                         } else {
                             coursesAdapter.updateCategories(categories)
-                            Toast.makeText(context, "Loaded ${allLessons.size} lessons", Toast.LENGTH_SHORT).show()
+                            println("HomeFragment: Updated adapter with categories")
                         }
                     }
                 } else {
                     val error = lessonsResult.exceptionOrNull()
+                    println("HomeFragment: Error loading lessons: ${error?.message}")
                     Toast.makeText(context, "Failed to load courses: ${error?.message}", Toast.LENGTH_LONG).show()
                 }
             } catch (e: Exception) {
                 hideCoursesLoading()
+                println("HomeFragment: Exception: ${e.message}")
+                e.printStackTrace()
                 Toast.makeText(context, "Error loading courses: ${e.message}", Toast.LENGTH_LONG).show()
             }
         }
     }
     
     private fun createCategoriesFromLessons(lessons: List<Lesson>): List<CourseCategory> {
-        val travelLessons = lessons.filter { it.courseId.contains("travel", ignoreCase = true) }
-        val practiceEasyLessons = lessons.filter { it.difficulty.name == "EASY" }
-        val businessLessons = lessons.filter { 
-            it.courseId.contains("business", ignoreCase = true) || 
-            it.courseId.contains("intermediate", ignoreCase = true) 
+        // Create categories directly from lessons using their title and imageUrl
+        return lessons.take(4).map { lesson ->
+            CourseCategory(
+                title = lesson.title,
+                imageUrl = lesson.imageUrl.takeIf { it.isNotBlank() } 
+                    ?: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=400",
+                lessons = listOf(lesson)
+            )
         }
-        val academicLessons = lessons.filter { 
-            it.courseId.contains("academic", ignoreCase = true) || 
-            it.courseId.contains("advanced", ignoreCase = true) 
-        }
-        
+    }
+    
+    private fun createTestCategories(): List<CourseCategory> {
+        // Create test categories for debugging
         return listOf(
             CourseCategory(
-                title = "Travel",
-                iconRes = R.drawable.img_ob1,
-                lessons = travelLessons
+                title = "Test Practice",
+                imageUrl = "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=400",
+                lessons = emptyList()
             ),
             CourseCategory(
-                title = "Practice", 
-                iconRes = R.drawable.img_ob2,
-                lessons = practiceEasyLessons
+                title = "Test Business",
+                imageUrl = "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400",
+                lessons = emptyList()
             ),
             CourseCategory(
-                title = "Business",
-                iconRes = R.drawable.img_ob3,
-                lessons = businessLessons
+                title = "Test Academic",
+                imageUrl = "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400",
+                lessons = emptyList()
             ),
             CourseCategory(
-                title = "Academic",
-                iconRes = R.drawable.img_ob1,
-                lessons = academicLessons
+                title = "Test Travel",
+                imageUrl = "https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=400",
+                lessons = emptyList()
             )
-        ).filter { it.lessons.isNotEmpty() }
+        )
     }
     
     private fun onCategoryClicked(category: CourseCategory) {

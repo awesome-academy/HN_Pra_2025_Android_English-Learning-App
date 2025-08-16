@@ -50,7 +50,7 @@ class HomeCoursesFragment : Fragment(), HomeView {
             onCategoryClicked(category)
         }
         
-        recyclerView.layoutManager = GridLayoutManager(context, 2)
+        recyclerView.layoutManager = GridLayoutManager(context, 3)
         recyclerView.adapter = adapter
     }
     

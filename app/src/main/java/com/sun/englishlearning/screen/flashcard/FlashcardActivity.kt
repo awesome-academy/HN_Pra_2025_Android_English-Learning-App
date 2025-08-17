@@ -320,13 +320,6 @@ class FlashcardActivity : BaseActivity<ActivityFlashcardBinding>(), FlashcardFra
         lessonIdForUpdate = lessonId
     }
 
-    // Implementation of OnProgressUpdateListener
-    override fun onProgressUpdated(lessonId: String) {
-        Log.d(TAG, "Progress updated for lesson: $lessonId")
-        // Store lessonId for later use when finishing the activity
-        lessonIdForUpdate = lessonId
-    }
-
     override fun onDestroy() {
         super.onDestroy()
         audioManager.release()

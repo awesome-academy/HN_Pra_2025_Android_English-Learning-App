@@ -14,9 +14,23 @@
         android:minHeight="@dimen/dp_48"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:title="@string/profile_title"
-        app:titleTextColor="@color/black" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/btn_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_arrow_back" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/nunito_semibold"
+            android:text="@string/profile_title"
+            android:textColor="@color/black"
+            android:textSize="@dimen/sp_16" />
+    </androidx.appcompat.widget.Toolbar>
 
     <LinearLayout
         android:id="@+id/header"
@@ -29,13 +43,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar">
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/img_profile_avatar"
             android:layout_width="@dimen/dp_96"
             android:layout_height="@dimen/dp_96"
             android:background="@drawable/bg_avatar"
             android:padding="@dimen/dp_4"
-            tools:src="@drawable/ic_me" />
+            android:src="@drawable/avatar" />
 
         <TextView
             android:id="@+id/tv_profile_name"
@@ -126,10 +140,13 @@
                 android:layout_weight="1"
                 android:text="@string/profile_native_language" />
 
-            <TextView
+            <Spinner
+                android:id="@+id/spinner_language"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:text="Việt Nam" />
+                android:background="@drawable/bg_spinner"
+                android:minWidth="@dimen/dp_100"
+                android:popupBackground="@color/white" />
         </LinearLayout>
 
         <View

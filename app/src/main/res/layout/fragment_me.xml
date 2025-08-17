@@ -42,6 +42,7 @@
                 android:background="@drawable/bg_avatar"
                 android:padding="@dimen/dp_4"
                 android:scaleType="centerCrop"
+                android:src="@drawable/avatar"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/ic_settings" />
 
@@ -83,7 +84,7 @@
                     android:fontFamily="@font/nunito_bold"
                     android:textColor="@color/text_dark_gray"
                     android:textSize="@dimen/sp_12"
-                    tools:text="Ha Noi" />
+                    android:text="@string/location_hanoi" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tv_speak_level"
@@ -95,7 +96,7 @@
                     android:fontFamily="@font/nunito_bold"
                     android:textColor="@color/text_dark_gray"
                     android:textSize="@dimen/sp_12"
-                    tools:text="Speak English at beginner level " />
+                    android:text="@string/speak_level_beginner" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tv_lean"
@@ -107,7 +108,7 @@
                     android:fontFamily="@font/nunito_bold"
                     android:textColor="@color/text_dark_gray"
                     android:textSize="@dimen/sp_12"
-                    tools:text="Learning English" />
+                    android:text="@string/learning_english" />
 
             </androidx.appcompat.widget.LinearLayoutCompat>
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -131,62 +132,115 @@
                     android:textColor="@color/black"
                     android:text="@string/profile_learning" />
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="@dimen/dp_135"
-                android:layout_height="@dimen/dp_133"
-                android:background="@drawable/bg_card_setting"
-                android:layout_marginTop="@dimen/dp_16">
+<!--            <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--                android:layout_width="@dimen/dp_135"-->
+<!--                android:layout_height="@dimen/dp_133"-->
+<!--                android:background="@drawable/bg_card_setting"-->
+<!--                android:layout_marginTop="@dimen/dp_16">-->
 
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/iv_language"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_us"
-                    android:layout_marginTop="@dimen/dp_12"
-                    android:layout_marginStart="@dimen/dp_12"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"/>
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/tv_language"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    tools:text="English"
-                    android:fontFamily="@font/nunito_semibold"
-                    android:layout_marginTop="@dimen/dp_8"
-                    android:textSize="@dimen/sp_14"
-                    android:textColor="@color/black"
-                    app:layout_constraintTop_toBottomOf="@id/iv_language"
-                    app:layout_constraintStart_toStartOf="parent"
-                    android:layout_marginStart="@dimen/dp_12"/>
+<!--                <androidx.appcompat.widget.AppCompatImageView-->
+<!--                    android:id="@+id/iv_language"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:src="@drawable/ic_us"-->
+<!--                    android:layout_marginTop="@dimen/dp_12"-->
+<!--                    android:layout_marginStart="@dimen/dp_12"-->
+<!--                    app:layout_constraintTop_toTopOf="parent"-->
+<!--                    app:layout_constraintStart_toStartOf="parent"/>-->
+<!--                <androidx.appcompat.widget.AppCompatTextView-->
+<!--                    android:id="@+id/tv_language"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    tools:text="English"-->
+<!--                    android:fontFamily="@font/nunito_semibold"-->
+<!--                    android:layout_marginTop="@dimen/dp_8"-->
+<!--                    android:textSize="@dimen/sp_14"-->
+<!--                    android:textColor="@color/black"-->
+<!--                    app:layout_constraintTop_toBottomOf="@id/iv_language"-->
+<!--                    app:layout_constraintStart_toStartOf="parent"-->
+<!--                    android:layout_marginStart="@dimen/dp_12"/>-->
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/tv_percent"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    tools:text="42%"
-                    android:fontFamily="@font/nunito_bold"
-                    android:textSize="@dimen/sp_14"
-                    android:textColor="@color/black"
-                    app:layout_constraintTop_toBottomOf="@id/tv_language"
-                    app:layout_constraintStart_toStartOf="parent"
-                    android:layout_marginStart="@dimen/dp_12"/>
+<!--                <androidx.appcompat.widget.AppCompatTextView-->
+<!--                    android:id="@+id/tv_percent"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    tools:text="42%"-->
+<!--                    android:fontFamily="@font/nunito_bold"-->
+<!--                    android:textSize="@dimen/sp_14"-->
+<!--                    android:textColor="@color/black"-->
+<!--                    app:layout_constraintTop_toBottomOf="@id/tv_language"-->
+<!--                    app:layout_constraintStart_toStartOf="parent"-->
+<!--                    android:layout_marginStart="@dimen/dp_12"/>-->
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/tv_up"
-                    android:layout_width="wrap_content"
+<!--                <androidx.appcompat.widget.AppCompatTextView-->
+<!--                    android:id="@+id/tv_up"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginTop="@dimen/dp_7"-->
+<!--                    android:drawableStart="@drawable/ic_up"-->
+<!--                    android:drawablePadding="@dimen/dp_8"-->
+<!--                    android:fontFamily="@font/nunito_bold"-->
+<!--                    android:textColor="@color/green_primary"-->
+<!--                    android:textSize="@dimen/sp_12"-->
+<!--                    tools:text="113"-->
+<!--                    app:layout_constraintTop_toBottomOf="@id/tv_percent"-->
+<!--                    app:layout_constraintStart_toStartOf="parent"-->
+<!--                    android:layout_marginStart="@dimen/dp_12"/>-->
+<!--            </androidx.constraintlayout.widget.ConstraintLayout>-->
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_16"
+                android:paddingHorizontal="@dimen/dp_20"
+                android:background="@color/white"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:padding="@dimen/dp_12">
+
+                <LinearLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dp_7"
-                    android:drawableStart="@drawable/ic_up"
-                    android:drawablePadding="@dimen/dp_8"
-                    android:fontFamily="@font/nunito_bold"
-                    android:textColor="@color/green_primary"
-                    android:textSize="@dimen/sp_12"
-                    tools:text="113"
-                    app:layout_constraintTop_toBottomOf="@id/tv_percent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    android:layout_marginStart="@dimen/dp_12"/>
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center">
+                    <com.sun.englishlearning.screen.me.CircleProgressView
+                        android:id="@+id/circle_time_today"
+                        android:layout_width="@dimen/dp_100"
+                        android:layout_height="@dimen/dp_100" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/learning_time_today"
+                        android:textSize="@dimen/sp_14"
+                        android:fontFamily="@font/nunito_bold"
+                        android:layout_marginTop="@dimen/dp_8"
+                        android:textColor="@color/black"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center">
+                    <com.sun.englishlearning.screen.me.CircleProgressView
+                        android:id="@+id/circle_days_week"
+                        android:layout_width="@dimen/dp_100"
+                        android:layout_height="@dimen/dp_100" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/days_learned_this_week"
+                        android:textSize="@dimen/sp_14"
+                        android:fontFamily="@font/nunito_bold"
+                        android:layout_marginTop="@dimen/dp_8"
+                        android:textColor="@color/black"/>
+                </LinearLayout>
+            </androidx.appcompat.widget.LinearLayoutCompat>
         </androidx.appcompat.widget.LinearLayoutCompat>
+
+
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"

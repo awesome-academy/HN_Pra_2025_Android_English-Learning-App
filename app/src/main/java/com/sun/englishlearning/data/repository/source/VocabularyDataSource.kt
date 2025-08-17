@@ -26,7 +26,7 @@ class VocabularyDataSource {
     // Thread pool for concurrent API requests
     private val apiExecutor: ExecutorService = Executors.newFixedThreadPool(CONCURRENT_REQUESTS)
     
-    // Cache for word definitions with LRU eviction policy
+    // Cache for word definitions
     private val wordCache = mutableMapOf<String, Word>()
     private val cacheMaxSize = 500 // Maximum number of cached words
     
@@ -148,53 +148,6 @@ class VocabularyDataSource {
         }
         
         return wordDefinition
-    }
-    
-    /**
-     * Get single word definition
-     */
-    fun getWordDefinition(word: String, lessonId: String, listener: OnResultListener<Word>) {
-        listener.onLoading()
-        
-        apiExecutor.execute {
-            try {
-                val wordDefinition = fetchWordDefinitionWithCache(word, lessonId)
-
-                mainHandler.post {
-                    if (wordDefinition != null) {
-                        listener.onSuccess(wordDefinition)
-                    } else {
-                        listener.onError("Failed to fetch definition for: $word")
-                    }
-                }
-                
-            } catch (e: Exception) {
-                Log.e(TAG, "Error getting word definition for: $word", e)
-                mainHandler.post {
-                    listener.onError(e.message ?: "Unknown error")
-                }
-            }
-        }
-    }
-    
-    /**
-     * Clear cache
-     */
-    fun clearCache() {
-        wordCache.clear()
-        Log.d(TAG, "Cache cleared")
-    }
-    
-    /**
-     * Check if API is available
-     */
-    fun checkApiAvailability(listener: OnResultListener<Boolean>) {
-        apiExecutor.execute {
-            val isAvailable = remoteDataSource.isDictionaryApiAvailable()
-            mainHandler.post {
-                listener.onSuccess(isAvailable)
-            }
-        }
     }
     
     /**

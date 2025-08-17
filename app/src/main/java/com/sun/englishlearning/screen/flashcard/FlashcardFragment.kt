@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.OvershootInterpolator
-import android.widget.Button
 import android.widget.Toast
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
@@ -35,7 +34,7 @@ class FlashcardFragment : Fragment() {
         }
     }
 
-    // Interface để thông báo khi tiến trình học được cập nhật
+    // Interface to notify when the learning progress is updated
     interface OnProgressUpdateListener {
         fun onProgressUpdated(lessonId: String)
     }
@@ -78,9 +77,9 @@ class FlashcardFragment : Fragment() {
         setupClickListeners()
         animateCardAppearance()
 
-        // Set up click listener for the Mark as Learned button from layout
+        // Set up click listener for the Mark as Learned button
         binding.btnMarkLearned.setOnClickListener {
-            // Get userId and lessonId (replace with actual retrieval logic)
+            // Get userId and lessonId
             val userId = FirebaseAuth.getInstance().currentUser?.uid
             if (userId == null) {
                 Toast.makeText(requireContext(), "User not logged in", Toast.LENGTH_SHORT).show()

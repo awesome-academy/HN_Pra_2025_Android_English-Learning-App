@@ -13,6 +13,7 @@ import com.sun.englishlearning.data.model.Lesson
 class CoursesAdapter(
     private var lessons: List<Lesson> = emptyList(),
     private var userProgressMap: Map<String, Int> = emptyMap(), // Map of lessonId to progress percentage
+    private var wordsLearnedMap: Map<String, Int> = emptyMap(), // Map of lessonId to actual words learned count
     private val onLessonClick: (Lesson) -> Unit = {}
 ) : RecyclerView.Adapter<CoursesAdapter.LessonViewHolder>() {
 
@@ -34,13 +35,15 @@ class CoursesAdapter(
     fun updateLessons(newLessons: List<Lesson>, progressMap: Map<String, Int> = emptyMap()) {
         lessons = newLessons
         userProgressMap = progressMap
+        wordsLearnedMap = emptyMap()
         notifyDataSetChanged()
     }
-    
-    // New method for updating lessons with progress
-    fun updateLessonsWithProgress(newLessons: List<Lesson>, progressMap: Map<String, Int>) {
+
+    // Update lessons with progress and words learned
+    fun updateLessonsWithProgress(newLessons: List<Lesson>, progressMap: Map<String, Int>, wordsLearnedMap: Map<String, Int>) {
         lessons = newLessons
         userProgressMap = progressMap
+        this.wordsLearnedMap = wordsLearnedMap
         notifyDataSetChanged()
     }
 
@@ -52,12 +55,26 @@ class CoursesAdapter(
                 // Set lesson title
                 textLessonTitle.text = lesson.title
 
-                // Set progress from userProgressMap
+                // Get progress data from userProgressMap
                 val progress = userProgressMap[lesson.id] ?: 0
                 progressLesson.progress = progress
 
-                // Set points display
-                textLessonPoints.text = "$progress / 10 words"
+                // Get actual words learned from wordsLearnedMap or calculate from progress
+                val totalWords = lesson.vocabulary.size
+                val wordsLearned = if (wordsLearnedMap.containsKey(lesson.id)) {
+                    // Use actual words learned count if available
+                    wordsLearnedMap[lesson.id] ?: 0
+                } else {
+                    // Fallback: calculate from percentage
+                    if (totalWords > 0) {
+                        (progress * totalWords) / 100
+                    } else {
+                        0
+                    }
+                }
+
+                // Set points display with actual word count
+                textLessonPoints.text = "$wordsLearned / $totalWords words"
 
                 // Load lesson image using Glide
                 if (lesson.imageUrl.isNotEmpty()) {

@@ -39,15 +39,20 @@ class CoursesPresenter : CoursesContract.Presenter {
                 if (inProgressResult.isSuccess) {
                     val lessonsWithProgress = inProgressResult.getOrNull() ?: emptyList()
                     
-                    // Extract lessons and create progress map
+                    // Extract lessons and create progress map with actual words learned
                     val lessons = lessonsWithProgress.map { it.first }
                     val progressMap = lessonsWithProgress.associate { (lesson, progress) ->
                         lesson.id to progress.progressPercentage
                     }
                     
+                    // Create words learned map for accurate display
+                    val wordsLearnedMap = lessonsWithProgress.associate { (lesson, progress) ->
+                        lesson.id to progress.wordsLearned
+                    }
+
                     view?.hideLoading()
-                    // Pass progress map to view
-                    (view as? CoursesFragment)?.showOngoingLessonsWithProgress(lessons, progressMap) ?:
+                    // Pass both progress and words learned to view
+                    (view as? CoursesFragment)?.showOngoingLessonsWithProgress(lessons, progressMap, wordsLearnedMap) ?:
                         view?.showOngoingLessons(lessons)
                 } else {
                     view?.hideLoading()
@@ -71,15 +76,20 @@ class CoursesPresenter : CoursesContract.Presenter {
                 if (completedResult.isSuccess) {
                     val lessonsWithProgress = completedResult.getOrNull() ?: emptyList()
                     
-                    // Extract lessons and create progress map
+                    // Extract lessons and create progress map with actual words learned
                     val lessons = lessonsWithProgress.map { it.first }
                     val progressMap = lessonsWithProgress.associate { (lesson, progress) ->
                         lesson.id to progress.progressPercentage
                     }
                     
+                    // Create words learned map for accurate display
+                    val wordsLearnedMap = lessonsWithProgress.associate { (lesson, progress) ->
+                        lesson.id to progress.wordsLearned
+                    }
+
                     view?.hideLoading()
-                    // Pass progress map to view
-                    (view as? CoursesFragment)?.showCompletedLessonsWithProgress(lessons, progressMap) ?:
+                    // Pass both progress and words learned to view
+                    (view as? CoursesFragment)?.showCompletedLessonsWithProgress(lessons, progressMap, wordsLearnedMap) ?:
                         view?.showCompletedLessons(lessons)
                 } else {
                     view?.hideLoading()
@@ -108,7 +118,6 @@ class CoursesPresenter : CoursesContract.Presenter {
     }
 
     override fun refreshLessons() {
-        // Simply reload the current tab since we don't have a cache to refresh
         if (isOngoingTabSelected) {
             loadOngoingLessons()
         } else {
@@ -131,9 +140,5 @@ class CoursesPresenter : CoursesContract.Presenter {
 
     override fun onStop() {
 
-    }
-    
-    private fun getCurrentUserId(): String {
-        return auth.currentUser?.uid ?: "anonymous_user"
     }
 }

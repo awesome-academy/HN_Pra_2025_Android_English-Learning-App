@@ -11,7 +11,6 @@ import com.sun.englishlearning.data.repository.source.VocabularyDataSource
 import com.sun.englishlearning.data.repository.source.remote.OnResultListener
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 class LessonDetailPresenter : LessonDetailContract.Presenter {
 

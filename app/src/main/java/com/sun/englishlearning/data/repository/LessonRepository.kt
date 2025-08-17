@@ -1,11 +1,9 @@
 package com.sun.englishlearning.data.repository
 
 import android.content.Context
-import com.google.firebase.ktx.Firebase
 import com.sun.englishlearning.data.model.Lesson
 import com.sun.englishlearning.data.model.UserLessonProgress
 import com.sun.englishlearning.utils.JsonUtils
-import kotlinx.coroutines.tasks.await
 
 interface LessonRepository {
     suspend fun getAllLessons(): Result<List<Lesson>>
@@ -63,7 +61,6 @@ class LessonRepositoryImpl(
             // Get user's lesson progress
             val userProgressResult = userLessonProgressRepository.getUserProgressByUser(userId)
             if (userProgressResult.isFailure) {
-                // If we can't get progress, return lessons as is
                 return Result.success(allLessons)
             }
 
@@ -141,45 +138,52 @@ class LessonRepositoryImpl(
     
     override suspend fun getInProgressLessons(userId: String): Result<List<Pair<Lesson, UserLessonProgress>>> {
         return try {
-            // Get user progress
-            val progressResult = userLessonProgressRepository.getUserProgressByUser(userId)
-            if (progressResult.isFailure) {
-                return Result.success(emptyList())
-            }
-
-            val userProgress = progressResult.getOrNull() ?: emptyList()
-
-            // Filter for lessons that are in progress (started but not completed)
-            val inProgressProgress = userProgress.filter { 
-                it.isStarted && it.progressPercentage < 100 
-            }
-
-            if (inProgressProgress.isEmpty()) {
-                return Result.success(emptyList())
-            }
-
-            // Get all lessons
+            // Get all lessons from JSON
             val allLessonsResult = getAllLessons()
             if (allLessonsResult.isFailure) {
                 return Result.success(emptyList())
             }
-
             val allLessons = allLessonsResult.getOrNull() ?: emptyList()
 
-            // Combine lessons with their progress data
-            val inProgressLessonsWithProgress = inProgressProgress.mapNotNull { progress ->
-                val lesson = allLessons.find { it.id == progress.lessonId }
-                if (lesson != null) {
-                    Pair(lesson, progress)
-                } else {
-                    null
-                }
+            // Get user progress
+            val progressResult = userLessonProgressRepository.getUserProgressByUser(userId)
+            val userProgress = if (progressResult.isSuccess) {
+                progressResult.getOrNull() ?: emptyList()
+            } else {
+                emptyList()
             }
 
-            // Sort by last accessed time (most recent first)
-            val sortedLessons = inProgressLessonsWithProgress.sortedByDescending { 
-                it.second.lastAccessedAt 
+            // Create a map of lesson progress for quick lookup
+            val progressMap = userProgress.associateBy { it.lessonId }
+
+            // Get all lessons except completed ones (100% progress)
+            val inProgressLessonsWithProgress = allLessons.mapNotNull { lesson ->
+                val progress = progressMap[lesson.id]
+
+                // Skip lessons that are 100% completed
+                if (progress != null && progress.progressPercentage >= 100) {
+                    return@mapNotNull null
+                }
+
+                // If no progress exists, create default progress (0%)
+                val actualProgress = progress ?: UserLessonProgress(
+                    userId = userId,
+                    lessonId = lesson.id,
+                    isStarted = false,
+                    wordsLearned = 0,
+                    totalWords = lesson.vocabulary.size,
+                    progressPercentage = 0,
+                    lastAccessedAt = java.util.Date(0) // Default old date for sorting
+                )
+
+                Pair(lesson, actualProgress)
             }
+
+            // Sort by last accessed time (most recent first), then by lesson ID for consistency
+            val sortedLessons = inProgressLessonsWithProgress.sortedWith(
+                compareByDescending<Pair<Lesson, UserLessonProgress>> { it.second.lastAccessedAt }
+                    .thenBy { it.first.id }
+            )
 
             Result.success(sortedLessons)
         } catch (e: Exception) {

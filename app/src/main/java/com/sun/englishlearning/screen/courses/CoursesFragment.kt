@@ -164,9 +164,9 @@ class CoursesFragment : Fragment(), CoursesContract.View {
         }
     }
     
-    // New methods for showing lessons with progress
-    override fun showOngoingLessonsWithProgress(lessons: List<Lesson>, progressMap: Map<String, Int>) {
-        coursesAdapter.updateLessonsWithProgress(lessons, progressMap)
+    // Showing lessons with progress
+    fun showOngoingLessonsWithProgress(lessons: List<Lesson>, progressMap: Map<String, Int>, wordsLearnedMap: Map<String, Int>) {
+        coursesAdapter.updateLessonsWithProgress(lessons, progressMap, wordsLearnedMap)
 
         // Show empty state message if no lessons
         if (lessons.isEmpty()) {
@@ -174,13 +174,22 @@ class CoursesFragment : Fragment(), CoursesContract.View {
         }
     }
 
-    override fun showCompletedLessonsWithProgress(lessons: List<Lesson>, progressMap: Map<String, Int>) {
-        coursesAdapter.updateLessonsWithProgress(lessons, progressMap)
+    fun showCompletedLessonsWithProgress(lessons: List<Lesson>, progressMap: Map<String, Int>, wordsLearnedMap: Map<String, Int>) {
+        coursesAdapter.updateLessonsWithProgress(lessons, progressMap, wordsLearnedMap)
 
         // Show empty state message for completed lessons
         if (lessons.isEmpty()) {
             Toast.makeText(requireContext(), "No completed lessons yet. Start learning to see progress!", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    // Override methods for backward compatibility
+    override fun showOngoingLessonsWithProgress(lessons: List<Lesson>, progressMap: Map<String, Int>) {
+        showOngoingLessonsWithProgress(lessons, progressMap, emptyMap())
+    }
+
+    override fun showCompletedLessonsWithProgress(lessons: List<Lesson>, progressMap: Map<String, Int>) {
+        showCompletedLessonsWithProgress(lessons, progressMap, emptyMap())
     }
 
     override fun showError(message: String) {
@@ -199,10 +208,5 @@ class CoursesFragment : Fragment(), CoursesContract.View {
     private fun refreshData() {
         // Refresh data when fragment becomes visible
         presenter.onTabSelected(isOngoingTabSelected)
-    }
-    
-    // Public method to refresh data from other fragments
-    fun refreshDataFromExternal() {
-        refreshData()
     }
 }

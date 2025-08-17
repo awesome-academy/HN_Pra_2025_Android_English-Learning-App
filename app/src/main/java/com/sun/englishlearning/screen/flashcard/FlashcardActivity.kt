@@ -324,7 +324,7 @@ class FlashcardActivity : BaseActivity<ActivityFlashcardBinding>(), FlashcardFra
     }
     
     override fun finish() {
-        // If we have a lessonId, send it back to the calling activity/fragment
+        // Send back to the calling activity/fragment
         if (lessonIdForUpdate != null) {
             val resultIntent = Intent()
             resultIntent.putExtra("updated_lesson_id", lessonIdForUpdate)

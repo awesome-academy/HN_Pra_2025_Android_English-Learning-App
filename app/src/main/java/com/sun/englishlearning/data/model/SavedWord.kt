@@ -23,5 +23,3 @@ data class SavedWord(
     val createdAt: Date = Date(),
     val updatedAt: Date = Date()
 )
-
-

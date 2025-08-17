@@ -116,12 +116,19 @@ class UserLessonProgressRepositoryImpl : UserLessonProgressRepository {
         return try {
             Log.d(TAG, "Creating progress record for user: ${progress.userId}, lesson: ${progress.lessonId}")
             
+            // Generate a new document ID if progress.id is empty
+            val documentId = if (progress.id.isNotEmpty()) {
+                progress.id
+            } else {
+                db.collection("userLessonProgress").document().id
+            }
+            
             db.collection("userLessonProgress")
-                .document(progress.id)
-                .set(progress)
+                .document(documentId)
+                .set(progress.copy(id = documentId))
                 .await()
                 
-            Log.d(TAG, "Successfully created progress record: ${progress.id}")
+            Log.d(TAG, "Successfully created progress record: $documentId")
             Result.success(Unit)
         } catch (e: Exception) {
             Log.e(TAG, "Failed to create progress record: ${e.message}", e)
@@ -131,6 +138,11 @@ class UserLessonProgressRepositoryImpl : UserLessonProgressRepository {
 
     override suspend fun updateProgress(progress: UserLessonProgress): Result<Unit> {
         return try {
+            // Ensure we have a valid document ID
+            if (progress.id.isEmpty()) {
+                return Result.failure(Exception("Invalid progress ID"))
+            }
+            
             val progressMap = mapOf(
                 "userId" to progress.userId,
                 "lessonId" to progress.lessonId,

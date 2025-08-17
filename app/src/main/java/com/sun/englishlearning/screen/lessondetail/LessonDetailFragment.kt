@@ -12,13 +12,20 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.sun.englishlearning.R
 import com.sun.englishlearning.databinding.FragmentLessonDetailBinding
 import com.sun.englishlearning.data.model.Lesson
+import com.sun.englishlearning.data.model.UserLessonProgress
 import com.sun.englishlearning.data.model.Word
+import com.sun.englishlearning.data.repository.UserLessonProgressRepositoryImpl
 import com.sun.englishlearning.screen.lessondetail.adapter.VocabularyAdapter
 import com.sun.englishlearning.screen.flashcard.FlashcardActivity
 import androidx.fragment.app.Fragment
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class LessonDetailFragment : Fragment(), LessonDetailContract.View {
 
@@ -33,6 +40,11 @@ class LessonDetailFragment : Fragment(), LessonDetailContract.View {
     private lateinit var presenter: LessonDetailContract.Presenter
     private val args: LessonDetailFragmentArgs by navArgs()
     private var currentLesson: Lesson? = null
+    private val userProgressRepository = UserLessonProgressRepositoryImpl()
+    private val coroutineScope = CoroutineScope(Dispatchers.Main)
+    
+    // Authentication
+    private val auth = Firebase.auth
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _viewBinding = FragmentLessonDetailBinding.inflate(inflater, container, false)
@@ -114,9 +126,6 @@ class LessonDetailFragment : Fragment(), LessonDetailContract.View {
             textLessonPoints.text = "Topic: ${lesson.title}"
             textLessonDescription.text = lesson.description
 
-            // Set progress using UserLessonProgress if available
-            loadUserProgress(lesson.id)
-
             // Load lesson image
             if (lesson.imageUrl.isNotEmpty()) {
                 Glide.with(requireContext())
@@ -129,6 +138,9 @@ class LessonDetailFragment : Fragment(), LessonDetailContract.View {
                 imageLesson.setImageResource(R.drawable.ic_launcher_background)
             }
         }
+        
+        // Load user progress after lesson info is displayed
+        loadUserProgress(lesson.id)
     }
 
     override fun showVocabulary(words: List<Word>) {
@@ -188,8 +200,44 @@ class LessonDetailFragment : Fragment(), LessonDetailContract.View {
     }
     
     private fun loadUserProgress(lessonId: String) {
-        // TODO: Implement actual user progress loading
-        // For now, set a placeholder progress
-        viewBinding.progressLesson.progress = 25 // 25% as example
+        coroutineScope.launch {
+            try {
+                val userId = auth.currentUser?.uid ?: return@launch
+                val progressResult = userProgressRepository.getUserLessonProgress(userId, lessonId)
+                
+                if (progressResult.isSuccess) {
+                    val progress = progressResult.getOrNull()
+                    updateProgressUI(progress, lessonId)
+                } else {
+                    // If no progress found, show default progress (0/totalWords)
+                    val lesson = currentLesson ?: return@launch
+                    updateProgressUI(null, lessonId)
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Error loading user progress", e)
+                // Show default progress in case of error
+                val lesson = currentLesson ?: return@launch
+                updateProgressUI(null, lessonId)
+            }
+        }
+    }
+    
+    private fun updateProgressUI(progress: UserLessonProgress?, lessonId: String) {
+        val lesson = currentLesson ?: return
+        val totalWords = lesson.vocabulary.size
+        
+        viewBinding.apply {
+            // Update progress bar
+            val progressPercentage = if (progress != null && totalWords > 0) {
+                (progress.wordsLearned * 100) / totalWords
+            } else {
+                0
+            }
+            progressLesson.progress = progressPercentage
+            
+            // Update points text
+            val wordsLearned = if (progress != null) progress.wordsLearned else 0
+            textLessonPoints.text = "$wordsLearned / $totalWords words learned"
+        }
     }
 }

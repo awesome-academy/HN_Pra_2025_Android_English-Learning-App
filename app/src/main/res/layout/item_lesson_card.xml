@@ -72,7 +72,7 @@
                 android:fontFamily="sans-serif"
                 android:textColor="@color/lesson_points_text"
                 android:textSize="@dimen/sp_12"
-                tools:text="points : 43 / 100" />
+                tools:text="words : 4 / 10" />
 
         </LinearLayout>
 

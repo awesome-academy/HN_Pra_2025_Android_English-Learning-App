@@ -50,7 +50,7 @@ class CoursesAdapter(
                 progressLesson.progress = progress
 
                 // Set points display
-                textLessonPoints.text = "Progress: $progress / 100 points"
+                textLessonPoints.text = "$progress / 10 words"
 
                 // Load lesson image using Glide
                 if (lesson.imageUrl.isNotEmpty()) {

@@ -82,6 +82,8 @@ class LessonDetailPresenter : LessonDetailContract.Presenter {
 
     override fun detachView() {
         this.view = null
+        // Shutdown vocabulary data source to release resources
+        vocabularyDataSource.shutdown()
     }
 
     override fun onStart() {

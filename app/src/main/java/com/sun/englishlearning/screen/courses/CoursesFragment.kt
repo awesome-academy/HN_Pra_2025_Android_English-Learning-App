@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sun.englishlearning.R
@@ -37,6 +38,14 @@ class CoursesFragment : Fragment(), CoursesContract.View {
     override fun onStart() {
         super.onStart()
         presenter.onStart()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Refresh data when fragment becomes visible
+        if (isResumed && lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) {
+            refreshData()
+        }
     }
 
     override fun onStop() {
@@ -149,5 +158,10 @@ class CoursesFragment : Fragment(), CoursesContract.View {
 
     override fun updateTabSelection(isOngoing: Boolean) {
         selectTab(isOngoing)
+    }
+    
+    private fun refreshData() {
+        // Refresh data when fragment becomes visible
+        presenter.onTabSelected(isOngoingTabSelected)
     }
 }

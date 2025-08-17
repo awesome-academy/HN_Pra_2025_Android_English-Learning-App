@@ -8,32 +8,41 @@ import com.sun.englishlearning.data.model.Word
 import com.sun.englishlearning.data.repository.source.local.VocabularyLocalDataSource
 import com.sun.englishlearning.data.repository.source.remote.OnResultListener
 import com.sun.englishlearning.data.repository.source.remote.VocabularyRemoteDataSource
-import kotlin.concurrent.thread
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 
 class VocabularyDataSource {
     
     companion object {
         private const val TAG = "VocabularyDataSource"
+        private const val CONCURRENT_REQUESTS = 5 // Number of concurrent API requests
     }
     
     private val localDataSource = VocabularyLocalDataSource()
     private val remoteDataSource = VocabularyRemoteDataSource()
     private val mainHandler = Handler(Looper.getMainLooper())
     
-    // Cache for word definitions
+    // Thread pool for concurrent API requests
+    private val apiExecutor: ExecutorService = Executors.newFixedThreadPool(CONCURRENT_REQUESTS)
+    
+    // Cache for word definitions with LRU eviction policy
     private val wordCache = mutableMapOf<String, Word>()
+    private val cacheMaxSize = 500 // Maximum number of cached words
     
     /**
      * Get vocabulary for a lesson (words + definitions from API)
+     * Optimized for speed with concurrent API requests and better caching
      */
     fun getVocabularyForLesson(
-        context: Context, 
-        lessonId: String, 
+        context: Context,
+        lessonId: String,
         listener: OnResultListener<List<Word>>
     ) {
         listener.onLoading()
         
-        thread {
+        // Use a background thread for the overall operation
+        apiExecutor.execute {
             try {
                 // 1. Get word list from local JSON
                 val words = localDataSource.getVocabularyWords(context, lessonId)
@@ -42,34 +51,13 @@ class VocabularyDataSource {
                     mainHandler.post {
                         listener.onError("No vocabulary found for lesson $lessonId")
                     }
-                    return@thread
+                    return@execute
                 }
                 
                 Log.d(TAG, "Found ${words.size} words for lesson $lessonId")
                 
-                // 2. Fetch definitions from API
-                val wordDefinitions = mutableListOf<Word>()
-                
-                words.forEach { word ->
-                    // Check cache first
-                    val cachedWord = wordCache[word.lowercase()]
-                    if (cachedWord != null) {
-                        wordDefinitions.add(cachedWord)
-                        Log.d(TAG, "Using cached definition for: $word")
-                    } else {
-                        // Fetch from API
-                        val wordDefinition = remoteDataSource.fetchWordDefinition(word)
-                        if (wordDefinition != null) {
-                            wordDefinitions.add(wordDefinition)
-                            // Cache the result
-                            wordCache[word.lowercase()] = wordDefinition
-                            Log.d(TAG, "Fetched and cached definition for: $word")
-                        }
-                    }
-                    
-                    // Small delay to avoid overwhelming the API
-                    Thread.sleep(100)
-                }
+                // 2. Fetch definitions from API with concurrent requests
+                val wordDefinitions = fetchWordDefinitionsConcurrently(words, lessonId)
                 
                 mainHandler.post {
                     listener.onSuccess(wordDefinitions)
@@ -85,33 +73,97 @@ class VocabularyDataSource {
     }
     
     /**
-     * Get single word definition
+     * Fetch word definitions concurrently for better performance
      */
-    fun getWordDefinition(word: String, listener: OnResultListener<Word>) {
-        listener.onLoading()
+    private fun fetchWordDefinitionsConcurrently(words: List<String>, lessonId: String): List<Word> {
+        val wordDefinitions = mutableListOf<Word>()
+        val fetchTasks = mutableListOf<() -> Unit>()
         
-        thread {
+        // Create fetch tasks for each word
+        words.forEach { word ->
+            fetchTasks.add {
+                val definition = fetchWordDefinitionWithCache(word, lessonId)
+                synchronized(wordDefinitions) {
+                    definition?.let { wordDefinitions.add(it) }
+                }
+            }
+        }
+        
+        // Execute fetch tasks concurrently
+        val futures = fetchTasks.map { task ->
+            apiExecutor.submit(task)
+        }
+        
+        // Wait for all tasks to complete
+        futures.forEach { future ->
             try {
-                // Check cache first
-                val cachedWord = wordCache[word.lowercase()]
-                if (cachedWord != null) {
-                    mainHandler.post {
-                        listener.onSuccess(cachedWord)
+                future.get(10, TimeUnit.SECONDS) // 10 second timeout per task
+            } catch (e: Exception) {
+                Log.e(TAG, "Error waiting for fetch task", e)
+            }
+        }
+        
+        // Sort results to match original word order
+        val wordOrderMap = words.withIndex().associate { it.value to it.index }
+        return wordDefinitions.sortedBy { wordOrderMap[it.word] }
+    }
+    
+    /**
+     * Fetch word definition with caching
+     */
+    private fun fetchWordDefinitionWithCache(word: String, lessonId: String): Word? {
+        // Check cache first
+        val cachedWord = wordCache[word.lowercase()]
+        if (cachedWord != null) {
+            Log.d(TAG, "Using cached definition for: $word")
+            // Update lessonId if it's missing
+            val updatedWord = if (cachedWord.lessonId.isEmpty()) {
+                cachedWord.copy(lessonId = lessonId)
+            } else {
+                cachedWord
+            }
+            return updatedWord
+        }
+        
+        // Fetch from API
+        val wordDefinition = remoteDataSource.fetchWordDefinition(word)
+        if (wordDefinition != null) {
+            // Add lessonId to the word definition
+            val wordWithLessonId = wordDefinition.copy(lessonId = lessonId)
+            
+            // Cache the result with size limit
+            synchronized(wordCache) {
+                // Evict oldest entries if cache is full
+                if (wordCache.size >= cacheMaxSize) {
+                    val oldestKey = wordCache.keys.firstOrNull()
+                    if (oldestKey != null) {
+                        wordCache.remove(oldestKey)
                     }
-                    return@thread
                 }
                 
-                // Fetch from API
-                val wordDefinition = remoteDataSource.fetchWordDefinition(word)
-                if (wordDefinition != null) {
-                    // Cache the result
-                    wordCache[word.lowercase()] = wordDefinition
-                    
-                    mainHandler.post {
+                wordCache[word.lowercase()] = wordWithLessonId
+            }
+            Log.d(TAG, "Fetched and cached definition for: $word")
+            return wordWithLessonId
+        }
+        
+        return wordDefinition
+    }
+    
+    /**
+     * Get single word definition
+     */
+    fun getWordDefinition(word: String, lessonId: String, listener: OnResultListener<Word>) {
+        listener.onLoading()
+        
+        apiExecutor.execute {
+            try {
+                val wordDefinition = fetchWordDefinitionWithCache(word, lessonId)
+
+                mainHandler.post {
+                    if (wordDefinition != null) {
                         listener.onSuccess(wordDefinition)
-                    }
-                } else {
-                    mainHandler.post {
+                    } else {
                         listener.onError("Failed to fetch definition for: $word")
                     }
                 }
@@ -137,11 +189,25 @@ class VocabularyDataSource {
      * Check if API is available
      */
     fun checkApiAvailability(listener: OnResultListener<Boolean>) {
-        thread {
+        apiExecutor.execute {
             val isAvailable = remoteDataSource.isDictionaryApiAvailable()
             mainHandler.post {
                 listener.onSuccess(isAvailable)
             }
+        }
+    }
+    
+    /**
+     * Shutdown executor service
+     */
+    fun shutdown() {
+        apiExecutor.shutdown()
+        try {
+            if (!apiExecutor.awaitTermination(5, TimeUnit.SECONDS)) {
+                apiExecutor.shutdownNow()
+            }
+        } catch (e: InterruptedException) {
+            apiExecutor.shutdownNow()
         }
     }
 }

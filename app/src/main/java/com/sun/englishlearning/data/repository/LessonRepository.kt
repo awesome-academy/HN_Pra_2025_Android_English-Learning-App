@@ -1,8 +1,6 @@
 package com.sun.englishlearning.data.repository
 
 import android.content.Context
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.sun.englishlearning.data.model.Lesson
 import com.sun.englishlearning.data.model.UserLessonProgress
@@ -18,18 +16,16 @@ interface LessonRepository {
     suspend fun getRecentlyLearnedLessons(userId: String, limit: Int = 2): Result<List<Pair<Lesson, UserLessonProgress>>>
     suspend fun createLesson(lesson: Lesson): Result<Unit>
     suspend fun updateLesson(lesson: Lesson): Result<Unit>
+    suspend fun updateLessonProgressForFlashcard(userId: String, lessonId: String, wordId: String): Result<Unit>
 }
 
 class LessonRepositoryImpl(
     private val context: Context,
     private val userLessonProgressRepository: UserLessonProgressRepository
 ) : LessonRepository {
-    private val db = Firebase.firestore
-    private val auth = Firebase.auth
 
     override suspend fun getAllLessons(): Result<List<Lesson>> {
         return try {
-            // Load lessons from JSON file in assets
             val lessons = JsonUtils.loadLessonsFromAssets(context)
             Result.success(lessons)
         } catch (e: Exception) {
@@ -39,10 +35,9 @@ class LessonRepositoryImpl(
 
     override suspend fun getLessonsByCourse(courseId: String): Result<List<Lesson>> {
         return try {
-            // Load all lessons and filter by courseId if needed
             val allLessons = JsonUtils.loadLessonsFromAssets(context)
-            // Since our JSON doesn't have courseId, return all lessons
-            Result.success(allLessons)
+            val lessons = allLessons.filter { it.id == courseId }
+            Result.success(lessons)
         } catch (e: Exception) {
             Result.failure(e)
         }
@@ -50,7 +45,6 @@ class LessonRepositoryImpl(
 
     override suspend fun getLesson(lessonId: String): Result<Lesson?> {
         return try {
-            // Load all lessons and find the one with matching ID
             val allLessons = JsonUtils.loadLessonsFromAssets(context)
             val lesson = allLessons.find { it.id == lessonId }
             Result.success(lesson)
@@ -144,30 +138,71 @@ class LessonRepositoryImpl(
     }
 
     override suspend fun updateLesson(lesson: Lesson): Result<Unit> {
-        return try {
-            val lessonMap = mapOf(
-                "title" to lesson.title,
-                "description" to lesson.description,
-                "imageUrl" to lesson.imageUrl,
-                "vocabulary" to lesson.vocabulary
-            )
-
-            db.collection("lessons")
-                .document(lesson.id)
-                .update(lessonMap)
-                .await()
-            Result.success(Unit)
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
+        // No-op: lessons are loaded from JSON, not updated in Firestore
+        return Result.success(Unit)
     }
 
     override suspend fun createLesson(lesson: Lesson): Result<Unit> {
+        // No-op: lessons are loaded from JSON, not created in Firestore
+        return Result.success(Unit)
+    }
+
+    override suspend fun updateLessonProgressForFlashcard(userId: String, lessonId: String, wordId: String): Result<Unit> {
         return try {
-            db.collection("lessons")
-                .document(lesson.id)
-                .set(lesson)
-                .await()
+            val progressResult = userLessonProgressRepository.getUserLessonProgress(userId, lessonId)
+            
+            val lessonResult = getLesson(lessonId)
+            if (lessonResult.isFailure) return Result.failure(lessonResult.exceptionOrNull()!!)
+            val lesson = lessonResult.getOrNull() ?: return Result.failure(Exception("Lesson not found"))
+            val totalWords = lesson.vocabulary.size
+            
+            // Handle case where progress doesn't exist yet
+            val progress = if (progressResult.isSuccess) {
+                progressResult.getOrNull()
+            } else {
+                null
+            }
+            
+            val learnedWords = progress?.learnedWordIds?.toMutableList() ?: mutableListOf()
+            if (!learnedWords.contains(wordId)) learnedWords.add(wordId)
+            
+            // Update progress fields
+            val updatedProgress = if (progress != null) {
+                // Update existing progress
+                progress.copy(
+                    learnedWordIds = learnedWords,
+                    wordsLearned = learnedWords.size,
+                    totalWords = totalWords,
+                    progressPercentage = if (totalWords > 0) (learnedWords.size * 100 / totalWords) else 0,
+                    bestScore = learnedWords.size,
+                    lastAccessedAt = java.util.Date()
+                )
+            } else {
+                // Create new progress record if it doesn't exist
+                UserLessonProgress(
+                    userId = userId,
+                    lessonId = lessonId,
+                    isStarted = true,
+                    learnedWordIds = learnedWords,
+                    wordsLearned = learnedWords.size,
+                    totalWords = totalWords,
+                    progressPercentage = if (totalWords > 0) (learnedWords.size * 100 / totalWords) else 0,
+                    bestScore = learnedWords.size,
+                    lastAccessedAt = java.util.Date(),
+                    startedAt = java.util.Date()
+                )
+            }
+            
+            // Create progress record if it doesn't exist yet
+            if (progress == null) {
+                val createResult = userLessonProgressRepository.createProgress(updatedProgress)
+                if (createResult.isFailure) {
+                    return Result.failure(Exception("Failed to create progress record: ${createResult.exceptionOrNull()?.message}"))
+                }
+            }
+            val updateResult = userLessonProgressRepository.updateProgress(updatedProgress)
+            if (updateResult.isFailure) return updateResult
+            
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)

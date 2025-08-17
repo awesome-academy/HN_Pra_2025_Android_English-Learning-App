@@ -12,6 +12,7 @@ import android.view.LayoutInflater
 import com.google.android.material.tabs.TabLayoutMediator
 import com.sun.englishlearning.databinding.ActivityOnboardingBinding
 import com.sun.englishlearning.screen.login.LoginActivity
+import com.sun.englishlearning.screen.register.RegisterActivity
 import com.sun.englishlearning.utils.AppPreferences
 import com.sun.englishlearning.utils.base.BaseActivity
 
@@ -30,7 +31,7 @@ class OnboardingActivity : BaseActivity<ActivityOnboardingBinding>() {
             AppPreferences.setFirstLaunch(this, true)
 
             // Navigate to the login screen
-            val intent = Intent(this, LoginActivity::class.java)
+            val intent = Intent(this, RegisterActivity::class.java)
             startActivity(intent)
             finish()
         }

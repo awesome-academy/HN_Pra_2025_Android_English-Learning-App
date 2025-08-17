@@ -19,6 +19,7 @@ import com.sun.englishlearning.data.repository.LessonRepositoryImpl
 import com.sun.englishlearning.data.repository.UserLessonProgressRepositoryImpl
 import com.sun.englishlearning.databinding.FragmentFlashcardBinding
 import kotlinx.coroutines.launch
+import android.content.Context
 
 class FlashcardFragment : Fragment() {
 
@@ -34,10 +35,23 @@ class FlashcardFragment : Fragment() {
         }
     }
 
+    // Interface để thông báo khi tiến trình học được cập nhật
+    interface OnProgressUpdateListener {
+        fun onProgressUpdated(lessonId: String)
+    }
+
     private var _binding: FragmentFlashcardBinding? = null
     private val binding get() = _binding!!
 
     private lateinit var word: Word
+    private var progressUpdateListener: OnProgressUpdateListener? = null
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is OnProgressUpdateListener) {
+            progressUpdateListener = context
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -90,6 +104,8 @@ class FlashcardFragment : Fragment() {
                 val result = lessonRepository.updateLessonProgressForFlashcard(userId, lessonId, wordId)
                 if (result.isSuccess) {
                     Toast.makeText(requireContext(), "Word marked as learned!", Toast.LENGTH_SHORT).show()
+                    // Notify parent activity/fragment that progress has been updated
+                    progressUpdateListener?.onProgressUpdated(lessonId)
                 } else {
                     Toast.makeText(requireContext(), "Failed to update progress: ${result.exceptionOrNull()?.message}", Toast.LENGTH_SHORT).show()
                 }

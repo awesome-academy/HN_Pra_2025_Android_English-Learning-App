@@ -14,6 +14,8 @@ interface LessonRepository {
     suspend fun getLessonsForUser(userId: String): Result<List<Lesson>>
     suspend fun getSuggestedLessons(userId: String): Result<List<Lesson>>
     suspend fun getRecentlyLearnedLessons(userId: String, limit: Int = 2): Result<List<Pair<Lesson, UserLessonProgress>>>
+    suspend fun getInProgressLessons(userId: String): Result<List<Pair<Lesson, UserLessonProgress>>>
+    suspend fun getCompletedLessons(userId: String): Result<List<Pair<Lesson, UserLessonProgress>>>
     suspend fun createLesson(lesson: Lesson): Result<Unit>
     suspend fun updateLesson(lesson: Lesson): Result<Unit>
     suspend fun updateLessonProgressForFlashcard(userId: String, lessonId: String, wordId: String): Result<Unit>
@@ -132,6 +134,97 @@ class LessonRepositoryImpl(
             }
 
             Result.success(recentLessonsWithProgress)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+    
+    override suspend fun getInProgressLessons(userId: String): Result<List<Pair<Lesson, UserLessonProgress>>> {
+        return try {
+            // Get user progress
+            val progressResult = userLessonProgressRepository.getUserProgressByUser(userId)
+            if (progressResult.isFailure) {
+                return Result.success(emptyList())
+            }
+
+            val userProgress = progressResult.getOrNull() ?: emptyList()
+
+            // Filter for lessons that are in progress (started but not completed)
+            val inProgressProgress = userProgress.filter { 
+                it.isStarted && it.progressPercentage < 100 
+            }
+
+            if (inProgressProgress.isEmpty()) {
+                return Result.success(emptyList())
+            }
+
+            // Get all lessons
+            val allLessonsResult = getAllLessons()
+            if (allLessonsResult.isFailure) {
+                return Result.success(emptyList())
+            }
+
+            val allLessons = allLessonsResult.getOrNull() ?: emptyList()
+
+            // Combine lessons with their progress data
+            val inProgressLessonsWithProgress = inProgressProgress.mapNotNull { progress ->
+                val lesson = allLessons.find { it.id == progress.lessonId }
+                if (lesson != null) {
+                    Pair(lesson, progress)
+                } else {
+                    null
+                }
+            }
+
+            // Sort by last accessed time (most recent first)
+            val sortedLessons = inProgressLessonsWithProgress.sortedByDescending { 
+                it.second.lastAccessedAt 
+            }
+
+            Result.success(sortedLessons)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun getCompletedLessons(userId: String): Result<List<Pair<Lesson, UserLessonProgress>>> {
+        return try {
+            // Get user progress
+            val progressResult = userLessonProgressRepository.getUserProgressByUser(userId)
+            if (progressResult.isFailure) {
+                return Result.success(emptyList())
+            }
+
+            val userProgress = progressResult.getOrNull() ?: emptyList()
+
+            // Filter for lessons that are completed (100% progress)
+            val completedProgress = userProgress.filter { 
+                it.isStarted && it.progressPercentage >= 100 
+            }
+
+            if (completedProgress.isEmpty()) {
+                return Result.success(emptyList())
+            }
+
+            // Get all lessons
+            val allLessonsResult = getAllLessons()
+            if (allLessonsResult.isFailure) {
+                return Result.success(emptyList())
+            }
+
+            val allLessons = allLessonsResult.getOrNull() ?: emptyList()
+
+            // Combine lessons with their progress data
+            val completedLessonsWithProgress = completedProgress.mapNotNull { progress ->
+                val lesson = allLessons.find { it.id == progress.lessonId }
+                if (lesson != null) {
+                    Pair(lesson, progress)
+                } else {
+                    null
+                }
+            }
+
+            Result.success(completedLessonsWithProgress)
         } catch (e: Exception) {
             Result.failure(e)
         }

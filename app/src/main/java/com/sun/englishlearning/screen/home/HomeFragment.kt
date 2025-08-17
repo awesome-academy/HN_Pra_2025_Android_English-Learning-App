@@ -27,6 +27,7 @@ import com.sun.englishlearning.utils.base.BaseFragment
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import android.app.Activity
 
 class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 
@@ -58,6 +59,19 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 
     override fun initData() {
         checkAuthenticationAndLoadData()
+    }
+    
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        
+        // Handle result from activities that might update progress
+        if (requestCode == 1001 && resultCode == Activity.RESULT_OK) {
+            val updatedLessonId = data?.getStringExtra("updated_lesson_id")
+            if (updatedLessonId != null) {
+                // Refresh data to show updated progress
+                loadRecentLessons()
+            }
+        }
     }
 
     private fun setupClickListeners() {
@@ -375,7 +389,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
         return lessons.take(3).map { lesson ->
             CourseCategory(
                 title = lesson.title,
-                imageUrl = lesson.imageUrl.takeIf { it.isNotBlank() } 
+                imageUrl = lesson.imageUrl.takeIf { it.isNotBlank() }
                     ?: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=400",
                 lessons = listOf(lesson)
             )

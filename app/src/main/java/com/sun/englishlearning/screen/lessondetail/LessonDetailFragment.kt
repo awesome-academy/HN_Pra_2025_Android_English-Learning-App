@@ -26,11 +26,14 @@ import androidx.fragment.app.Fragment
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import android.app.Activity
+import android.content.Intent
 
 class LessonDetailFragment : Fragment(), LessonDetailContract.View {
 
     companion object {
         private const val TAG = "LessonDetailFragment"
+        private const val REQUEST_CODE_FLASHCARD = 1001
     }
 
     private var _viewBinding: FragmentLessonDetailBinding? = null
@@ -77,6 +80,20 @@ class LessonDetailFragment : Fragment(), LessonDetailContract.View {
         super.onDestroyView()
         presenter.detachView()
         _viewBinding = null
+    }
+    
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        
+        // Handle result from FlashcardActivity
+        if (requestCode == REQUEST_CODE_FLASHCARD && resultCode == Activity.RESULT_OK) {
+            val updatedLessonId = data?.getStringExtra("updated_lesson_id")
+            if (updatedLessonId != null) {
+                Log.d(TAG, "Received updated lesson ID: $updatedLessonId")
+                // Refresh progress UI for this lesson
+                loadUserProgress(updatedLessonId)
+            }
+        }
     }
 
     private fun initPresenter() {
@@ -183,7 +200,8 @@ class LessonDetailFragment : Fragment(), LessonDetailContract.View {
                     currentIndex = 0,
                     lessonTitle = lessonTitle
                 )
-                startActivity(intent)
+                // Start activity for result to get progress updates
+                startActivityForResult(intent, REQUEST_CODE_FLASHCARD)
             } else {
                 val intent = FlashcardActivity.newIntent(
                     context = requireContext(),
@@ -191,7 +209,8 @@ class LessonDetailFragment : Fragment(), LessonDetailContract.View {
                     currentIndex = currentIndex,
                     lessonTitle = lessonTitle
                 )
-                startActivity(intent)
+                // Start activity for result to get progress updates
+                startActivityForResult(intent, REQUEST_CODE_FLASHCARD)
             }
         } catch (e: Exception) {
             Log.e(TAG, "Error navigating to flashcard", e)

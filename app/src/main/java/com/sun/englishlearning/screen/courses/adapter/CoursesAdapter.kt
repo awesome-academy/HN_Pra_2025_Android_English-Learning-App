@@ -36,6 +36,13 @@ class CoursesAdapter(
         userProgressMap = progressMap
         notifyDataSetChanged()
     }
+    
+    // New method for updating lessons with progress
+    fun updateLessonsWithProgress(newLessons: List<Lesson>, progressMap: Map<String, Int>) {
+        lessons = newLessons
+        userProgressMap = progressMap
+        notifyDataSetChanged()
+    }
 
     inner class LessonViewHolder(private val binding: ItemLessonCardBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -45,7 +52,7 @@ class CoursesAdapter(
                 // Set lesson title
                 textLessonTitle.text = lesson.title
 
-                // Set progress - 0% for ongoing lessons (not started yet)
+                // Set progress from userProgressMap
                 val progress = userProgressMap[lesson.id] ?: 0
                 progressLesson.progress = progress
 

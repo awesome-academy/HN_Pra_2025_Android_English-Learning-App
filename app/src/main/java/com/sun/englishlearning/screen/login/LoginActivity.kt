@@ -34,6 +34,8 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(), LoginContract.View {
         binding.tvRegister.setOnClickListener {
             // Navigate to registration screen
             val intent = Intent(this, RegisterActivity::class.java)
+            // Clear any existing RegisterActivity from stack to avoid duplicates
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
             startActivity(intent)
         }
 

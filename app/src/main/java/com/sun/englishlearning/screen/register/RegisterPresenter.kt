@@ -1,5 +1,7 @@
 package com.sun.englishlearning.screen.register
 
+import android.content.Context
+import com.sun.englishlearning.BuildConfig
 import com.sun.englishlearning.data.repository.AuthRepository
 import com.sun.englishlearning.data.repository.AuthRepositoryImpl
 import kotlinx.coroutines.CoroutineScope
@@ -8,6 +10,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class RegisterPresenter(
+    private val context: Context,
     private val authRepository: AuthRepository = AuthRepositoryImpl()
 ) : RegisterContract.Presenter {
 
@@ -41,6 +44,24 @@ class RegisterPresenter(
                 } else {
                     view?.onRegisterFailure(exception.message ?: "Lỗi không xác định")
                 }
+            }
+        }
+    }
+
+    override fun handleGoogleSignUp() {
+        view?.showLoading()
+        presenterScope.launch {
+            val result = withContext(Dispatchers.IO) {
+                authRepository.signInWithGoogle(
+                    context = context,
+                    serverClientId = BuildConfig.WEB_CLIENT_ID
+                )
+            }
+            view?.hideLoading()
+            result.onSuccess {
+                view?.onRegisterSuccess()
+            }.onFailure { exception ->
+                view?.onRegisterFailure(exception.message ?: "Lỗi đăng ký với Google")
             }
         }
     }

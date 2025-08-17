@@ -9,19 +9,18 @@ import android.widget.Toast
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.sun.englishlearning.MainActivity
 import com.sun.englishlearning.databinding.ActivityRegisterBinding
+import com.sun.englishlearning.screen.login.LoginActivity
 import com.sun.englishlearning.utils.base.BaseActivity
 
 class RegisterActivity : BaseActivity<ActivityRegisterBinding>(), RegisterContract.View {
 
-    private val presenter: RegisterContract.Presenter = RegisterPresenter()
+    private lateinit var presenter: RegisterContract.Presenter
 
     override fun inflateBinding(inflater: LayoutInflater): ActivityRegisterBinding {
         return ActivityRegisterBinding.inflate(inflater)
     }
 
     override fun initView() {
-        presenter.attachView(this)
-
         binding.btnRegister.setOnClickListener {
             val name = binding.etName.text.toString().trim()
             val email = binding.etEmail.text.toString().trim()
@@ -30,26 +29,36 @@ class RegisterActivity : BaseActivity<ActivityRegisterBinding>(), RegisterContra
         }
 
         binding.btnGoogleSignUp.setOnClickListener {
-            // TODO: Implement Google Sign Up
-            Toast.makeText(this, "Google Sign Up coming soon!", Toast.LENGTH_SHORT).show()
+            presenter.handleGoogleSignUp()
         }
 
         binding.tvLoginLink.setOnClickListener {
-            // Return to login screen
+            // Navigate to login screen
+            val intent = Intent(this, LoginActivity::class.java)
+            // Clear any existing LoginActivity from stack to avoid duplicates
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+            startActivity(intent)
             finish()
         }
     }
 
-    override fun initData() {}
+    override fun initData() {
+        presenter = RegisterPresenter(this)
+        presenter.attachView(this)
+    }
 
     override fun showLoading() {
         binding.progressBar.visibility = View.VISIBLE
         binding.btnRegister.isEnabled = false
+        binding.btnGoogleSignUp.isEnabled = false
+        binding.tvLoginLink.isEnabled = false
     }
 
     override fun hideLoading() {
         binding.progressBar.visibility = View.GONE
         binding.btnRegister.isEnabled = true
+        binding.btnGoogleSignUp.isEnabled = true
+        binding.tvLoginLink.isEnabled = true
     }
 
     override fun onRegisterSuccess() {

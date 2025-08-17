@@ -26,16 +26,16 @@ class RegisterActivity : BaseActivity<ActivityRegisterBinding>(), RegisterContra
             val name = binding.etName.text.toString().trim()
             val email = binding.etEmail.text.toString().trim()
             val password = binding.etPassword.text.toString().trim()
-            val confirmPassword = binding.etConfirmPassword.text.toString().trim()
-            presenter.register(name, email, password, confirmPassword)
+            presenter.register(name, email, password)
+        }
+
+        binding.btnGoogleSignUp.setOnClickListener {
+            // TODO: Implement Google Sign Up
+            Toast.makeText(this, "Google Sign Up coming soon!", Toast.LENGTH_SHORT).show()
         }
 
         binding.tvLoginLink.setOnClickListener {
             // Return to login screen
-            finish()
-        }
-
-        binding.ivBack.setOnClickListener {
             finish()
         }
     }
@@ -53,7 +53,7 @@ class RegisterActivity : BaseActivity<ActivityRegisterBinding>(), RegisterContra
     }
 
     override fun onRegisterSuccess() {
-        Toast.makeText(this, "Registration successful!", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "Đăng ký thành công!", Toast.LENGTH_SHORT).show()
         val intent = Intent(this, MainActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
@@ -61,20 +61,20 @@ class RegisterActivity : BaseActivity<ActivityRegisterBinding>(), RegisterContra
     }
 
     override fun onRegisterFailure(message: String) {
-        Toast.makeText(this, "Error: $message", Toast.LENGTH_LONG).show()
+        Toast.makeText(this, "Lỗi: $message", Toast.LENGTH_LONG).show()
     }
 
     override fun showEmailCollisionError() {
         MaterialAlertDialogBuilder(this)
-            .setTitle("Email already exists")
-            .setMessage("This email is already in use. Please use a different email or go back to login.")
-            .setPositiveButton("Understood", null)
+            .setTitle("Email đã tồn tại")
+            .setMessage("Email này đã được sử dụng. Vui lòng sử dụng email khác hoặc quay lại đăng nhập.")
+            .setPositiveButton("Đã hiểu", null)
             .show()
     }
 
     override fun showPasswordMismatchError() {
-        // We can set error directly on TextInputLayout
-        binding.tilConfirmPassword.error = "Passwords do not match"
+        // This method is no longer needed since we removed confirm password field
+        // But we keep it for interface compatibility
     }
 
     override fun onDestroy() {

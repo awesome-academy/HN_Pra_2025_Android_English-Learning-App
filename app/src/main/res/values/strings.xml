@@ -85,6 +85,10 @@
     <string name="reset_password">Đặt lại mật khẩu</string>
     <string name="forgot_password_prompt">Quên mật khẩu? </string>
     <string name="no_account_text">Bạn chưa có tài khoản? </string>
+    <string name="welcome_register_title">Chào mừng đến EziEng!</string>
+    <string name="create_account_button">Tạo tài khoản</string>
+    <string name="terms_and_conditions">Bằng cách đăng ký, bạn đồng ý với\ncác điều khoản dịch vụ và chính sách bảo mật của chúng tôi</string>
+    <string name="google_sign_up_button">Đăng ký với tài khoản Google</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

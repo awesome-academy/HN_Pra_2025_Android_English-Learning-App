@@ -13,6 +13,6 @@ interface RegisterContract {
     }
 
     interface Presenter : BasePresenter<View> {
-        fun register(name: String, email: String, pass: String, confirmPass: String)
+        fun register(name: String, email: String, pass: String)
     }
 }

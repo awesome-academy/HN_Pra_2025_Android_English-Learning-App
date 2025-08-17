@@ -14,18 +14,14 @@ class RegisterPresenter(
     private var view: RegisterContract.View? = null
     private val presenterScope = CoroutineScope(Dispatchers.Main)
 
-    override fun register(name: String, email: String, pass: String, confirmPass: String) {
+    override fun register(name: String, email: String, pass: String) {
         // --- Start input validation ---
         if (name.isEmpty() || email.isEmpty() || pass.isEmpty()) {
-            view?.onRegisterFailure("Please enter all required information.")
-            return
-        }
-        if (pass != confirmPass) {
-            view?.showPasswordMismatchError()
+            view?.onRegisterFailure("Vui lòng nhập đầy đủ thông tin.")
             return
         }
         if (pass.length < 6) {
-            view?.onRegisterFailure("Password must be at least 6 characters.")
+            view?.onRegisterFailure("Mật khẩu phải có ít nhất 6 ký tự.")
             return
         }
         // --- End validation ---
@@ -43,7 +39,7 @@ class RegisterPresenter(
                 if (exception.message == "EMAIL_COLLISION") {
                     view?.showEmailCollisionError()
                 } else {
-                    view?.onRegisterFailure(exception.message ?: "Unknown error")
+                    view?.onRegisterFailure(exception.message ?: "Lỗi không xác định")
                 }
             }
         }

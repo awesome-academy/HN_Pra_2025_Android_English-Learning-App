@@ -43,6 +43,9 @@
         <activity
             android:name=".screen.flashcard.FlashcardActivity"
             android:exported="false" />
+        <activity
+            android:name=".screen.register.RegisterActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

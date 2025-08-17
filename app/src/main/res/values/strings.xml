@@ -63,6 +63,26 @@
     <string name="weekday_fri">Fri</string>
     <string name="weekday_sat">Sat</string>
     <string name="weekday_sun">Sun</string>
+
+<!--    Auth Screen-->
+    <string name="app_logo">Logo ứng dụng</string>
+    <string name="login_title">Đăng nhập</string>
+    <string name="email_hint">Email</string>
+    <string name="password_hint">Mật khẩu</string>
+    <string name="forgot_password">Quên mật khẩu?</string>
+    <string name="login_button">Đăng nhập</string>
+    <string name="or_separator">Hoặc</string>
+    <string name="google_sign_in_button">Đăng nhập với tài khoản Google</string>
+    <string name="no_account_prompt">Chưa có tài khoản?</string>
+    <string name="register_link">Đăng ký</string>
+    <string name="register_title">Tạo tài khoản</string>
+    <string name="name_hint">Họ và tên</string>
+    <string name="password_hint_register">Mật khẩu (ít nhất 6 ký tự)</string>
+    <string name="confirm_password_hint">Xác nhận mật khẩu</string>
+    <string name="register_button">Đăng ký</string>
+    <string name="already_have_account">Đã có tài khoản?</string>
+    <string name="login_link">Đăng nhập</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="profile_title">Profile</string>

@@ -8,6 +8,7 @@ import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
+import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
@@ -22,6 +23,8 @@ interface AuthRepository {
     val currentUser: FirebaseUser?
     suspend fun signInWithGoogle(context: Context, serverClientId: String): Result<FirebaseUser>
     suspend fun signOut(context: Context): Result<Unit>
+    suspend fun registerWithEmailPassword(email: String, password: String, displayName: String): Result<FirebaseUser>
+    suspend fun signInWithEmailPassword(email: String, password: String): Result<FirebaseUser>
 }
 
 class AuthRepositoryImpl : AuthRepository {
@@ -102,6 +105,43 @@ class AuthRepositoryImpl : AuthRepository {
             auth.signOut()
             credentialManager.clearCredentialState(ClearCredentialStateRequest())
             Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+    override suspend fun registerWithEmailPassword(email: String, password: String, displayName: String): Result<FirebaseUser> {
+        return try {
+            val authResult = auth.createUserWithEmailAndPassword(email, password).await()
+            val user = authResult.user
+            if (user != null) {
+                // After successful registration, create user profile in Firestore
+                val userProfile = hashMapOf(
+                    "uid" to user.uid,
+                    "displayName" to displayName,
+                    "email" to user.email,
+                    "createdAt" to System.currentTimeMillis()
+                )
+                db.collection("users").document(user.uid)
+                    .set(userProfile, SetOptions.merge())
+                    .await()
+                Result.success(user)
+            } else {
+                Result.failure(Exception("Registration failed."))
+            }
+        } catch (e: Exception) {
+            // This is the most important "email link" logic!
+            if (e is FirebaseAuthUserCollisionException) {
+                // Return a specific error for the Presenter to handle
+                return Result.failure(Exception("EMAIL_COLLISION"))
+            }
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun signInWithEmailPassword(email: String, password: String): Result<FirebaseUser> {
+        return try {
+            val authResult = auth.signInWithEmailAndPassword(email, password).await()
+            Result.success(authResult.user!!)
         } catch (e: Exception) {
             Result.failure(e)
         }

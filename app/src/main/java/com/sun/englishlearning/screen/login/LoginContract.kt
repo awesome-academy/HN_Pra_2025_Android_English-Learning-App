@@ -12,5 +12,7 @@ interface LoginContract {
 
     interface Presenter : BasePresenter<View> {
         fun handleGoogleSignIn()
+
+        fun handleEmailSignIn(email: String, password: String)
     }
 }

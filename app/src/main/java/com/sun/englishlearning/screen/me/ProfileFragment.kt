@@ -47,6 +47,11 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>() {
             // Navigate back to previous screen
             findNavController().navigateUp()
         }
+
+        viewBinding.llNotifications.setOnClickListener {
+            findNavController().navigate(R.id.action_profileFragment_to_notificationsFragment)
+        }
+
     }
 
     override fun onStart() {

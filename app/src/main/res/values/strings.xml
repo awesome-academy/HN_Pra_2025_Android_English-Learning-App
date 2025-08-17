@@ -63,33 +63,32 @@
     <string name="weekday_fri">Fri</string>
     <string name="weekday_sat">Sat</string>
     <string name="weekday_sun">Sun</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
     <string name="profile_title">Profile</string>
     <string name="profile_country">Country</string>
     <string name="profile_native_language">Native language</string>
     <string name="language_english">English</string>
     <string name="language_vietnamese">Tiếng Việt</string>
-    
+
     <!-- Me Fragment -->
     <string name="location_hanoi">Ha Noi</string>
     <string name="speak_level_beginner">Speak English at beginner level</string>
     <string name="learning_english">Learning English</string>
     <string name="learning_time_today">Today\'s learning time</string>
     <string name="days_learned_this_week">Days learned this week</string>
-    
+
     <string name="profile_notifications">Notifications</string>
     <string name="profile_terms">Terms of Service</string>
     <string name="profile_privacy">Privacy policy</string>
     <string name="profile_logout">Logout</string>
     <string name="profile_delete_account">Delete account</string>
-    
+
     <!-- Logout Dialog -->
     <string name="logout_confirmation_title">Xác nhận đăng xuất</string>
     <string name="logout_confirmation_message">Bạn có chắc chắn muốn đăng xuất khỏi tài khoản?</string>
     <string name="logout_confirm">Đăng xuất</string>
     <string name="logout_cancel">Hủy</string>
-    
+
     <!-- Dialog -->
     <string name="dialog_ok">OK</string>
     <string name="dialog_error_title">Lỗi</string>

@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.Toast
 import com.sun.englishlearning.MainActivity
 import com.sun.englishlearning.databinding.ActivityLoginBinding
+import com.sun.englishlearning.utils.DialogUtils
 import com.sun.englishlearning.screen.register.RegisterActivity
 import com.sun.englishlearning.utils.base.BaseActivity
 
@@ -57,7 +58,10 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(), LoginContract.View {
     }
 
     override fun onLoginFailure(message: String) {
-        Toast.makeText(this, "Error: $message", Toast.LENGTH_LONG).show()
+        DialogUtils.showErrorDialog(
+            context = this,
+            message = "Login failed: $message"
+        )
     }
 
     override fun showLoading() {

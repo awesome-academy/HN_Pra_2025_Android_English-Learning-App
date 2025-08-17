@@ -14,6 +14,7 @@ import com.sun.englishlearning.data.model.Word
 import com.sun.englishlearning.databinding.ActivityFlashcardBinding
 import com.sun.englishlearning.screen.flashcard.adapter.FlashcardAdapter
 import com.sun.englishlearning.utils.AudioManager
+import com.sun.englishlearning.utils.DialogUtils
 import com.sun.englishlearning.utils.base.BaseActivity
 
 class FlashcardActivity : BaseActivity<ActivityFlashcardBinding>(), FlashcardFragment.OnProgressUpdateListener {
@@ -303,12 +304,20 @@ class FlashcardActivity : BaseActivity<ActivityFlashcardBinding>(), FlashcardFra
 
     private fun showError(message: String) {
         Log.e(TAG, "Showing error: $message")
-        android.widget.Toast.makeText(this, message, android.widget.Toast.LENGTH_LONG).show()
-
-        // Delay finish to allow user to see the toast
-        binding.root.postDelayed({
+        DialogUtils.showErrorDialog(
+            context = this,
+            message = message
+        ) {
+            // Close activity after user acknowledges the error
             finish()
-        }, 2000)
+        }
+    }
+
+    // Implementation of OnProgressUpdateListener
+    override fun onProgressUpdated(lessonId: String) {
+        Log.d(TAG, "Progress updated for lesson: $lessonId")
+        // Store lessonId for later use when finishing the activity
+        lessonIdForUpdate = lessonId
     }
 
     // Implementation of OnProgressUpdateListener

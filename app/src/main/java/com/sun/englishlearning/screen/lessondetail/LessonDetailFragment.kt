@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
+import com.sun.englishlearning.utils.DialogUtils
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
@@ -166,7 +167,10 @@ class LessonDetailFragment : Fragment(), LessonDetailContract.View {
     }
 
     override fun showError(message: String) {
-        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+        DialogUtils.showErrorDialog(
+            context = requireContext(),
+            message = message
+        )
     }
 
     override fun navigateBack() {
@@ -188,7 +192,10 @@ class LessonDetailFragment : Fragment(), LessonDetailContract.View {
             Log.d(TAG, "Navigating to flashcard: ${words.size} words, index: $currentIndex, title: $lessonTitle")
 
             if (words.isEmpty()) {
-                Toast.makeText(requireContext(), "No vocabulary words available", Toast.LENGTH_SHORT).show()
+                DialogUtils.showErrorDialog(
+                    context = requireContext(),
+                    message = "No vocabulary words available"
+                )
                 return
             }
 
@@ -214,7 +221,10 @@ class LessonDetailFragment : Fragment(), LessonDetailContract.View {
             }
         } catch (e: Exception) {
             Log.e(TAG, "Error navigating to flashcard", e)
-            Toast.makeText(requireContext(), "Failed to open flashcard: ${e.message}", Toast.LENGTH_SHORT).show()
+            DialogUtils.showErrorDialog(
+                context = requireContext(),
+                message = "Failed to open flashcard: ${e.message}"
+            )
         }
     }
     

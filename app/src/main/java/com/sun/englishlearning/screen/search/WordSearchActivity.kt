@@ -11,6 +11,7 @@ import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.sun.englishlearning.data.model.WordSearchResult
+import com.sun.englishlearning.utils.DialogUtils
 import com.sun.englishlearning.data.model.SavedWord
 import com.sun.englishlearning.data.model.WordType
 import com.sun.englishlearning.data.repository.DictionaryRepository
@@ -91,7 +92,10 @@ class WordSearchActivity : BaseActivity<ActivityWordSearchBinding>() {
     private fun performSearch() {
         val query = binding.etSearchWord.text.toString().trim()
         if (query.isEmpty()) {
-            Toast.makeText(this, "Please enter a word to search", Toast.LENGTH_SHORT).show()
+            DialogUtils.showErrorDialog(
+                context = this,
+                message = "Please enter a word to search"
+            )
             return
         }
 
@@ -173,6 +177,12 @@ class WordSearchActivity : BaseActivity<ActivityWordSearchBinding>() {
                 prepareAsync()
             }
         } catch (e: Exception) {
+
+            DialogUtils.showErrorDialog(
+                context = this,
+                message = "Unable to play sound"
+            )
+            
             Toast.makeText(this, "Unable to play sound: ${e.message}", Toast.LENGTH_SHORT).show()
         }
     }

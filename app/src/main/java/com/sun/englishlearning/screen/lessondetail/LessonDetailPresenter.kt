@@ -3,8 +3,15 @@ package com.sun.englishlearning.screen.lessondetail
 import android.content.Context
 import com.sun.englishlearning.data.model.Lesson
 import com.sun.englishlearning.data.model.Word
+import com.sun.englishlearning.data.repository.LessonRepository
+import com.sun.englishlearning.data.repository.LessonRepositoryImpl
+import com.sun.englishlearning.data.repository.UserLessonProgressRepository
+import com.sun.englishlearning.data.repository.UserLessonProgressRepositoryImpl
 import com.sun.englishlearning.data.repository.source.VocabularyDataSource
 import com.sun.englishlearning.data.repository.source.remote.OnResultListener
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class LessonDetailPresenter : LessonDetailContract.Presenter {
 
@@ -13,9 +20,13 @@ class LessonDetailPresenter : LessonDetailContract.Presenter {
     private var currentVocabulary: List<Word> = emptyList()
     private var context: Context? = null
     private val vocabularyDataSource = VocabularyDataSource()
+    private var lessonRepository: LessonRepository? = null
+    private val userProgressRepository: UserLessonProgressRepository = UserLessonProgressRepositoryImpl()
+    private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
     fun setContext(context: Context) {
         this.context = context
+        lessonRepository = LessonRepositoryImpl(context, userProgressRepository)
     }
 
     override fun loadLessonDetail(lesson: Lesson) {
@@ -82,6 +93,8 @@ class LessonDetailPresenter : LessonDetailContract.Presenter {
 
     override fun detachView() {
         this.view = null
+        // Shutdown vocabulary data source to release resources
+        vocabularyDataSource.shutdown()
     }
 
     override fun onStart() {

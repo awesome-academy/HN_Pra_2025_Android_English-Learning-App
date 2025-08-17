@@ -19,6 +19,7 @@ class CoursesPresenter : CoursesContract.Presenter {
     private val userProgressRepository: UserLessonProgressRepository = UserLessonProgressRepositoryImpl()
     private var lessonRepository: LessonRepository? = null
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
+    private val auth = FirebaseAuth.getInstance()
 
     fun setContext(context: Context) {
         this.context = context
@@ -31,12 +32,23 @@ class CoursesPresenter : CoursesContract.Presenter {
             // Use lessonRepository safely
             val repo = lessonRepository ?: return@launch
             try {
-                // For now, get all lessons and filter for started ones
-                val lessonsResult = repo.getAllLessons()
-                if (lessonsResult.isSuccess) {
-                    val lessons = lessonsResult.getOrNull() ?: emptyList()
+                val userId = auth.currentUser?.uid ?: return@launch
+                
+                // Get in-progress lessons from repository
+                val inProgressResult = repo.getInProgressLessons(userId)
+                if (inProgressResult.isSuccess) {
+                    val lessonsWithProgress = inProgressResult.getOrNull() ?: emptyList()
+                    
+                    // Extract lessons and create progress map
+                    val lessons = lessonsWithProgress.map { it.first }
+                    val progressMap = lessonsWithProgress.associate { (lesson, progress) ->
+                        lesson.id to progress.progressPercentage
+                    }
+                    
                     view?.hideLoading()
-                    view?.showOngoingLessons(lessons)
+                    // Pass progress map to view
+                    (view as? CoursesFragment)?.showOngoingLessonsWithProgress(lessons, progressMap) ?:
+                        view?.showOngoingLessons(lessons)
                 } else {
                     view?.hideLoading()
                     view?.showError("Error loading lessons")
@@ -52,10 +64,27 @@ class CoursesPresenter : CoursesContract.Presenter {
         view?.showLoading()
         coroutineScope.launch {
             try {
-                // For now, no lessons are completed since user hasn't started any
-                val completedLessons = emptyList<Lesson>()
-                view?.hideLoading()
-                view?.showCompletedLessons(completedLessons)
+                val userId = auth.currentUser?.uid ?: return@launch
+                
+                // Get completed lessons from repository
+                val completedResult = lessonRepository?.getCompletedLessons(userId) ?: return@launch
+                if (completedResult.isSuccess) {
+                    val lessonsWithProgress = completedResult.getOrNull() ?: emptyList()
+                    
+                    // Extract lessons and create progress map
+                    val lessons = lessonsWithProgress.map { it.first }
+                    val progressMap = lessonsWithProgress.associate { (lesson, progress) ->
+                        lesson.id to progress.progressPercentage
+                    }
+                    
+                    view?.hideLoading()
+                    // Pass progress map to view
+                    (view as? CoursesFragment)?.showCompletedLessonsWithProgress(lessons, progressMap) ?:
+                        view?.showCompletedLessons(lessons)
+                } else {
+                    view?.hideLoading()
+                    view?.showError("Error loading completed lessons")
+                }
             } catch (e: Exception) {
                 view?.hideLoading()
                 view?.showError(e.message ?: "Error loading completed lessons")
@@ -105,8 +134,6 @@ class CoursesPresenter : CoursesContract.Presenter {
     }
     
     private fun getCurrentUserId(): String {
-        // TODO: Implement proper user identification logic
-        // This could come from SharedPreferences, Firebase Auth, or session management
-        return "user_${System.currentTimeMillis() % 1000}" // Temporary placeholder
+        return auth.currentUser?.uid ?: "anonymous_user"
     }
 }

@@ -12,6 +12,10 @@ interface CoursesContract {
         fun showError(message: String)
         fun navigateToLessonDetail(lesson: Lesson)
         fun updateTabSelection(isOngoing: Boolean)
+        
+        // New methods for showing lessons with progress
+        fun showOngoingLessonsWithProgress(lessons: List<Lesson>, progressMap: Map<String, Int>)
+        fun showCompletedLessonsWithProgress(lessons: List<Lesson>, progressMap: Map<String, Int>)
     }
 
     interface Presenter : BasePresenter<View> {

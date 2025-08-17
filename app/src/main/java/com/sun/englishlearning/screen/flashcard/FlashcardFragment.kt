@@ -8,10 +8,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.OvershootInterpolator
+import android.widget.Button
+import android.widget.Toast
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import com.google.firebase.auth.FirebaseAuth
 import com.sun.englishlearning.data.model.Word
+import com.sun.englishlearning.data.repository.LessonRepositoryImpl
+import com.sun.englishlearning.data.repository.UserLessonProgressRepositoryImpl
 import com.sun.englishlearning.databinding.FragmentFlashcardBinding
+import kotlinx.coroutines.launch
+import android.content.Context
 
 class FlashcardFragment : Fragment() {
 
@@ -27,10 +35,23 @@ class FlashcardFragment : Fragment() {
         }
     }
 
+    // Interface để thông báo khi tiến trình học được cập nhật
+    interface OnProgressUpdateListener {
+        fun onProgressUpdated(lessonId: String)
+    }
+
     private var _binding: FragmentFlashcardBinding? = null
     private val binding get() = _binding!!
-    
+
     private lateinit var word: Word
+    private var progressUpdateListener: OnProgressUpdateListener? = null
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is OnProgressUpdateListener) {
+            progressUpdateListener = context
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,6 +77,40 @@ class FlashcardFragment : Fragment() {
         setupWordData()
         setupClickListeners()
         animateCardAppearance()
+
+        // Set up click listener for the Mark as Learned button from layout
+        binding.btnMarkLearned.setOnClickListener {
+            // Get userId and lessonId (replace with actual retrieval logic)
+            val userId = FirebaseAuth.getInstance().currentUser?.uid
+            if (userId == null) {
+                Toast.makeText(requireContext(), "User not logged in", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            
+            val lessonId = word.lessonId // Assuming Word has lessonId
+            if (lessonId.isEmpty()) {
+                Toast.makeText(requireContext(), "Lesson ID not found", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            
+            val wordId = word.id
+            if (wordId.isEmpty()) {
+                Toast.makeText(requireContext(), "Word ID not found", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            
+            val lessonRepository = LessonRepositoryImpl(requireContext(), UserLessonProgressRepositoryImpl())
+            lifecycleScope.launch {
+                val result = lessonRepository.updateLessonProgressForFlashcard(userId, lessonId, wordId)
+                if (result.isSuccess) {
+                    Toast.makeText(requireContext(), "Word marked as learned!", Toast.LENGTH_SHORT).show()
+                    // Notify parent activity/fragment that progress has been updated
+                    progressUpdateListener?.onProgressUpdated(lessonId)
+                } else {
+                    Toast.makeText(requireContext(), "Failed to update progress: ${result.exceptionOrNull()?.message}", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
     }
 
     private fun setupWordData() {

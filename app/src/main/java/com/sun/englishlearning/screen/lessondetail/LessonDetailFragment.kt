@@ -29,6 +29,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import android.app.Activity
 import android.content.Intent
+import com.sun.englishlearning.utils.AudioManager
 
 class LessonDetailFragment : Fragment(), LessonDetailContract.View {
 
@@ -53,6 +54,9 @@ class LessonDetailFragment : Fragment(), LessonDetailContract.View {
     // Current vocabulary and learned word IDs
     private var currentVocabulary: List<Word> = emptyList()
     private var learnedWordIds: Set<String> = emptySet()
+
+    // Audio manager for playing word sounds
+    private val audioManager = AudioManager.getInstance()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _viewBinding = FragmentLessonDetailBinding.inflate(inflater, container, false)
@@ -187,8 +191,25 @@ class LessonDetailFragment : Fragment(), LessonDetailContract.View {
     }
 
     override fun playWordSound(word: Word) {
-        Toast.makeText(requireContext(), "Playing sound for: ${word.word}", Toast.LENGTH_SHORT).show()
-        // TODO: Implement actual sound playing
+        if (word.soundUrl.isNotEmpty()) {
+            audioManager.playAudio(
+                context = requireContext(),
+                audioUrl = word.soundUrl,
+                listener = object : AudioManager.AudioPlaybackListener {
+                    override fun onAudioStarted() {
+
+                    }
+                    override fun onAudioCompleted() {
+
+                    }
+                    override fun onAudioError(error: String) {
+                        Toast.makeText(requireContext(), "Error playing audio: $error", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            )
+        } else {
+            Toast.makeText(requireContext(), "Audio pronunciation not available for '${word.word}'", Toast.LENGTH_SHORT).show()
+        }
     }
 
     override fun showWordDetail(word: Word) {

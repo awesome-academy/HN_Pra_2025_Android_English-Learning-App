@@ -4,17 +4,41 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/flashcard_background"
-    android:padding="@dimen/dp_8">
+    android:background="@color/flashcard_background">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_margin="@dimen/dp_8"
         android:background="@drawable/bg_flashcard_modern"
         app:cardBackgroundColor="@color/flashcard_surface"
-        app:cardCornerRadius="@dimen/dp_24"
-        app:cardElevation="@dimen/dp_12"
-        app:cardUseCompatPadding="true">
+        app:cardCornerRadius="@dimen/dp_20"
+        app:cardElevation="@dimen/dp_8"
+        app:cardUseCompatPadding="false">
+
+        <!-- Save Word Button - Top Right Corner -->
+        <FrameLayout
+            android:id="@+id/btn_save_word_container"
+            android:layout_width="@dimen/dp_48"
+            android:layout_height="@dimen/dp_48"
+            android:layout_gravity="top|end"
+            android:layout_margin="@dimen/dp_16"
+            android:background="@drawable/bg_audio_button_modern"
+            android:clickable="true"
+            android:focusable="true"
+            android:elevation="@dimen/dp_8">
+
+            <ImageView
+                android:id="@+id/btn_save_word"
+                android:layout_width="@dimen/dp_24"
+                android:layout_height="@dimen/dp_24"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_bookmark"
+                android:contentDescription="@string/save_this_word"
+                app:tint="@color/white"
+                android:scaleType="centerInside" />
+
+        </FrameLayout>
 
         <ScrollView
             android:layout_width="match_parent"
@@ -27,7 +51,8 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="@dimen/dp_24"
-                android:clipToPadding="false">
+                android:paddingTop="@dimen/dp_64"
+                android:gravity="center_horizontal">
 
                 <!-- Word Section -->
                 <LinearLayout
@@ -35,15 +60,14 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:orientation="vertical"
-                    android:layout_marginBottom="@dimen/dp_32"
-                    android:paddingVertical="@dimen/dp_16">
+                    android:layout_marginBottom="@dimen/dp_40">
 
                     <!-- Word Name -->
                     <TextView
                         android:id="@+id/text_word_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/dp_16"
+                        android:layout_marginBottom="@dimen/dp_24"
                         android:fontFamily="@font/nunito_bold"
                         android:gravity="center"
                         android:textColor="@color/flashcard_text_primary"
@@ -58,10 +82,10 @@
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
+                        android:background="@drawable/bg_example_modern"
                         android:paddingHorizontal="@dimen/dp_20"
                         android:paddingVertical="@dimen/dp_12"
-                        android:layout_marginBottom="@dimen/dp_8"
-                        android:elevation="@dimen/dp_4">
+                        android:elevation="@dimen/dp_2">
 
                         <!-- Phonetic Display -->
                         <TextView
@@ -69,25 +93,25 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="@dimen/dp_16"
-                            android:textColor="@color/black"
-                            android:textSize="@dimen/sp_20"
+                            android:textColor="@color/flashcard_secondary"
+                            android:textSize="@dimen/sp_18"
                             android:contentDescription="@string/phonetic_transcription"
                             android:textStyle="italic"
+                            android:fontFamily="@font/nunito_medium"
                             tools:text="/skuːl/" />
 
                         <!-- Audio Button -->
                         <FrameLayout
-                            android:layout_width="@dimen/dp_45"
-                            android:layout_height="@dimen/dp_45"
+                            android:layout_width="@dimen/dp_40"
+                            android:layout_height="@dimen/dp_40"
                             android:background="@drawable/bg_audio_button_modern"
                             android:clickable="true"
-                            android:focusable="true"
-                            android:elevation="@dimen/dp_6">
+                            android:focusable="true">
 
                             <ImageView
                                 android:id="@+id/btn_audio"
-                                android:layout_width="@dimen/dp_28"
-                                android:layout_height="@dimen/dp_28"
+                                android:layout_width="@dimen/dp_20"
+                                android:layout_height="@dimen/dp_20"
                                 android:layout_gravity="center"
                                 android:src="@drawable/ic_volume"
                                 android:contentDescription="@string/play_pronunciation_audio"
@@ -105,16 +129,16 @@
                     android:id="@+id/text_part_of_speech"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginBottom="@dimen/dp_24"
+                    android:layout_marginBottom="@dimen/dp_32"
                     android:fontFamily="@font/nunito_bold"
-                    android:paddingHorizontal="@dimen/dp_20"
-                    android:paddingVertical="@dimen/dp_10"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/sp_16"
+                    android:background="@drawable/bg_example_modern"
+                    android:paddingHorizontal="@dimen/dp_16"
+                    android:paddingVertical="@dimen/dp_8"
+                    android:textColor="@color/flashcard_secondary"
+                    android:textSize="@dimen/sp_14"
                     android:visibility="gone"
-                    android:elevation="@dimen/dp_4"
                     android:textAllCaps="true"
+                    android:letterSpacing="0.1"
                     tools:text="noun"
                     tools:visibility="visible" />
 
@@ -122,9 +146,11 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/dp_24"
+                    android:layout_marginBottom="@dimen/dp_32"
                     android:orientation="vertical"
-                    android:paddingHorizontal="@dimen/dp_4">
+                    android:background="@color/white"
+                    android:padding="@dimen/dp_20"
+                    android:elevation="@dimen/dp_2">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -133,7 +159,7 @@
                         android:fontFamily="@font/nunito_bold"
                         android:text="@string/definition"
                         android:textColor="@color/flashcard_primary"
-                        android:textSize="@dimen/sp_18"
+                        android:textSize="@dimen/sp_16"
                         android:letterSpacing="0.05" />
 
                     <TextView
@@ -141,9 +167,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/nunito_medium"
-                        android:lineSpacingExtra="@dimen/dp_6"
+                        android:lineSpacingExtra="@dimen/dp_4"
                         android:textColor="@color/flashcard_text_primary"
-                        android:textSize="@dimen/sp_20"
+                        android:textSize="@dimen/sp_18"
                         tools:text="An institution for educating children and young people" />
 
                 </LinearLayout>
@@ -155,19 +181,18 @@
                     android:background="@drawable/bg_example_modern"
                     android:orientation="vertical"
                     android:padding="@dimen/dp_20"
-                    android:elevation="@dimen/dp_2"
-                    android:layout_marginHorizontal="@dimen/dp_4">
+                    android:layout_marginBottom="@dimen/dp_40">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:gravity="center_vertical"
-                        android:layout_marginBottom="@dimen/dp_12">
+                        android:layout_marginBottom="@dimen/dp_8">
 
                         <ImageView
-                            android:layout_width="@dimen/dp_20"
-                            android:layout_height="@dimen/dp_20"
+                            android:layout_width="@dimen/dp_16"
+                            android:layout_height="@dimen/dp_16"
                             android:src="@drawable/ic_star"
                             android:layout_marginEnd="@dimen/dp_8"
                             app:tint="@color/flashcard_secondary" />
@@ -176,9 +201,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/nunito_bold"
-                            android:text="Example"
+                            android:text="@string/example"
                             android:textColor="@color/flashcard_secondary"
-                            android:textSize="@dimen/sp_18" />
+                            android:textSize="@dimen/sp_16" />
 
                     </LinearLayout>
 
@@ -188,29 +213,34 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/nunito_regular"
                         android:fontStyle="italic"
-                        android:lineSpacingExtra="@dimen/dp_6"
+                        android:lineSpacingExtra="@dimen/dp_4"
                         android:textColor="@color/flashcard_text_secondary"
-                        android:textSize="@dimen/sp_18"
+                        android:textSize="@dimen/sp_16"
                         tools:text="I go to school every day to learn new things." />
 
                 </LinearLayout>
 
                 <!-- Mark as Learned Button -->
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_mark_learned"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="@dimen/dp_32"
-                    android:background="@drawable/bg_blue_button"
+                    android:layout_height="@dimen/dp_48"
+                    android:layout_marginBottom="@dimen/dp_24"
                     android:fontFamily="@font/nunito_bold"
-                    android:paddingHorizontal="@dimen/dp_32"
-                    android:paddingVertical="@dimen/dp_16"
-                    android:text="Mark as Learned"
+                    android:paddingHorizontal="@dimen/dp_24"
+                    android:text="@string/mark_as_learned"
                     android:textAllCaps="false"
+                    android:textSize="@dimen/sp_16"
+                    android:letterSpacing="0"
+                    app:cornerRadius="@dimen/dp_24"
+                    app:backgroundTint="@color/flashcard_primary"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/sp_18"
-                    android:contentDescription="Mark this word as learned" />
+                    app:icon="@drawable/ic_star"
+                    app:iconGravity="textStart"
+                    app:iconSize="@dimen/dp_18"
+                    app:iconTint="@color/white"
+                    android:contentDescription="@string/mark_as_learned"
+                    style="@style/Widget.Material3.Button" />
 
             </LinearLayout>
 

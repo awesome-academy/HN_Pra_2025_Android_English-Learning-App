@@ -53,7 +53,7 @@
         <activity
             android:name=".screen.vocabulary.VocabularyByTypeActivity"
             android:exported="false" />
-
+        
         <receiver
             android:name=".screen.register.RegisterActivity"
             android:exported="false" />

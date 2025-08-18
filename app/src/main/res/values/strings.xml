@@ -142,4 +142,21 @@
     <string name="notifications_pm">PM</string>
     <string name="notifications_off">Off</string>
     <string name="notifications_save">Save</string>
+    <string name="learned">Learned</string>
+
+    <!-- Flashcard Strings -->
+    <string name="save_this_word">Save this word</string>
+    <string name="mark_as_learned">Mark as Learned</string>
+    <string name="learned_checkmark">Learned ✓</string>
+    <string name="example">Example</string>
+    <string name="definition_not_available">Definition not available</string>
+    <string name="example_not_available">Example not available</string>
+    <string name="audio_not_available">Audio not available for %s</string>
+    <string name="play_pronunciation_for">Play pronunciation for %s</string>
+    <string name="english_word_with_name">English word: %s</string>
+    <string name="definition_with_content">Definition: %s</string>
+    <string name="example_sentence_with_content">Example sentence: %s</string>
+    <string name="pronunciation_with_content">Pronunciation: %s</string>
+    <string name="part_of_speech_with_content">Part of speech: %s</string>
+
 </resources>

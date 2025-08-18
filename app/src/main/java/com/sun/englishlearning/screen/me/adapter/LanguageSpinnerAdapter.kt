@@ -39,3 +39,4 @@ class LanguageSpinnerAdapter(
         return view
     }
 }
+

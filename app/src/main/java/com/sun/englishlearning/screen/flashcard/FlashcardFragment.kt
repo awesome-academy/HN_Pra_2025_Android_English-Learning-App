@@ -14,8 +14,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.google.firebase.auth.FirebaseAuth
 import com.sun.englishlearning.data.model.Word
+import com.sun.englishlearning.data.model.SavedWord
+import com.sun.englishlearning.data.model.WordType
 import com.sun.englishlearning.data.repository.LessonRepositoryImpl
 import com.sun.englishlearning.data.repository.UserLessonProgressRepositoryImpl
+import com.sun.englishlearning.data.repository.SavedWordsRepositoryImpl
 import com.sun.englishlearning.databinding.FragmentFlashcardBinding
 import kotlinx.coroutines.launch
 import android.content.Context
@@ -44,6 +47,8 @@ class FlashcardFragment : Fragment() {
 
     private lateinit var word: Word
     private var progressUpdateListener: OnProgressUpdateListener? = null
+    private val savedWordsRepository = SavedWordsRepositoryImpl()
+    private var isWordSaved = false
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -76,6 +81,7 @@ class FlashcardFragment : Fragment() {
         setupWordData()
         setupClickListeners()
         animateCardAppearance()
+        checkIfWordIsSaved()
 
         // Set up click listener for the Mark as Learned button
         binding.btnMarkLearned.setOnClickListener {
@@ -109,6 +115,11 @@ class FlashcardFragment : Fragment() {
                     Toast.makeText(requireContext(), "Failed to update progress: ${result.exceptionOrNull()?.message}", Toast.LENGTH_SHORT).show()
                 }
             }
+        }
+
+        // Set up click listener for the Save Word button
+        binding.btnSaveWord.setOnClickListener {
+            toggleSaveWord()
         }
     }
 
@@ -305,6 +316,77 @@ class FlashcardFragment : Fragment() {
                     .start()
             }
         }
+    }
+
+    private fun checkIfWordIsSaved() {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid
+        if (userId == null) {
+            return
+        }
+
+        lifecycleScope.launch {
+            try {
+                val result = savedWordsRepository.isWordSavedWithType(userId, word.word, WordType.SAVED)
+                if (result.isSuccess) {
+                    isWordSaved = result.getOrNull() != null
+                    updateSaveButtonUI()
+                }
+            } catch (e: Exception) {
+
+            }
+        }
+    }
+
+    private fun toggleSaveWord() {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid
+        if (userId == null) {
+            Toast.makeText(requireContext(), "Please log in to save words", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        lifecycleScope.launch {
+            try {
+                if (isWordSaved) {
+                    // Remove word from saved
+                    val deleteResult = savedWordsRepository.deleteWordByUserAndName(userId, word.word, WordType.SAVED)
+                    if (deleteResult.isSuccess) {
+                        isWordSaved = false
+                        updateSaveButtonUI()
+                        Toast.makeText(requireContext(), "Word removed from saved list", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(requireContext(), "Failed to remove word", Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    // Save word
+                    val savedWord = SavedWord(
+                        userId = userId,
+                        word = word.word,
+                        ipa = word.phonetic,
+                        partOfSpeech = word.partOfSpeech,
+                        definition = word.definition,
+                        example = word.example,
+                        soundUrl = "",
+                        wordType = WordType.SAVED.value
+                    )
+
+                    val saveResult = savedWordsRepository.saveWord(savedWord)
+                    if (saveResult.isSuccess) {
+                        isWordSaved = true
+                        updateSaveButtonUI()
+                        Toast.makeText(requireContext(), "Word saved successfully!", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(requireContext(), "Failed to save word", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            } catch (e: Exception) {
+                Toast.makeText(requireContext(), "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun updateSaveButtonUI() {
+        binding.btnSaveWord.alpha = if (isWordSaved) 1.0f else 0.7f
+
     }
 
     override fun onDestroyView() {

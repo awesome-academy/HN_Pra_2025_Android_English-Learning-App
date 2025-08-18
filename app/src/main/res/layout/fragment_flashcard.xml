@@ -73,7 +73,7 @@
                             android:textSize="@dimen/sp_20"
                             android:contentDescription="@string/phonetic_transcription"
                             android:textStyle="italic"
-                            tools:text="/skuːl/" />
+                            tools:text="/skul/" />
 
                         <!-- Audio Button -->
                         <FrameLayout
@@ -91,6 +91,28 @@
                                 android:layout_gravity="center"
                                 android:src="@drawable/ic_volume"
                                 android:contentDescription="@string/play_pronunciation_audio"
+                                app:tint="@color/white"
+                                android:scaleType="centerInside" />
+
+                        </FrameLayout>
+
+                        <!-- Save Word Button -->
+                        <FrameLayout
+                            android:layout_width="@dimen/dp_45"
+                            android:layout_height="@dimen/dp_45"
+                            android:layout_marginStart="@dimen/dp_16"
+                            android:background="@drawable/bg_audio_button_modern"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:elevation="@dimen/dp_6">
+
+                            <ImageView
+                                android:id="@+id/btn_save_word"
+                                android:layout_width="@dimen/dp_28"
+                                android:layout_height="@dimen/dp_28"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_bookmark"
+                                android:contentDescription="Save this word"
                                 app:tint="@color/white"
                                 android:scaleType="centerInside" />
 

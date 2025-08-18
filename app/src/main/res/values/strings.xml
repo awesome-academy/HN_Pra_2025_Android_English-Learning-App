@@ -159,4 +159,9 @@
     <string name="pronunciation_with_content">Pronunciation: %s</string>
     <string name="part_of_speech_with_content">Part of speech: %s</string>
 
+    <string name="check_learned_definition_placeholder">Định nghĩa từ sẽ hiển thị ở đây</string>
+    <string name="check_learned_hint">Nhập đáp án của bạn...</string>
+    <string name="check_learned_button">Kiểm tra</string>
+    <string name="check_learned_result_correct">Chính xác! Bạn đã trả lời đúng.</string>
+    <string name="check_learned_result_incorrect">Sai rồi, hãy thử lại nhé!</string>
 </resources>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="@dimen/dp_24"
+    android:background="@color/white">
+
+    <!-- Definition -->
+    <TextView
+        android:id="@+id/text_definition"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/check_learned_definition_placeholder"
+        android:textSize="@dimen/sp_22"
+        android:textColor="@color/flashcard_text_primary"
+        android:fontFamily="@font/nunito_bold"
+        android:background="@color/gray_100"
+        android:padding="@dimen/dp_16"
+        android:layout_marginBottom="@dimen/dp_24"
+        android:gravity="center" />
+
+    <!-- EditText for user input -->
+    <EditText
+        android:id="@+id/edit_answer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/check_learned_hint"
+        android:textSize="@dimen/sp_18"
+        android:padding="@dimen/dp_12"
+        android:background="@drawable/bg_vocabulary_card"
+        android:fontFamily="@font/nunito_regular"
+        android:layout_marginBottom="@dimen/dp_16"
+        android:inputType="text"
+        android:elevation="@dimen/dp_1" />
+
+    <!-- Check Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_check"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/check_learned_button"
+        android:textSize="@dimen/sp_18"
+        android:fontFamily="@font/nunito_bold"
+        android:backgroundTint="@color/flashcard_primary"
+        android:textColor="@color/white"
+        android:layout_marginBottom="@dimen/dp_24"
+        android:layout_marginTop="@dimen/dp_8"
+        android:elevation="@dimen/dp_2" />
+
+    <!-- Result Text -->
+    <TextView
+        android:id="@+id/text_result"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="@dimen/sp_18"
+        android:textColor="@color/state_success"
+        android:fontFamily="@font/nunito_bold"
+        android:gravity="center"
+        android:padding="@dimen/dp_12"
+        android:visibility="gone"
+        android:layout_marginTop="@dimen/dp_8" />
+
+</LinearLayout>

@@ -80,7 +80,8 @@
     
     <!-- Additional colors for notifications -->
     <color name="text_hint">#7D8388</color>
-    <color name="gray_200">#EAEBEC</color>
+    <color name="gray_100">#F3F4F6</color>
+    <color name="gray_200">#E5E7EB</color>
 
     <!-- Login Screen Colors -->
     <color name="login_primary">#4285F4</color>

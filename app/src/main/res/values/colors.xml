@@ -6,7 +6,7 @@
     <color name= "secondary_orange">#FE9519</color>
     <color name="state_error">#E53535</color>
     <color name="state_warning">#FFCC00</color>
-    <color name="state_success">#05A660</color>
+    <color name="state_success">#86B8A6</color>
     <color name="state_info">#0063F7</color>
     <color name="success_70">#ECF9EF</color>
     <color name="gray_dark">#858585</color>
@@ -89,4 +89,3 @@
     <color name="login_google_bg">#F5F5F5</color>
 
 </resources>
-

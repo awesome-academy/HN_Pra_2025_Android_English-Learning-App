@@ -50,6 +50,10 @@ class LessonDetailFragment : Fragment(), LessonDetailContract.View {
     // Authentication
     private val auth = Firebase.auth
 
+    // Current vocabulary and learned word IDs
+    private var currentVocabulary: List<Word> = emptyList()
+    private var learnedWordIds: Set<String> = emptySet()
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _viewBinding = FragmentLessonDetailBinding.inflate(inflater, container, false)
         return viewBinding.root
@@ -162,8 +166,13 @@ class LessonDetailFragment : Fragment(), LessonDetailContract.View {
     }
 
     override fun showVocabulary(words: List<Word>) {
-        vocabularyAdapter.updateWords(words)
+        currentVocabulary = words
+        updateVocabularyAdapter()
         viewBinding.textWordCount.text = "${words.size} words"
+    }
+
+    private fun updateVocabularyAdapter() {
+        vocabularyAdapter.updateWords(currentVocabulary, learnedWordIds)
     }
 
     override fun showError(message: String) {
@@ -190,35 +199,15 @@ class LessonDetailFragment : Fragment(), LessonDetailContract.View {
     override fun navigateToFlashcard(words: List<Word>, currentIndex: Int, lessonTitle: String) {
         try {
             Log.d(TAG, "Navigating to flashcard: ${words.size} words, index: $currentIndex, title: $lessonTitle")
-
-            if (words.isEmpty()) {
-                DialogUtils.showErrorDialog(
-                    context = requireContext(),
-                    message = "No vocabulary words available"
-                )
-                return
-            }
-
-            if (currentIndex < 0 || currentIndex >= words.size) {
-                Log.w(TAG, "Invalid currentIndex: $currentIndex, using 0 instead")
-                val intent = FlashcardActivity.newIntent(
-                    context = requireContext(),
-                    words = ArrayList(words),
-                    currentIndex = 0,
-                    lessonTitle = lessonTitle
-                )
-                // Start activity for result to get progress updates
-                startActivityForResult(intent, REQUEST_CODE_FLASHCARD)
-            } else {
-                val intent = FlashcardActivity.newIntent(
-                    context = requireContext(),
-                    words = ArrayList(words),
-                    currentIndex = currentIndex,
-                    lessonTitle = lessonTitle
-                )
-                // Start activity for result to get progress updates
-                startActivityForResult(intent, REQUEST_CODE_FLASHCARD)
-            }
+            val sortedWords = currentVocabulary // Use sorted vocabulary for flashcard
+            val index = if (currentIndex < 0 || currentIndex >= sortedWords.size) 0 else currentIndex
+            val intent = FlashcardActivity.newIntent(
+                context = requireContext(),
+                words = ArrayList(sortedWords),
+                currentIndex = index,
+                lessonTitle = lessonTitle
+            )
+            startActivityForResult(intent, REQUEST_CODE_FLASHCARD)
         } catch (e: Exception) {
             Log.e(TAG, "Error navigating to flashcard", e)
             DialogUtils.showErrorDialog(
@@ -233,20 +222,21 @@ class LessonDetailFragment : Fragment(), LessonDetailContract.View {
             try {
                 val userId = auth.currentUser?.uid ?: return@launch
                 val progressResult = userProgressRepository.getUserLessonProgress(userId, lessonId)
-                
                 if (progressResult.isSuccess) {
                     val progress = progressResult.getOrNull()
+                    learnedWordIds = progress?.learnedWordIds?.toSet() ?: emptySet()
                     updateProgressUI(progress, lessonId)
                 } else {
-                    // If no progress found, show default progress (0/totalWords)
+                    learnedWordIds = emptySet()
                     val lesson = currentLesson ?: return@launch
                     updateProgressUI(null, lessonId)
                 }
+                updateVocabularyAdapter()
             } catch (e: Exception) {
-                Log.e(TAG, "Error loading user progress", e)
-                // Show default progress in case of error
+                learnedWordIds = emptySet()
                 val lesson = currentLesson ?: return@launch
                 updateProgressUI(null, lessonId)
+                updateVocabularyAdapter()
             }
         }
     }

@@ -16,16 +16,6 @@
         android:padding="@dimen/dp_16"
         android:background="@color/white">
 
-        <ImageView
-            android:id="@+id/btn_back"
-            android:layout_width="@dimen/dp_24"
-            android:layout_height="@dimen/dp_24"
-            android:src="@drawable/ic_arrow_back"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:padding="@dimen/dp_4"
-            android:clickable="true"
-            android:focusable="true" />
-
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"

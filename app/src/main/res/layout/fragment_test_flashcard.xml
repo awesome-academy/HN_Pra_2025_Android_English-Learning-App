@@ -118,13 +118,13 @@
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_check_answer"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/dp_56"
-                    android:layout_marginBottom="@dimen/dp_16"
+                    android:layout_height="@dimen/dp_40"
+                    android:layout_marginBottom="@dimen/dp_8"
                     android:fontFamily="@font/nunito_bold"
                     android:text="Check Answer"
                     android:textAllCaps="false"
                     android:textSize="@dimen/sp_16"
-                    app:cornerRadius="@dimen/dp_12"
+                    app:cornerRadius="@dimen/dp_16"
                     style="@style/Widget.Material3.Button"/>
 
                 <!-- Result Section (Initially Hidden) -->
@@ -179,15 +179,14 @@
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_next"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/dp_56"
-                    android:layout_marginTop="@dimen/dp_8"
+                    android:layout_height="@dimen/dp_40"
+                    android:layout_marginTop="@dimen/dp_4"
                     android:fontFamily="@font/nunito_bold"
                     android:text="Next"
                     android:textAllCaps="false"
                     android:textSize="@dimen/sp_16"
-                    app:cornerRadius="@dimen/dp_12"
+                    app:cornerRadius="@dimen/dp_16"
                     android:visibility="gone"
-                    tools:visibility="visible"
                     style="@style/Widget.Material3.Button.OutlinedButton"/>
 
             </LinearLayout>

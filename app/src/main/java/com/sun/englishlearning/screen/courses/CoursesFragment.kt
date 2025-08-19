@@ -85,7 +85,6 @@ class CoursesFragment : Fragment(), CoursesContract.View {
     private fun initView() {
         setupRecyclerView()
         setupTabs()
-        setupBackButton()
     }
 
     private fun setupRecyclerView() {
@@ -130,14 +129,6 @@ class CoursesFragment : Fragment(), CoursesContract.View {
         }
     }
 
-    private fun setupBackButton() {
-        viewBinding.btnBack.setOnClickListener {
-            // Handle back button click
-            findNavController().navigateUp()
-        }
-    }
-
-    // MVP View implementations
     override fun showLoading() {
         // Show loading indicator
     }

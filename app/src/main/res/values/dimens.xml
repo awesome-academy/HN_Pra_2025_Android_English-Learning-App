@@ -481,6 +481,7 @@
 	<dimen name="sp_16">16.00sp</dimen>
 	<dimen name="sp_17">17.00sp</dimen>
 	<dimen name="sp_18">18.00sp</dimen>
+	<dimen name="elevation_6">6dp</dimen>
 	<dimen name="sp_19">19.00sp</dimen>
 	<dimen name="sp_20">20.00sp</dimen>
 	<dimen name="sp_21">21.00sp</dimen>

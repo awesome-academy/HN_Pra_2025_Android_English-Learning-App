@@ -10,28 +10,32 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.core.content.ContextCompat
-import com.sun.englishlearning.data.model.WordSearchResult
-import com.sun.englishlearning.utils.DialogUtils
-import com.sun.englishlearning.data.model.SavedWord
+import com.sun.englishlearning.data.model.Word
 import com.sun.englishlearning.data.model.WordType
-import com.sun.englishlearning.data.repository.DictionaryRepository
-import com.sun.englishlearning.data.repository.DictionaryRepositoryImpl
+import com.sun.englishlearning.data.model.SavedWord
+import com.sun.englishlearning.data.repository.VocabularyRepository
+import com.sun.englishlearning.data.repository.source.remote.VocabularyRemoteDataSource
+import com.sun.englishlearning.data.repository.source.local.VocabularyLocalDataSource
+import com.google.firebase.auth.FirebaseAuth
 import com.sun.englishlearning.data.repository.SavedWordsRepository
 import com.sun.englishlearning.data.repository.SavedWordsRepositoryImpl
-import com.google.firebase.auth.FirebaseAuth
 import com.sun.englishlearning.databinding.ActivityWordSearchBinding
+import com.sun.englishlearning.utils.DialogUtils
 import com.sun.englishlearning.utils.base.BaseActivity
+import com.sun.englishlearning.data.repository.source.remote.OnResultListener
 import kotlinx.coroutines.*
 
 class WordSearchActivity : BaseActivity<ActivityWordSearchBinding>() {
-
     private var searchJob: Job? = null
     private var mediaPlayer: MediaPlayer? = null
-    private var currentWordResult: WordSearchResult? = null
+    private var currentWord: Word? = null
     private var isWordSaved: Boolean = false
-    private val dictionaryRepository: DictionaryRepository = DictionaryRepositoryImpl()
-    private val savedWordsRepository: SavedWordsRepository = SavedWordsRepositoryImpl()
+    private val vocabularyRepository: VocabularyRepository = VocabularyRepository.getInstance(
+        VocabularyRemoteDataSource.getInstance(),
+        VocabularyLocalDataSource.getInstance()
+    )
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
+    private val savedWordsRepository: SavedWordsRepository = SavedWordsRepositoryImpl()
 
     override fun inflateBinding(inflater: LayoutInflater): ActivityWordSearchBinding {
         return ActivityWordSearchBinding.inflate(inflater)
@@ -55,12 +59,11 @@ class WordSearchActivity : BaseActivity<ActivityWordSearchBinding>() {
         }
 
         binding.btnPlaySound.setOnClickListener {
-            currentWordResult?.let { playWordSound(it.soundUrl) }
+            currentWord?.let { playWordSound(it.soundUrl) }
         }
 
-
         binding.btnSaveWord.setOnClickListener {
-            currentWordResult?.let { toggleSaveWord(it) }
+            currentWord?.let { toggleSaveWord(it) }
         }
 
         binding.btnClearSearch.setOnClickListener {
@@ -102,18 +105,24 @@ class WordSearchActivity : BaseActivity<ActivityWordSearchBinding>() {
         searchJob?.cancel()
         searchJob = CoroutineScope(Dispatchers.Main).launch {
             showLoading()
-            try {
-                val result = dictionaryRepository.searchWord(query)
-                if (result.isSuccess) {
-                    result.getOrNull()?.let { showSearchResult(it) } ?: showError()
-                } else {
-                    showError()
-                    Toast.makeText(this@WordSearchActivity, "Word not found", Toast.LENGTH_SHORT).show()
+            vocabularyRepository.getWords(object : OnResultListener<MutableList<Word>> {
+                override fun onLoading() {
+                    showLoading()
                 }
-            } catch (e: Exception) {
-                showError()
-                Toast.makeText(this@WordSearchActivity, "Network error. Please try again.", Toast.LENGTH_SHORT).show()
-            }
+                override fun onSuccess(data: MutableList<Word>) {
+                    val foundWord: Word? = data.firstOrNull { it.word.equals(query, ignoreCase = true) }
+                    if (foundWord != null) {
+                        showSearchResult(foundWord)
+                    } else {
+                        showError()
+                        Toast.makeText(this@WordSearchActivity, "Word not found", Toast.LENGTH_SHORT).show()
+                    }
+                }
+                override fun onError(error: String) {
+                    showError()
+                    Toast.makeText(this@WordSearchActivity, "Network error. Please try again.", Toast.LENGTH_SHORT).show()
+                }
+            })
         }
     }
 
@@ -126,8 +135,8 @@ class WordSearchActivity : BaseActivity<ActivityWordSearchBinding>() {
         }
     }
 
-    private fun showSearchResult(result: WordSearchResult) {
-        currentWordResult = result
+    private fun showSearchResult(result: Word) {
+        currentWord = result
         binding.apply {
             progressLoading.visibility = View.GONE
             cardSearchResult.visibility = View.VISIBLE
@@ -135,12 +144,10 @@ class WordSearchActivity : BaseActivity<ActivityWordSearchBinding>() {
             layoutErrorState.visibility = View.GONE
 
             tvWordTitle.text = result.word
-            tvIpa.text = result.ipa
+            tvIpa.text = result.phonetic
             tvPartOfSpeech.text = result.partOfSpeech
             tvDefinition.text = result.definition
-
         }
-        
         // Check if word is already saved
         checkIfWordIsSaved(result.word)
     }
@@ -154,19 +161,17 @@ class WordSearchActivity : BaseActivity<ActivityWordSearchBinding>() {
         }
     }
 
-
     private fun playWordSound(soundUrl: String) {
         if (soundUrl.isEmpty()) {
             Toast.makeText(this, "No audio available for this word", Toast.LENGTH_SHORT).show()
             return
         }
-        
         try {
             mediaPlayer?.release()
             mediaPlayer = MediaPlayer().apply {
                 setAudioStreamType(AudioManager.STREAM_MUSIC)
                 setDataSource(soundUrl)
-                setOnPreparedListener { 
+                setOnPreparedListener {
                     start()
                     Toast.makeText(this@WordSearchActivity, "Playing pronunciation...", Toast.LENGTH_SHORT).show()
                 }
@@ -177,16 +182,13 @@ class WordSearchActivity : BaseActivity<ActivityWordSearchBinding>() {
                 prepareAsync()
             }
         } catch (e: Exception) {
-
             DialogUtils.showErrorDialog(
                 context = this,
                 message = "Unable to play sound"
             )
-            
             Toast.makeText(this, "Unable to play sound: ${e.message}", Toast.LENGTH_SHORT).show()
         }
     }
-
 
     private fun checkIfWordIsSaved(word: String) {
         val currentUser = auth.currentUser
@@ -194,15 +196,13 @@ class WordSearchActivity : BaseActivity<ActivityWordSearchBinding>() {
             updateSaveButton(false)
             return
         }
-
         CoroutineScope(Dispatchers.Main).launch {
             try {
                 val savedWordResult = savedWordsRepository.isWordSavedWithType(
-                    currentUser.uid, 
-                    word, 
+                    currentUser.uid,
+                    word,
                     WordType.SAVED
                 )
-                
                 if (savedWordResult.isSuccess) {
                     val savedWord = savedWordResult.getOrNull()
                     isWordSaved = savedWord != null
@@ -214,54 +214,45 @@ class WordSearchActivity : BaseActivity<ActivityWordSearchBinding>() {
         }
     }
 
-    private fun toggleSaveWord(wordResult: WordSearchResult) {
+    private fun toggleSaveWord(word: Word) {
         val currentUser = auth.currentUser
         if (currentUser == null) {
             Toast.makeText(this, "Please login to save words", Toast.LENGTH_SHORT).show()
             return
         }
-
         CoroutineScope(Dispatchers.Main).launch {
             try {
                 if (isWordSaved) {
-                    // Delete the word
                     val deleteResult = savedWordsRepository.deleteWordByUserAndName(
                         currentUser.uid,
-                        wordResult.word,
+                        word.word,
                         WordType.SAVED
                     )
-                    
                     if (deleteResult.isSuccess) {
                         isWordSaved = false
                         updateSaveButton(false)
                         Toast.makeText(this@WordSearchActivity, "Word removed from saved list", Toast.LENGTH_SHORT).show()
-                    } else {
-                        Toast.makeText(this@WordSearchActivity, "Failed to remove word", Toast.LENGTH_SHORT).show()
                     }
                 } else {
-                    // Save the word
                     val savedWord = SavedWord(
                         userId = currentUser.uid,
-                        word = wordResult.word,
-                        ipa = wordResult.ipa,
-                        partOfSpeech = wordResult.partOfSpeech,
-                        definition = wordResult.definition,
-                        example = wordResult.example,
-                        soundUrl = wordResult.soundUrl,
+                        word = word.word,
+                        ipa = word.phonetic,
+                        partOfSpeech = word.partOfSpeech,
+                        definition = word.definition,
+                        example = word.example,
+                        soundUrl = word.soundUrl,
                         wordType = WordType.SAVED.value
                     )
-
                     val saveResult = savedWordsRepository.saveWord(savedWord)
                     if (saveResult.isSuccess) {
                         isWordSaved = true
                         updateSaveButton(true)
                         Toast.makeText(this@WordSearchActivity, "Word saved successfully!", Toast.LENGTH_SHORT).show()
-                    } else {
-                        Toast.makeText(this@WordSearchActivity, "Failed to save word", Toast.LENGTH_SHORT).show()
                     }
                 }
-            } catch (e: Exception) {
-                Toast.makeText(this@WordSearchActivity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+            } catch (_: Exception) {
+                Toast.makeText(this@WordSearchActivity, "Error saving word", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -291,4 +282,3 @@ class WordSearchActivity : BaseActivity<ActivityWordSearchBinding>() {
         }
     }
 }
-

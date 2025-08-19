@@ -1,102 +1,116 @@
 package com.sun.englishlearning.data.repository.source.remote.fetchjson
 
-import android.util.Log
+import android.os.Handler
+import android.os.Looper
+import com.sun.englishlearning.data.repository.source.remote.OnResultListener
+import org.json.JSONArray
 import java.io.BufferedReader
-import java.io.IOException
 import java.io.InputStreamReader
+import java.lang.StringBuilder
 import java.net.HttpURLConnection
 import java.net.URL
+import java.util.concurrent.Executor
+import java.util.concurrent.Executors
 
-class GetJsonFromUrl {
-    
+class GetJsonFromUrl<T> constructor(
+    private val word: String,
+    private val keyEntity: String,
+    private val listener: OnResultListener<T>
+) {
+
     companion object {
-        private const val TAG = "GetJsonFromUrl"
-        private const val TIMEOUT_CONNECT = 10000 // 10 seconds
-        private const val TIMEOUT_READ = 15000 // 15 seconds
+        private const val TIME_OUT = 15000
+        private const val METHOD_GET = "GET"
+        private const val BASE_API = "https://api.dictionaryapi.dev/api/v2/entries/en/"
     }
-    
-    /**
-     * Fetch JSON data from URL using HttpURLConnection
-     */
-    fun fetchJsonFromUrl(urlString: String): String {
-        var connection: HttpURLConnection? = null
-        var reader: BufferedReader? = null
-        
-        return try {
-            Log.d(TAG, "Fetching JSON from: $urlString")
-            
-            val url = URL(urlString)
-            connection = url.openConnection() as HttpURLConnection
-            
-            // Set connection properties
-            connection.apply {
-                requestMethod = "GET"
-                connectTimeout = TIMEOUT_CONNECT
-                readTimeout = TIMEOUT_READ
-                setRequestProperty("Accept", "application/json")
-                setRequestProperty("User-Agent", "English Learning App")
-            }
-            
-            // Check response code
-            val responseCode = connection.responseCode
-            Log.d(TAG, "Response code: $responseCode")
-            
-            if (responseCode == HttpURLConnection.HTTP_OK) {
-                // Read response
-                reader = BufferedReader(InputStreamReader(connection.inputStream))
-                val response = StringBuilder()
-                var line: String?
-                
-                while (reader.readLine().also { line = it } != null) {
-                    response.append(line)
-                }
-                
-                val jsonResponse = response.toString()
-                Log.d(TAG, "Successfully fetched JSON data (${jsonResponse.length} characters)")
-                jsonResponse
-                
-            } else {
-                Log.e(TAG, "HTTP error: $responseCode")
-                ""
-            }
-            
-        } catch (e: IOException) {
-            Log.e(TAG, "Network error while fetching JSON", e)
-            ""
-        } catch (e: Exception) {
-            Log.e(TAG, "Unexpected error while fetching JSON", e)
-            ""
-        } finally {
-            // Clean up resources
+
+    private val mExecutor: Executor = Executors.newSingleThreadExecutor()
+    private val mHandler = Handler(Looper.getMainLooper())
+
+    init {
+        callAPI()
+    }
+
+    private fun callAPI() {
+        mExecutor.execute {
             try {
-                reader?.close()
-                connection?.disconnect()
-            } catch (e: IOException) {
-                Log.e(TAG, "Error closing connection", e)
+                listener.onLoading()
+                val responseJson = getJsonStringFromUrl(BASE_API + word)
+
+                if (responseJson.isEmpty()) {
+                    mHandler.post {
+                        listener.onError("No data received for word: $word")
+                    }
+                    return@execute
+                }
+
+                // Parse JSON response from Dictionary API
+                val jsonArray = JSONArray(responseJson)
+                if (jsonArray.length() > 0) {
+                    val wordObject = jsonArray.getJSONObject(0)
+                    val parsedData = ParseDataWithJson().parseWordDefinition(responseJson, word)
+
+                    mHandler.post {
+                        if (parsedData != null) {
+                            listener.onSuccess(parsedData as T)
+                        } else {
+                            listener.onError("Failed to parse word definition for: $word")
+                        }
+                    }
+                } else {
+                    mHandler.post {
+                        listener.onError("No definition found for word: $word")
+                    }
+                }
+
+            } catch (e: Exception) {
+                mHandler.post {
+                    listener.onError("Network error: ${e.message}")
+                }
             }
         }
     }
-    
-    /**
-     * Check if URL is reachable
-     */
-    fun isUrlReachable(urlString: String): Boolean {
-        return try {
+
+    private fun getJsonStringFromUrl(urlString: String): String {
+        var httpURLConnection: HttpURLConnection? = null
+        var bufferedReader: BufferedReader? = null
+
+        try {
             val url = URL(urlString)
-            val connection = url.openConnection() as HttpURLConnection
-            connection.apply {
-                requestMethod = "HEAD"
-                connectTimeout = 5000
-                readTimeout = 5000
+            httpURLConnection = url.openConnection() as HttpURLConnection
+            httpURLConnection.apply {
+                connectTimeout = TIME_OUT
+                readTimeout = TIME_OUT
+                requestMethod = METHOD_GET
+                doOutput = false // Set to false for GET requests
+                connect()
             }
-            
-            val responseCode = connection.responseCode
-            connection.disconnect()
-            
-            responseCode == HttpURLConnection.HTTP_OK
+
+            // Check response code
+            val responseCode = httpURLConnection.responseCode
+            if (responseCode != HttpURLConnection.HTTP_OK) {
+                throw Exception("HTTP Error: $responseCode")
+            }
+
+            bufferedReader = BufferedReader(InputStreamReader(httpURLConnection.inputStream))
+            val stringBuilder = StringBuilder()
+            var line: String?
+
+            while (bufferedReader.readLine().also { line = it } != null) {
+                stringBuilder.append(line)
+            }
+
+            return stringBuilder.toString()
+
         } catch (e: Exception) {
-            Log.e(TAG, "Error checking URL reachability", e)
-            false
+            throw Exception("Network request failed: ${e.message}")
+        } finally {
+            try {
+                bufferedReader?.close()
+                httpURLConnection?.disconnect()
+            } catch (e: Exception) {
+                // Log but don't throw
+            }
         }
     }
 }

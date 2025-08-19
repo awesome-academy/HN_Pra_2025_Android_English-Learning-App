@@ -18,6 +18,11 @@ class ParseDataWithJson {
         return try {
             Log.d(TAG, "Parsing definition for word: $word")
             
+            if (jsonResponse.isEmpty() || jsonResponse.isBlank()) {
+                Log.w(TAG, "Empty JSON response for word: $word")
+                return null
+            }
+
             val jsonArray = JSONArray(jsonResponse)
             if (jsonArray.length() == 0) {
                 Log.w(TAG, "No definition found for word: $word")
@@ -25,9 +30,9 @@ class ParseDataWithJson {
             }
             
             val wordObject = jsonArray.getJSONObject(0)
-            val meanings = wordObject.getJSONArray("meanings")
-            
-            if (meanings.length() == 0) {
+            val meanings = wordObject.optJSONArray("meanings")
+
+            if (meanings == null || meanings.length() == 0) {
                 Log.w(TAG, "No meanings found for word: $word")
                 return null
             }
@@ -35,16 +40,16 @@ class ParseDataWithJson {
             // Get first meaning
             val firstMeaning = meanings.getJSONObject(0)
             val partOfSpeech = firstMeaning.optString("partOfSpeech", "")
-            val definitions = firstMeaning.getJSONArray("definitions")
-            
-            if (definitions.length() == 0) {
+            val definitions = firstMeaning.optJSONArray("definitions")
+
+            if (definitions == null || definitions.length() == 0) {
                 Log.w(TAG, "No definitions found for word: $word")
                 return null
             }
             
             // Get first definition
             val firstDefinition = definitions.getJSONObject(0)
-            val definition = firstDefinition.getString("definition")
+            val definition = firstDefinition.optString("definition", "No definition available")
             val example = firstDefinition.optString("example", "")
             
             // Get phonetic if available
@@ -54,12 +59,17 @@ class ParseDataWithJson {
             
             if (phonetics != null && phonetics.length() > 0) {
                 for (i in 0 until phonetics.length()) {
-                    val phonetic = phonetics.getJSONObject(i)
-                    if (phonetic.has("text") && phoneticText.isEmpty()) {
-                        phoneticText = phonetic.getString("text")
-                    }
-                    if (phonetic.has("audio") && audioUrl.isEmpty()) {
-                        audioUrl = phonetic.getString("audio")
+                    val phonetic = phonetics.optJSONObject(i)
+                    if (phonetic != null) {
+                        if (phonetic.has("text") && phoneticText.isEmpty()) {
+                            phoneticText = phonetic.optString("text", "")
+                        }
+                        if (phonetic.has("audio") && audioUrl.isEmpty()) {
+                            val audio = phonetic.optString("audio", "")
+                            if (audio.isNotEmpty()) {
+                                audioUrl = audio
+                            }
+                        }
                     }
                 }
             }
@@ -79,7 +89,16 @@ class ParseDataWithJson {
             
         } catch (e: Exception) {
             Log.e(TAG, "Error parsing word definition for: $word", e)
-            null
+            // Return a basic Word object instead of null to prevent crashes
+            Word(
+                id = word.hashCode().toString(),
+                word = word,
+                definition = "Definition not available",
+                soundUrl = "",
+                example = "",
+                phonetic = "",
+                partOfSpeech = ""
+            )
         }
     }
     
@@ -96,5 +115,14 @@ class ParseDataWithJson {
             Log.e(TAG, "Invalid JSON response", e)
             false
         }
+    }
+
+    /**
+     * Generic JSON parsing stub for GetJsonFromUrl usage
+     */
+    fun parseJsonToData(jsonObject: JSONObject, keyEntity: String): Any? {
+        // TODO: Implement actual parsing logic based on keyEntity
+        // For now, just return the raw JSONObject or null
+        return jsonObject.opt(keyEntity)
     }
 }

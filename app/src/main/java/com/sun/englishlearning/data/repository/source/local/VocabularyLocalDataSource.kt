@@ -1,67 +1,62 @@
 package com.sun.englishlearning.data.repository.source.local
 
 import android.content.Context
-import android.util.Log
+import com.sun.englishlearning.data.model.Word
+import com.sun.englishlearning.data.repository.source.remote.OnResultListener
+import com.sun.englishlearning.data.repository.source.VocabularyDataSource
 import org.json.JSONObject
 import java.io.IOException
 import java.io.InputStream
 
-class VocabularyLocalDataSource {
-    
+class VocabularyLocalDataSource : VocabularyDataSource.Local {
     companion object {
-        private const val TAG = "VocabularyLocalDataSource"
-        private const val VOCABULARY_FILE = "vocabulary.json"
+        private const val LESSONS_FILE = "lessons.json"
+        private var instance: VocabularyLocalDataSource? = null
+        fun getInstance() = synchronized(this) {
+            instance ?: VocabularyLocalDataSource().also { instance = it }
+        }
     }
-    
+
     /**
-     * Load vocabulary words for a specific lesson from assets
+     * Load vocabulary words for a specific lesson from lessons.json
      */
-    fun getVocabularyWords(context: Context, lessonId: String): List<String> {
-        return try {
-            Log.d(TAG, "Loading vocabulary for lesson: $lessonId")
-            
-            val jsonString = loadJsonFromAssets(context, VOCABULARY_FILE)
+    override fun getWordsLocal(context: Context, lessonId: String, listener: OnResultListener<MutableList<Word>>) {
+        try {
+            val jsonString = loadJsonFromAssets(context, LESSONS_FILE)
             if (jsonString.isEmpty()) {
-                Log.e(TAG, "JSON string is empty")
-                return emptyList()
+                listener.onError("JSON string is empty")
+                return
             }
             
-            parseVocabularyWords(jsonString, lessonId)
-            
+            val words = parseWordsFromLessonsJson(jsonString, lessonId)
+            listener.onSuccess(words)
+
         } catch (e: Exception) {
-            Log.e(TAG, "Error loading vocabulary from assets", e)
-            emptyList()
+            listener.onError(e.message ?: "Unknown error")
         }
     }
-    
+
     /**
-     * Parse vocabulary words from JSON for specific lesson
+     * Parse vocabulary words from lessons.json for specific lesson
      */
-    private fun parseVocabularyWords(jsonString: String, lessonId: String): List<String> {
-        return try {
-            val jsonObject = JSONObject(jsonString)
-            val vocabularyObject = jsonObject.getJSONObject("vocabulary")
-            
-            if (vocabularyObject.has(lessonId)) {
-                val lessonObject = vocabularyObject.getJSONObject(lessonId)
-                val wordsArray = lessonObject.getJSONArray("words")
-                
-                val words = mutableListOf<String>()
-                for (i in 0 until wordsArray.length()) {
-                    words.add(wordsArray.getString(i))
+    private fun parseWordsFromLessonsJson(jsonString: String, lessonId: String): MutableList<Word> {
+        val result = mutableListOf<Word>()
+        val jsonObject = JSONObject(jsonString)
+        val lessonsArray = jsonObject.getJSONArray("lessons")
+
+        for (i in 0 until lessonsArray.length()) {
+            val lessonObj = lessonsArray.getJSONObject(i)
+            if (lessonObj.getString("id") == lessonId) {
+                val vocabArray = lessonObj.getJSONArray("vocabulary")
+
+                for (j in 0 until vocabArray.length()) {
+                    val wordText = vocabArray.getString(j)
+                    result.add(Word(word = wordText, id = wordText.hashCode().toString(), lessonId = lessonId))
                 }
-                
-                Log.d(TAG, "Loaded ${words.size} words for lesson $lessonId")
-                words
-            } else {
-                Log.w(TAG, "No vocabulary found for lesson: $lessonId")
-                emptyList()
+                break
             }
-            
-        } catch (e: Exception) {
-            Log.e(TAG, "Error parsing vocabulary JSON", e)
-            emptyList()
         }
+        return result
     }
 
     /**
@@ -76,7 +71,6 @@ class VocabularyLocalDataSource {
             inputStream.close()
             String(buffer, Charsets.UTF_8)
         } catch (e: IOException) {
-            Log.e(TAG, "Error reading JSON file from assets", e)
             ""
         }
     }

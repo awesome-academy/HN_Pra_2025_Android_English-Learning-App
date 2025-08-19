@@ -1,129 +1,82 @@
 package com.sun.englishlearning.data.repository
 
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
+import android.content.Context
 import com.sun.englishlearning.data.model.Word
-import kotlinx.coroutines.tasks.await
+import com.sun.englishlearning.data.repository.source.VocabularyDataSource
+import com.sun.englishlearning.data.repository.source.remote.OnResultListener
 
-interface WordRepository {
-suspend fun getAllWords(): Result<List<Word>>
-    suspend fun getWordsByLesson(lessonId: String): Result<List<Word>>
-    suspend fun getWordsByDifficulty(difficulty: String): Result<List<Word>>
-    suspend fun getWord(wordId: String): Result<Word?>
-    suspend fun createWord(word: Word): Result<Unit>
-    suspend fun updateWord(word: Word): Result<Unit>
-    suspend fun deleteWord(wordId: String): Result<Unit>
-}
+class VocabularyRepository private constructor(
+    private val remote: VocabularyDataSource.Remote,
+    private val local: VocabularyDataSource.Local
+) : VocabularyDataSource.Local, VocabularyDataSource.Remote {
+    // Always use local for lesson vocabulary
+    override fun getWordsLocal(context: Context, lessonId: String, listener: OnResultListener<MutableList<Word>>) {
+        local.getWordsLocal(context, lessonId, listener)
+    }
 
-class WordRepositoryImpl : WordRepository {
-    private val db = Firebase.firestore
+    // Always use remote for word data
+    override fun getWords(listener: OnResultListener<MutableList<Word>>) {
+        remote.getWords(listener)
+    }
 
-    override suspend fun getAllWords(): Result<List<Word>> {
-        return try {
-            val snapshot = db.collection("words")
-                .get()
-                .await()
-
-            val words = snapshot.documents.mapNotNull { document ->
-                document.toObject(Word::class.java)?.copy(id = document.id)
+    override fun getWordsByLesson(context: Context, lessonId: String, listener: OnResultListener<MutableList<Word>>) {
+        listener.onLoading()
+        local.getWordsLocal(context, lessonId, object : OnResultListener<MutableList<Word>> {
+            override fun onSuccess(data: MutableList<Word>) {
+                if (data.isEmpty()) {
+                    listener.onError("No words found for lesson $lessonId")
+                    return
+                }
+                val resultList = mutableListOf<Word>()
+                var completed = 0
+                for (word in data) {
+                    remote.getWord(word.word, object : OnResultListener<Word?> {
+                        override fun onSuccess(wordDetail: Word?) {
+                            wordDetail?.let { resultList.add(it) }
+                            completed++
+                            if (completed == data.size) {
+                                listener.onSuccess(resultList)
+                            }
+                        }
+                        override fun onError(error: String) {
+                            completed++
+                            if (completed == data.size) {
+                                listener.onSuccess(resultList)
+                            }
+                        }
+                        override fun onLoading() {}
+                    })
+                }
             }
-            Result.success(words)
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
-    }
-
-    override suspend fun getWordsByLesson(lessonId: String): Result<List<Word>> {
-        return try {
-            val snapshot = db.collection("words")
-                .whereEqualTo("lessonId", lessonId)
-                .get()
-                .await()
-
-            val words = snapshot.documents.mapNotNull { document ->
-                document.toObject(Word::class.java)?.copy(id = document.id)
+            override fun onError(error: String) {
+                listener.onError(error)
             }
-            Result.success(words)
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
+            override fun onLoading() {}
+        })
     }
 
-    override suspend fun getWordsByDifficulty(difficulty: String): Result<List<Word>> {
-        return try {
-            val snapshot = db.collection("words")
-                .whereEqualTo("difficulty", difficulty)
-                .get()
-                .await()
+    override fun getWord(wordId: String, listener: OnResultListener<Word?>) {
+        remote.getWord(wordId, listener)
+    }
 
-            val words = snapshot.documents.mapNotNull { document ->
-                document.toObject(Word::class.java)?.copy(id = document.id)
+    override fun createWord(word: Word, listener: OnResultListener<Unit>) {
+        remote.createWord(word, listener)
+    }
+
+    override fun updateWord(word: Word, listener: OnResultListener<Unit>) {
+        remote.updateWord(word, listener)
+    }
+
+    override fun deleteWord(wordId: String, listener: OnResultListener<Unit>) {
+        remote.deleteWord(wordId, listener)
+    }
+
+    companion object {
+        @Volatile
+        private var instance: VocabularyRepository? = null
+        fun getInstance(remote: VocabularyDataSource.Remote, local: VocabularyDataSource.Local): VocabularyRepository =
+            instance ?: synchronized(this) {
+                instance ?: VocabularyRepository(remote, local).also { instance = it }
             }
-            Result.success(words)
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
-    }
-
-    override suspend fun getWord(wordId: String): Result<Word?> {
-        return try {
-            val document = db.collection("words")
-                .document(wordId)
-                .get()
-                .await()
-
-            val word = document.toObject(Word::class.java)?.copy(id = document.id)
-            Result.success(word)
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
-    }
-
-    override suspend fun createWord(word: Word): Result<Unit> {
-        return try {
-            db.collection("words")
-                .document(word.id)
-                .set(word)
-                .await()
-            Result.success(Unit)
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
-    }
-
-    override suspend fun updateWord(word: Word): Result<Unit> {
-        return try {
-            val wordMap = mapOf(
-                "word" to word.word,
-                "definition" to word.definition,
-                "pronunciation" to word.pronunciation,
-                "phonetic" to word.phonetic,
-                "partOfSpeech" to word.partOfSpeech,
-                "example" to word.example,
-                "soundUrl" to word.soundUrl,
-                "imageUrl" to word.imageUrl,
-                "lessonId" to word.lessonId
-            )
-            
-            db.collection("words")
-                .document(word.id)
-                .update(wordMap)
-                .await()
-            Result.success(Unit)
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
-    }
-
-    override suspend fun deleteWord(wordId: String): Result<Unit> {
-        return try {
-            db.collection("words")
-                .document(wordId)
-                .delete()
-                .await()
-            Result.success(Unit)
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
     }
 }

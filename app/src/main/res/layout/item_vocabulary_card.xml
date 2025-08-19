@@ -37,4 +37,16 @@
         android:tint="@color/main_blue"
         tools:ignore="UseAppTint" />
 
+    <!-- Learned Indicator -->
+    <ImageView
+        android:id="@+id/imgLearned"
+        android:layout_width="@dimen/dp_24"
+        android:layout_height="@dimen/dp_24"
+        android:layout_marginStart="@dimen/dp_8"
+        android:src="@drawable/ic_check_circle"
+        android:tint="@color/state_success"
+        android:visibility="gone"
+        tools:ignore="UseAppTint"
+        tools:visibility="visible" />
+
 </LinearLayout>

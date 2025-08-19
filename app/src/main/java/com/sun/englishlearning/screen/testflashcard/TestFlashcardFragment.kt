@@ -1,4 +1,4 @@
-package com.sun.englishlearning.screen.flashcard.test
+package com.sun.englishlearning.screen.testflashcard
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
@@ -10,13 +10,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.OvershootInterpolator
 import android.view.inputmethod.EditorInfo
+import android.widget.Toast
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
 import com.sun.englishlearning.R
 import com.sun.englishlearning.data.model.Word
 import com.sun.englishlearning.databinding.FragmentTestFlashcardBinding
+import com.sun.englishlearning.utils.base.BaseFragment
+import java.lang.Exception
 
-class TestFlashcardFragment : Fragment() {
+class TestFlashcardFragment :
+    BaseFragment<FragmentTestFlashcardBinding>(),
+    TestFlashcardContract.View {
 
     companion object {
         private const val ARG_WORD = "arg_word"
@@ -32,14 +36,23 @@ class TestFlashcardFragment : Fragment() {
 
     interface OnTestProgressListener {
         fun onWordTested(word: Word, isCorrect: Boolean)
+        fun onMoveToNextCard()
+        fun onPlayWordAudio(word: Word)
     }
 
-    private var _binding: FragmentTestFlashcardBinding? = null
-    private val binding get() = _binding!!
-
+    private lateinit var mTestVocabularyPresenter: TestFlashcardPresenter
     private lateinit var word: Word
     private var testProgressListener: OnTestProgressListener? = null
     private var isAnswerChecked = false
+
+    override val isInsets = false
+
+    override fun inflateViewBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ): FragmentTestFlashcardBinding {
+        return FragmentTestFlashcardBinding.inflate(inflater, container, false)
+    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -58,24 +71,60 @@ class TestFlashcardFragment : Fragment() {
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentTestFlashcardBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        setupTestData()
+    override fun initView() {
         setupClickListeners()
         animateCardAppearance()
     }
 
+    override fun initData() {
+        mTestVocabularyPresenter = TestFlashcardPresenter()
+        mTestVocabularyPresenter.setContext(requireContext())
+        mTestVocabularyPresenter.attachView(this)
+        mTestVocabularyPresenter.loadTestWord(word)
+    }
+
+    private fun setupClickListeners() {
+        viewBinding.apply {
+            // Audio button click
+            btnAudio.setOnClickListener { view ->
+                animateButtonPress(view) {
+                    testProgressListener?.onPlayWordAudio(word)
+                    mTestVocabularyPresenter.playAudio(word.soundUrl)
+                }
+            }
+
+            // Check answer button click
+            btnCheckAnswer.setOnClickListener {
+                checkAnswer()
+            }
+
+            // Next button click
+            btnNext.setOnClickListener {
+                testProgressListener?.onMoveToNextCard()
+                mTestVocabularyPresenter.nextWord()
+            }
+
+            // Handle done action on keyboard
+            editAnswer.setOnEditorActionListener { _, actionId, _ ->
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    checkAnswer()
+                    return@setOnEditorActionListener true
+                }
+                false
+            }
+        }
+    }
+
+    private fun checkAnswer() {
+        if (isAnswerChecked) return
+
+        val userAnswer = viewBinding.editAnswer.text.toString().trim()
+        val correctAnswer = word.word.trim()
+        mTestVocabularyPresenter.checkAnswer(userAnswer, correctAnswer)
+    }
+
     private fun setupTestData() {
-        binding.apply {
+        viewBinding.apply {
             // Set definition
             val definition = if (word.definition.isNotEmpty()) {
                 word.definition
@@ -94,51 +143,9 @@ class TestFlashcardFragment : Fragment() {
         }
     }
 
-    private fun setupClickListeners() {
-        binding.apply {
-            // Audio button click
-            btnAudio.setOnClickListener { view ->
-                animateButtonPress(view) {
-                    // Get parent activity and play audio
-                    (activity as? TestFlashcardActivity)?.playWordAudio(word)
-                }
-            }
-
-            // Check answer button click
-            btnCheckAnswer.setOnClickListener {
-                checkAnswer()
-            }
-
-            // Next button click
-            btnNext.setOnClickListener {
-                (activity as? TestFlashcardActivity)?.moveToNextCard()
-            }
-
-            // Handle done action on keyboard
-            editAnswer.setOnEditorActionListener { _, actionId, _ ->
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    checkAnswer()
-                    return@setOnEditorActionListener true
-                }
-                false
-            }
-        }
-    }
-
-    private fun checkAnswer() {
-        if (isAnswerChecked) return
-
-        val userAnswer = binding.editAnswer.text.toString().trim()
-        val correctAnswer = word.word.trim()
-        val isCorrect = userAnswer.equals(correctAnswer, ignoreCase = true)
-
-        showResult(isCorrect)
-        testProgressListener?.onWordTested(word, isCorrect)
-    }
-
     private fun showResult(isCorrect: Boolean) {
         isAnswerChecked = true
-        binding.apply {
+        viewBinding.apply {
             layoutResult.visibility = View.VISIBLE
             if (isCorrect) {
                 imageResultIcon.setImageResource(R.drawable.ic_check_circle)
@@ -171,7 +178,7 @@ class TestFlashcardFragment : Fragment() {
     }
 
     private fun animateCardAppearance() {
-        binding.root.apply {
+        viewBinding.root.apply {
             alpha = 0f
             scaleX = 0.8f
             scaleY = 0.8f
@@ -213,8 +220,34 @@ class TestFlashcardFragment : Fragment() {
         }, 200)
     }
 
+    // MVP Contract.View implementation
+    override fun onTestWordSuccess(word: Word) {
+        setupTestData()
+    }
+
+    override fun onTestCompleted() {
+
+    }
+
+    override fun onError(exception: Exception?) {
+        Toast.makeText(requireContext(), exception?.message ?: getString(R.string.error_general), Toast.LENGTH_SHORT).show()
+    }
+
+    override fun showLoading() {
+
+    }
+
+    override fun hideLoading() {
+
+    }
+
+    override fun onWordTested(isCorrect: Boolean) {
+        showResult(isCorrect)
+        testProgressListener?.onWordTested(word, isCorrect)
+    }
+
     override fun onDestroyView() {
+        mTestVocabularyPresenter.detachView()
         super.onDestroyView()
-        _binding = null
     }
 }

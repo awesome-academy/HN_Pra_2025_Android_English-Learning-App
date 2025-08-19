@@ -1,10 +1,10 @@
-package com.sun.englishlearning.screen.flashcard.test.adapter
+package com.sun.englishlearning.screen.testflashcard.adapter
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.sun.englishlearning.data.model.Word
-import com.sun.englishlearning.screen.flashcard.test.TestFlashcardFragment
+import com.sun.englishlearning.screen.testflashcard.TestFlashcardFragment
 
 class TestFlashcardAdapter(
     fragmentActivity: FragmentActivity,

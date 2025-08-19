@@ -23,22 +23,19 @@ import com.sun.englishlearning.data.model.Word
 import com.sun.englishlearning.data.repository.UserLessonProgressRepositoryImpl
 import com.sun.englishlearning.screen.lessondetail.adapter.VocabularyAdapter
 import com.sun.englishlearning.screen.flashcard.FlashcardActivity
-import com.sun.englishlearning.screen.flashcard.test.TestFlashcardActivity
-import androidx.fragment.app.Fragment
+import com.sun.englishlearning.screen.testflashcard.TestFlashcardActivity
+import com.sun.englishlearning.utils.base.BaseFragment
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import androidx.activity.result.contract.ActivityResultContracts
 import com.sun.englishlearning.utils.AudioManager
 
-class LessonDetailFragment : Fragment(), LessonDetailContract.View {
+class LessonDetailFragment : BaseFragment<FragmentLessonDetailBinding>(), LessonDetailContract.View {
 
     companion object {
         private const val TAG = "LessonDetailFragment"
     }
-
-    private var _viewBinding: FragmentLessonDetailBinding? = null
-    private val viewBinding get() = _viewBinding!!
 
     private lateinit var vocabularyAdapter: VocabularyAdapter
     private lateinit var presenter: LessonDetailContract.Presenter
@@ -46,18 +43,11 @@ class LessonDetailFragment : Fragment(), LessonDetailContract.View {
     private var currentLesson: Lesson? = null
     private val userProgressRepository = UserLessonProgressRepositoryImpl()
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
-    
-    // Authentication
     private val auth = Firebase.auth
-
-    // Current vocabulary and learned word IDs
     private var currentVocabulary: List<Word> = emptyList()
     private var learnedWordIds: Set<String> = emptySet()
-
-    // Audio manager for playing word sounds
     private val audioManager = AudioManager.getInstance()
 
-    // Activity Result Launchers
     private val flashcardLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
@@ -93,15 +83,22 @@ class LessonDetailFragment : Fragment(), LessonDetailContract.View {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        _viewBinding = FragmentLessonDetailBinding.inflate(inflater, container, false)
-        return viewBinding.root
+    override val isInsets = true
+
+    override fun inflateViewBinding(inflater: LayoutInflater, container: ViewGroup?): FragmentLessonDetailBinding {
+        return FragmentLessonDetailBinding.inflate(inflater, container, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        initPresenter()
-        initView()
+    override fun initView() {
+        setupRecyclerView()
+        setupBackButton()
+        setupTestButton()
+    }
+
+    override fun initData() {
+        presenter = LessonDetailPresenter()
+        (presenter as LessonDetailPresenter).setContext(requireContext())
+        presenter.attachView(this)
 
         // Get lesson from args and load
         currentLesson = args.lesson
@@ -121,21 +118,8 @@ class LessonDetailFragment : Fragment(), LessonDetailContract.View {
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
         presenter.detachView()
-        _viewBinding = null
-    }
-
-    private fun initPresenter() {
-        presenter = LessonDetailPresenter()
-        (presenter as LessonDetailPresenter).setContext(requireContext())
-        presenter.attachView(this)
-    }
-
-    private fun initView() {
-        setupRecyclerView()
-        setupBackButton()
-        setupTestButton()
+        super.onDestroyView()
     }
 
     private fun setupRecyclerView() {
@@ -219,7 +203,7 @@ class LessonDetailFragment : Fragment(), LessonDetailContract.View {
                 imageLesson.setImageResource(R.drawable.ic_launcher_background)
             }
         }
-        
+
         // Load user progress after lesson info is displayed
         loadUserProgress(lesson.id)
     }
@@ -292,7 +276,7 @@ class LessonDetailFragment : Fragment(), LessonDetailContract.View {
             )
         }
     }
-    
+
     private fun loadUserProgress(lessonId: String) {
         coroutineScope.launch {
             try {
@@ -315,11 +299,11 @@ class LessonDetailFragment : Fragment(), LessonDetailContract.View {
             }
         }
     }
-    
+
     private fun updateProgressUI(progress: UserLessonProgress?) {
         val lesson = currentLesson ?: return
         val totalWords = lesson.vocabulary.size
-        
+
         viewBinding.apply {
             // Update progress bar
             val progressPercentage = if (progress != null && totalWords > 0) {
@@ -328,7 +312,7 @@ class LessonDetailFragment : Fragment(), LessonDetailContract.View {
                 0
             }
             progressLesson.progress = progressPercentage
-            
+
             // Update points text
             val wordsLearned = if (progress != null) progress.wordsLearned else 0
             textLessonPoints.text = getString(R.string.words_learned_format, wordsLearned, totalWords)

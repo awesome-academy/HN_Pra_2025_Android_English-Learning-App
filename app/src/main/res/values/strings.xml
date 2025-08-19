@@ -120,7 +120,8 @@
 
     <!-- Dialog -->
     <string name="dialog_ok">OK</string>
-    <string name="dialog_error_title">Lỗi</string>
+    <string name="dialog_error_title">L—i</string>
+    <string name="error_general">An error occurred. Please try again.</string>
     <string name="phonetic_transcription">Phonetic transcription</string>
     <string name="english_word">English word</string>
     <string name="play_pronunciation_audio">Play pronunciation audio</string>

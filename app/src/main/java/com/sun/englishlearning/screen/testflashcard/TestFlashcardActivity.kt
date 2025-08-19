@@ -1,4 +1,4 @@
-package com.sun.englishlearning.screen.flashcard.test
+package com.sun.englishlearning.screen.testflashcard
 
 import android.content.Context
 import android.content.Intent
@@ -13,15 +13,16 @@ import androidx.viewpager2.widget.ViewPager2
 import com.sun.englishlearning.R
 import com.sun.englishlearning.data.model.Word
 import com.sun.englishlearning.databinding.ActivityFlashcardBinding
-import com.sun.englishlearning.screen.flashcard.test.adapter.TestFlashcardAdapter
+import com.sun.englishlearning.screen.testflashcard.adapter.TestFlashcardAdapter
 import com.sun.englishlearning.utils.AudioManager
 import com.sun.englishlearning.utils.DialogUtils
 import com.sun.englishlearning.utils.base.BaseActivity
 
-class TestFlashcardActivity : BaseActivity<ActivityFlashcardBinding>(), TestFlashcardFragment.OnTestProgressListener {
+class TestFlashcardActivity : BaseActivity<ActivityFlashcardBinding>(),
+    TestFlashcardFragment.OnTestProgressListener {
 
     companion object {
-        private const val TAG = "TestFlashcardActivity"
+        private const val TAG = "TestVocabularyActivity"
         private const val EXTRA_WORDS = "extra_words"
         private const val EXTRA_CURRENT_INDEX = "extra_current_index"
         private const val EXTRA_LESSON_TITLE = "extra_lesson_title"
@@ -43,7 +44,7 @@ class TestFlashcardActivity : BaseActivity<ActivityFlashcardBinding>(), TestFlas
         }
     }
 
-    private lateinit var testFlashcardAdapter: TestFlashcardAdapter
+    private lateinit var testVocabularyAdapter: TestFlashcardAdapter
     private var words: List<Word> = emptyList()
     private var currentIndex: Int = 0
     private var lessonTitle: String = ""
@@ -60,7 +61,7 @@ class TestFlashcardActivity : BaseActivity<ActivityFlashcardBinding>(), TestFlas
 
     override fun initView() {
         try {
-            Log.d(TAG, "Initializing TestFlashcardActivity")
+            Log.d(TAG, "Initializing TestVocabularyActivity")
             getIntentData()
 
             // Validate data before proceeding
@@ -78,10 +79,10 @@ class TestFlashcardActivity : BaseActivity<ActivityFlashcardBinding>(), TestFlas
             setupAccessibility()
             animateInitialAppearance()
 
-            Log.d(TAG, "TestFlashcardActivity initialized successfully")
+            Log.d(TAG, "TestVocabularyActivity initialized successfully")
         } catch (e: Exception) {
-            Log.e(TAG, "Error initializing TestFlashcardActivity", e)
-            showError("Failed to initialize flashcard test: ${e.message}")
+            Log.e(TAG, "Error initializing TestVocabularyActivity", e)
+            showError("Failed to initialize vocabulary test: ${e.message}")
         }
     }
 
@@ -132,10 +133,10 @@ class TestFlashcardActivity : BaseActivity<ActivityFlashcardBinding>(), TestFlas
     }
 
     private fun setupViewPager() {
-        testFlashcardAdapter = TestFlashcardAdapter(this, words)
+        testVocabularyAdapter = TestFlashcardAdapter(this, words)
 
         binding.viewPagerFlashcards.apply {
-            adapter = testFlashcardAdapter
+            adapter = testVocabularyAdapter
             orientation = ViewPager2.ORIENTATION_HORIZONTAL
 
             // Disable swiping between cards (user must answer each question)
@@ -167,17 +168,6 @@ class TestFlashcardActivity : BaseActivity<ActivityFlashcardBinding>(), TestFlas
         }
     }
 
-    fun moveToNextCard() {
-        if (currentIndex < words.size - 1) {
-            currentIndex++
-            binding.viewPagerFlashcards.setCurrentItem(currentIndex, true)
-            updateProgressIndicator(currentIndex)
-        } else {
-            // Show test completion
-            showTestResults()
-        }
-    }
-
     private fun updateProgressIndicator(position: Int) {
         binding.textProgress.text = "${position + 1}/${words.size}"
     }
@@ -188,6 +178,7 @@ class TestFlashcardActivity : BaseActivity<ActivityFlashcardBinding>(), TestFlas
         val scorePercent = if (totalWords > 0) (correctCount * 100 / totalWords) else 0
         val resultMessage = getString(R.string.test_completed) + "\n" +
                 getString(R.string.test_score_format, correctCount, totalWords, scorePercent)
+
         DialogUtils.showInfoDialog(
             context = this,
             title = getString(R.string.test_results),
@@ -202,39 +193,6 @@ class TestFlashcardActivity : BaseActivity<ActivityFlashcardBinding>(), TestFlas
                 finish()
             }
         )
-    }
-
-    override fun onWordTested(word: Word, isCorrect: Boolean) {
-        if (isCorrect) {
-            correctAnswers.add(word.id)
-        } else {
-            wrongAnswers.add(word.id)
-        }
-    }
-
-    fun playWordAudio(word: Word) {
-        if (word.soundUrl.isNotEmpty()) {
-            audioManager.playAudio(
-                context = this,
-                audioUrl = word.soundUrl,
-                listener = object : AudioManager.AudioPlaybackListener {
-                    override fun onAudioStarted() {
-                        // Audio playback started
-                    }
-                    override fun onAudioCompleted() {
-                        // Audio playback completed
-                    }
-                    override fun onAudioError(error: String) {
-                        Toast.makeText(this@TestFlashcardActivity,
-                            "Could not play pronunciation: $error",
-                            Toast.LENGTH_SHORT).show()
-                    }
-                }
-            )
-        } else {
-            Toast.makeText(this, "Audio pronunciation not available for '${word.word}'",
-                Toast.LENGTH_SHORT).show()
-        }
     }
 
     private fun showError(message: String) {
@@ -259,6 +217,51 @@ class TestFlashcardActivity : BaseActivity<ActivityFlashcardBinding>(), TestFlas
                 },
                 onNegativeClick = null
             )
+        }
+    }
+
+    // TestVocabularyFragment.OnTestProgressListener implementation
+    override fun onWordTested(word: Word, isCorrect: Boolean) {
+        if (isCorrect) {
+            correctAnswers.add(word.id)
+        } else {
+            wrongAnswers.add(word.id)
+        }
+    }
+
+    override fun onMoveToNextCard() {
+        if (currentIndex < words.size - 1) {
+            currentIndex++
+            binding.viewPagerFlashcards.setCurrentItem(currentIndex, true)
+            updateProgressIndicator(currentIndex)
+        } else {
+            // Show test completion
+            showTestResults()
+        }
+    }
+
+    override fun onPlayWordAudio(word: Word) {
+        if (word.soundUrl.isNotEmpty()) {
+            audioManager.playAudio(
+                context = this,
+                audioUrl = word.soundUrl,
+                listener = object : AudioManager.AudioPlaybackListener {
+                    override fun onAudioStarted() {
+                        // Audio playback started
+                    }
+                    override fun onAudioCompleted() {
+                        // Audio playback completed
+                    }
+                    override fun onAudioError(error: String) {
+                        Toast.makeText(this@TestFlashcardActivity,
+                            "Could not play pronunciation: $error",
+                            Toast.LENGTH_SHORT).show()
+                    }
+                }
+            )
+        } else {
+            Toast.makeText(this, "Audio pronunciation not available for '${word.word}'",
+                Toast.LENGTH_SHORT).show()
         }
     }
 }

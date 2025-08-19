@@ -81,7 +81,8 @@ class ParseDataWithJson {
                 soundUrl = audioUrl,
                 example = example,
                 phonetic = phoneticText,
-                partOfSpeech = partOfSpeech
+                partOfSpeech = partOfSpeech,
+                lessonId = "dictionary_search" // Add default lessonId for dictionary words
             )
             
             Log.d(TAG, "Successfully parsed definition for word: $word")

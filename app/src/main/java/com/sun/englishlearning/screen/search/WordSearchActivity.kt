@@ -105,14 +105,14 @@ class WordSearchActivity : BaseActivity<ActivityWordSearchBinding>() {
         searchJob?.cancel()
         searchJob = CoroutineScope(Dispatchers.Main).launch {
             showLoading()
-            vocabularyRepository.getWords(object : OnResultListener<MutableList<Word>> {
+            // Use getWord instead of getWords to search for specific word
+            vocabularyRepository.getWord(query, object : OnResultListener<Word?> {
                 override fun onLoading() {
                     showLoading()
                 }
-                override fun onSuccess(data: MutableList<Word>) {
-                    val foundWord: Word? = data.firstOrNull { it.word.equals(query, ignoreCase = true) }
-                    if (foundWord != null) {
-                        showSearchResult(foundWord)
+                override fun onSuccess(data: Word?) {
+                    if (data != null) {
+                        showSearchResult(data)
                     } else {
                         showError()
                         Toast.makeText(this@WordSearchActivity, "Word not found", Toast.LENGTH_SHORT).show()
@@ -120,7 +120,7 @@ class WordSearchActivity : BaseActivity<ActivityWordSearchBinding>() {
                 }
                 override fun onError(error: String) {
                     showError()
-                    Toast.makeText(this@WordSearchActivity, "Network error. Please try again.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@WordSearchActivity, "Network error: $error", Toast.LENGTH_SHORT).show()
                 }
             })
         }

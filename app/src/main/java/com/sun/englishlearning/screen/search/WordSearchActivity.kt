@@ -14,10 +14,10 @@ import com.sun.englishlearning.data.model.WordSearchResult
 import com.sun.englishlearning.utils.DialogUtils
 import com.sun.englishlearning.data.model.SavedWord
 import com.sun.englishlearning.data.model.WordType
-import com.sun.englishlearning.data.repository.DictionaryRepository
-import com.sun.englishlearning.data.repository.DictionaryRepositoryImpl
 import com.sun.englishlearning.data.repository.SavedWordsRepository
 import com.sun.englishlearning.data.repository.SavedWordsRepositoryImpl
+import com.sun.englishlearning.data.repository.DictionaryRepository
+import com.sun.englishlearning.data.repository.DictionaryRepositoryImpl
 import com.google.firebase.auth.FirebaseAuth
 import com.sun.englishlearning.databinding.ActivityWordSearchBinding
 import com.sun.englishlearning.utils.base.BaseActivity
@@ -29,9 +29,9 @@ class WordSearchActivity : BaseActivity<ActivityWordSearchBinding>() {
     private var mediaPlayer: MediaPlayer? = null
     private var currentWordResult: WordSearchResult? = null
     private var isWordSaved: Boolean = false
-    private val dictionaryRepository: DictionaryRepository = DictionaryRepositoryImpl()
     private val savedWordsRepository: SavedWordsRepository = SavedWordsRepositoryImpl()
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
+    private val dictionaryRepository: DictionaryRepository = DictionaryRepositoryImpl()
 
     override fun inflateBinding(inflater: LayoutInflater): ActivityWordSearchBinding {
         return ActivityWordSearchBinding.inflate(inflater)
@@ -291,4 +291,3 @@ class WordSearchActivity : BaseActivity<ActivityWordSearchBinding>() {
         }
     }
 }
-

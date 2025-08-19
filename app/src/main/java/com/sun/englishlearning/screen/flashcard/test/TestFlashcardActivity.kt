@@ -86,7 +86,7 @@ class TestFlashcardActivity : BaseActivity<ActivityFlashcardBinding>(), TestFlas
     }
 
     override fun initData() {
-        // Nothing to initialize
+
     }
 
     private fun getIntentData() {
@@ -149,11 +149,11 @@ class TestFlashcardActivity : BaseActivity<ActivityFlashcardBinding>(), TestFlas
     }
 
     private fun setupClickListeners() {
-        // Nothing to set up here for the test activity
+
     }
 
     private fun setupAccessibility() {
-        // Set up accessibility features if needed
+
     }
 
     private fun animateInitialAppearance() {

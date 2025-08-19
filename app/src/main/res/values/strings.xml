@@ -180,4 +180,7 @@
     <string name="lesson_topic_format">Topic: %1$s</string>
     <string name="word_count_format">%1$d words</string>
     <string name="words_learned_format">%1$d / %2$d words learned</string>
+    <string name="next">Next</string>
+    <string name="check_answer">Check Answer</string>
+    <string name="enter_the_word">Enter the word</string>
 </resources>

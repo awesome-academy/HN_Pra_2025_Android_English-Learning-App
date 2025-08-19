@@ -5,13 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
+    android:clipToPadding="false"
+    android:clipChildren="false"
     tools:context=".screen.review.ReviewFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="@dimen/dp_16">
+        android:padding="@dimen/dp_20"
+        android:clipToPadding="false">
 
         <!-- Header -->
         <TextView
@@ -50,8 +53,10 @@
                     android:id="@+id/card_week_words"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dp_120"
+                    android:layout_margin="@dimen/dp_4"
                     app:cardCornerRadius="@dimen/dp_12"
-                    app:cardElevation="@dimen/dp_2">
+                    app:cardElevation="@dimen/dp_4"
+                    app:cardUseCompatPadding="true">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -102,9 +107,11 @@
                     android:layout_width="0dp"
                     android:layout_height="@dimen/dp_120"
                     android:layout_weight="1"
+                    android:layout_margin="@dimen/dp_4"
                     android:layout_marginEnd="@dimen/dp_8"
                     app:cardCornerRadius="@dimen/dp_12"
-                    app:cardElevation="@dimen/dp_2">
+                    app:cardElevation="@dimen/dp_4"
+                    app:cardUseCompatPadding="true">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -145,9 +152,11 @@
                     android:layout_width="0dp"
                     android:layout_height="@dimen/dp_120"
                     android:layout_weight="1"
+                    android:layout_margin="@dimen/dp_4"
                     android:layout_marginStart="@dimen/dp_8"
                     app:cardCornerRadius="@dimen/dp_12"
-                    app:cardElevation="@dimen/dp_2">
+                    app:cardElevation="@dimen/dp_4"
+                    app:cardUseCompatPadding="true">
 
                     <LinearLayout
                         android:layout_width="match_parent"

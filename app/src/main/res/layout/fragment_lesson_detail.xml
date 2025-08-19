@@ -171,6 +171,28 @@
                 android:textColor="@color/lesson_title_text"
                 android:textSize="@dimen/sp_18" />
 
+            <!-- Test button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_test_vocabulary"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dp_32"
+                android:layout_marginStart="@dimen/dp_8"
+                android:paddingHorizontal="@dimen/dp_12"
+                android:paddingVertical="@dimen/dp_0"
+                android:text="Test"
+                android:textAllCaps="false"
+                android:textSize="@dimen/sp_14"
+                android:fontFamily="@font/nunito_bold"
+                app:cornerRadius="@dimen/dp_16"
+                app:icon="@drawable/ic_star"
+                app:iconGravity="textStart"
+                app:iconSize="@dimen/dp_16"
+                app:iconTint="@color/white"
+                app:backgroundTint="@color/flashcard_primary"
+                android:textColor="@color/white"
+                android:elevation="@dimen/dp_1"
+                style="@style/Widget.Material3.Button" />
+
             <!-- Word Count -->
             <TextView
                 android:id="@+id/text_word_count"

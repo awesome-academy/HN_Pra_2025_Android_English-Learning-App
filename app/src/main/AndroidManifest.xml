@@ -58,6 +58,10 @@
             android:name=".screen.register.RegisterActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".screen.testflashcard.TestFlashcardActivity"
+            android:exported="false" />
+
         <receiver
             android:name=".screen.me.ReminderReceiver"
             android:enabled="true"

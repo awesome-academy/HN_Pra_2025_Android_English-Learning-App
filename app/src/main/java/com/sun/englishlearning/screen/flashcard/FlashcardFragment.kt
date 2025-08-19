@@ -2,6 +2,7 @@ package com.sun.englishlearning.screen.flashcard
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.content.Context
 import android.content.res.ColorStateList
 import android.os.Build
 import android.os.Bundle
@@ -12,21 +13,16 @@ import android.view.animation.OvershootInterpolator
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import com.google.firebase.auth.FirebaseAuth
 import com.sun.englishlearning.R
 import com.sun.englishlearning.data.model.Word
-import com.sun.englishlearning.data.model.SavedWord
-import com.sun.englishlearning.data.model.WordType
-import com.sun.englishlearning.data.repository.LessonRepositoryImpl
-import com.sun.englishlearning.data.repository.UserLessonProgressRepositoryImpl
-import com.sun.englishlearning.data.repository.SavedWordsRepositoryImpl
 import com.sun.englishlearning.databinding.FragmentFlashcardBinding
-import kotlinx.coroutines.launch
-import android.content.Context
+import com.sun.englishlearning.utils.base.BaseFragment
+import java.lang.Exception
 
-class FlashcardFragment : Fragment() {
+class FlashcardFragment :
+    BaseFragment<FragmentFlashcardBinding>(),
+    FlashcardContract.View {
 
     companion object {
         private const val ARG_WORD = "arg_word"
@@ -45,14 +41,20 @@ class FlashcardFragment : Fragment() {
         fun onProgressUpdated(lessonId: String)
     }
 
-    private var _binding: FragmentFlashcardBinding? = null
-    private val binding get() = _binding!!
-
+    private lateinit var mFlashcardPresenter: FlashcardPresenter
     private lateinit var word: Word
     private var progressUpdateListener: OnProgressUpdateListener? = null
-    private val savedWordsRepository = SavedWordsRepositoryImpl()
     private var isWordSaved = false
     private var isWordLearned = false
+
+    override val isInsets = false
+
+    override fun inflateViewBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ): FragmentFlashcardBinding {
+        return FragmentFlashcardBinding.inflate(inflater, container, false)
+    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -71,36 +73,49 @@ class FlashcardFragment : Fragment() {
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentFlashcardBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        setupWordData()
+    override fun initView() {
         setupClickListeners()
         animateCardAppearance()
-        checkIfWordIsSaved()
-        checkIfWordIsLearned()
+    }
 
-        // Set up click listener for the Save Word button
-        binding.btnSaveWordContainer.setOnClickListener {
-            toggleSaveWord()
-        }
+    override fun initData() {
+        mFlashcardPresenter = FlashcardPresenter()
+        mFlashcardPresenter.setContext(requireContext())
+        mFlashcardPresenter.setLifecycleScope(lifecycleScope)
+        mFlashcardPresenter.attachView(this)
+        mFlashcardPresenter.loadWord(word)
+    }
 
-        // Set up click listener for the Mark as Learned button
-        binding.btnMarkLearned.setOnClickListener {
-            toggleLearnedStatus()
+    private fun setupClickListeners() {
+        viewBinding.apply {
+            // Audio button click
+            btnAudio.setOnClickListener { view ->
+                animateButtonPress(view) {
+                    // Get parent activity and play audio
+                    (activity as? FlashcardActivity)?.playWordAudio(word)
+                    mFlashcardPresenter.playAudio(word.soundUrl)
+                }
+            }
+
+            // Save word button click
+            btnSaveWordContainer.setOnClickListener {
+                toggleSaveWord()
+            }
+
+            // Mark as learned button click
+            btnMarkLearned.setOnClickListener {
+                toggleLearnedStatus()
+            }
+
+            // Add touch feedback to the entire card
+            ViewCompat.setOnApplyWindowInsetsListener(root) { v, insets ->
+                insets
+            }
         }
     }
 
     private fun setupWordData() {
-        binding.apply {
+        viewBinding.apply {
             // Set word name
             textWordName.text = word.word
             textWordName.contentDescription = getString(R.string.english_word_with_name, word.word)
@@ -150,197 +165,19 @@ class FlashcardFragment : Fragment() {
         }
     }
 
-    private fun setupClickListeners() {
-        binding.btnAudio.setOnClickListener { view ->
-            animateButtonPress(view) {
-                // Get parent activity and play audio
-                (activity as? FlashcardActivity)?.playWordAudio(word)
-            }
-        }
-
-        // Add touch feedback to the entire card
-        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
-            insets
-        }
-    }
-
-    private fun checkIfWordIsSaved() {
-        val userId = FirebaseAuth.getInstance().currentUser?.uid
-        if (userId == null) {
-            return
-        }
-
-        lifecycleScope.launch {
-            try {
-                val result = savedWordsRepository.isWordSavedWithType(userId, word.word, WordType.SAVED)
-                if (result.isSuccess) {
-                    isWordSaved = result.getOrNull() != null
-                    updateSaveButtonUI()
-                }
-            } catch (e: Exception) {
-
-            }
-        }
-    }
-
-    private fun checkIfWordIsLearned() {
-        val userId = FirebaseAuth.getInstance().currentUser?.uid
-        if (userId == null || word.lessonId.isEmpty()) {
-            return
-        }
-
-        lifecycleScope.launch {
-            try {
-                val userLessonProgressRepository = UserLessonProgressRepositoryImpl()
-                val result = userLessonProgressRepository.getUserLessonProgress(userId, word.lessonId)
-                if (result.isSuccess) {
-                    val progress = result.getOrNull()
-                    isWordLearned = progress?.learnedWordIds?.contains(word.id) == true
-                    updateLearnedButtonUI()
-                }
-            } catch (e: Exception) {
-                // Handle error silently
-            }
-        }
-    }
-
     private fun toggleSaveWord() {
-        val userId = FirebaseAuth.getInstance().currentUser?.uid
-        if (userId == null) {
-            Toast.makeText(requireContext(), "Please log in to save words", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        // Add button animation
-        animateButtonPress(binding.btnSaveWordContainer) {
-            lifecycleScope.launch {
-                try {
-                    if (isWordSaved) {
-                        // Remove word from saved
-                        val deleteResult = savedWordsRepository.deleteWordByUserAndName(userId, word.word, WordType.SAVED)
-                        if (deleteResult.isSuccess) {
-                            isWordSaved = false
-                            updateSaveButtonUI()
-                            Toast.makeText(requireContext(), "Word removed from saved list", Toast.LENGTH_SHORT).show()
-                        } else {
-                            Toast.makeText(requireContext(), "Failed to remove word", Toast.LENGTH_SHORT).show()
-                        }
-                    } else {
-                        // Save word
-                        val savedWord = SavedWord(
-                            userId = userId,
-                            word = word.word,
-                            ipa = word.phonetic,
-                            partOfSpeech = word.partOfSpeech,
-                            definition = word.definition,
-                            example = word.example,
-                            soundUrl = "",
-                            wordType = WordType.SAVED.value
-                        )
-
-                        val saveResult = savedWordsRepository.saveWord(savedWord)
-                        if (saveResult.isSuccess) {
-                            isWordSaved = true
-                            updateSaveButtonUI()
-                            Toast.makeText(requireContext(), "Word saved successfully!", Toast.LENGTH_SHORT).show()
-                        } else {
-                            Toast.makeText(requireContext(), "Failed to save word", Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                } catch (e: Exception) {
-                    Toast.makeText(requireContext(), "Error: ${e.message}", Toast.LENGTH_SHORT).show()
-                }
+        animateButtonPress(viewBinding.btnSaveWordContainer) {
+            if (isWordSaved) {
+                mFlashcardPresenter.unsaveWord(word)
+            } else {
+                mFlashcardPresenter.saveWord(word)
             }
         }
     }
 
     private fun toggleLearnedStatus() {
-        val userId = FirebaseAuth.getInstance().currentUser?.uid
-        if (userId == null) {
-            Toast.makeText(requireContext(), "User not logged in", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        val lessonId = word.lessonId
-        if (lessonId.isEmpty()) {
-            Toast.makeText(requireContext(), "Lesson ID not found", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        val wordId = word.id
-        if (wordId.isEmpty()) {
-            Toast.makeText(requireContext(), "Word ID not found", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        // Add button animation
-        animateButtonPress(binding.btnMarkLearned) {
-            val lessonRepository = LessonRepositoryImpl(requireContext(), UserLessonProgressRepositoryImpl())
-            lifecycleScope.launch {
-                val result = lessonRepository.updateLessonProgressForFlashcard(userId, lessonId, wordId)
-                if (result.isSuccess) {
-                    isWordLearned = true
-                    updateLearnedButtonUI()
-                    Toast.makeText(requireContext(), "Word marked as learned!", Toast.LENGTH_SHORT).show()
-                    // Notify parent activity/fragment that progress has been updated
-                    progressUpdateListener?.onProgressUpdated(lessonId)
-                } else {
-                    Toast.makeText(requireContext(), "Failed to update progress: ${result.exceptionOrNull()?.message}", Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
-    }
-
-    private fun updateSaveButtonUI() {
-        val container = binding.btnSaveWordContainer
-        val imageView = binding.btnSaveWord
-
-        if (isWordSaved) {
-            // Saved state - highlight with accent color
-            container.backgroundTintList = ColorStateList.valueOf(
-                ContextCompat.getColor(requireContext(), R.color.flashcard_primary)
-            )
-            imageView.imageTintList = ColorStateList.valueOf(
-                ContextCompat.getColor(requireContext(), R.color.white)
-            )
-            container.alpha = 1.0f
-        } else {
-            // Not saved state - default appearance
-            container.backgroundTintList = null
-            imageView.imageTintList = ColorStateList.valueOf(
-                ContextCompat.getColor(requireContext(), R.color.white)
-            )
-            container.alpha = 0.8f
-        }
-    }
-
-    private fun updateLearnedButtonUI() {
-        if (isWordLearned) {
-            // Learned state - change to success color and text
-            binding.btnMarkLearned.apply {
-                text = getString(R.string.learned_checkmark)
-                backgroundTintList = ColorStateList.valueOf(
-                    ContextCompat.getColor(requireContext(), R.color.state_success)
-                )
-                iconTint = ColorStateList.valueOf(
-                    ContextCompat.getColor(requireContext(), R.color.white)
-                )
-                isEnabled = false // Disable further clicks
-                alpha = 0.9f
-            }
-        } else {
-            // Not learned state - default appearance
-            binding.btnMarkLearned.apply {
-                text = getString(R.string.mark_as_learned)
-                backgroundTintList = ColorStateList.valueOf(
-                    ContextCompat.getColor(requireContext(), R.color.flashcard_primary)
-                )
-                iconTint = ColorStateList.valueOf(
-                    ContextCompat.getColor(requireContext(), R.color.white)
-                )
-                isEnabled = true
-                alpha = 1.0f
-            }
+        animateButtonPress(viewBinding.btnMarkLearned) {
+            mFlashcardPresenter.markWordAsLearned(word)
         }
     }
 
@@ -389,9 +226,8 @@ class FlashcardFragment : Fragment() {
     }
 
     private fun animateCardAppearance() {
-
         // Animate word name with scale up
-        binding.textWordName.apply {
+        viewBinding.textWordName.apply {
             alpha = 0f
             scaleX = 0.8f
             scaleY = 0.8f
@@ -406,7 +242,7 @@ class FlashcardFragment : Fragment() {
         }
 
         // Animate phonetic section
-        binding.textPhonetic.apply {
+        viewBinding.textPhonetic.apply {
             alpha = 0f
             translationY = 50f
             animate()
@@ -418,7 +254,7 @@ class FlashcardFragment : Fragment() {
         }
 
         // Animate audio button
-        binding.btnAudio.apply {
+        viewBinding.btnAudio.apply {
             alpha = 0f
             scaleX = 0.5f
             scaleY = 0.5f
@@ -433,7 +269,7 @@ class FlashcardFragment : Fragment() {
         }
 
         // Animate definition section
-        binding.textDefinition.apply {
+        viewBinding.textDefinition.apply {
             alpha = 0f
             translationY = 30f
             animate()
@@ -445,7 +281,7 @@ class FlashcardFragment : Fragment() {
         }
 
         // Animate example section
-        binding.textExample.apply {
+        viewBinding.textExample.apply {
             alpha = 0f
             translationY = 30f
             animate()
@@ -457,8 +293,8 @@ class FlashcardFragment : Fragment() {
         }
 
         // Animate part of speech if visible
-        if (binding.textPartOfSpeech.visibility == View.VISIBLE) {
-            binding.textPartOfSpeech.apply {
+        if (viewBinding.textPartOfSpeech.visibility == View.VISIBLE) {
+            viewBinding.textPartOfSpeech.apply {
                 alpha = 0f
                 scaleX = 0.8f
                 scaleY = 0.8f
@@ -474,8 +310,118 @@ class FlashcardFragment : Fragment() {
         }
     }
 
+    // MVP Contract.View implementation
+    override fun onWordLoaded(word: Word) {
+        setupWordData()
+    }
+
+    override fun onWordSaved(success: Boolean) {
+        if (success) {
+            Toast.makeText(requireContext(), "Word saved successfully!", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(requireContext(), "Failed to save word", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    override fun onWordUnsaved(success: Boolean) {
+        if (success) {
+            Toast.makeText(requireContext(), "Word removed from saved list", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(requireContext(), "Failed to remove word", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    override fun onWordMarkedAsLearned(success: Boolean) {
+        if (success) {
+            Toast.makeText(requireContext(), "Word marked as learned!", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(requireContext(), "Failed to update progress", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    override fun onProgressUpdated(lessonId: String) {
+        progressUpdateListener?.onProgressUpdated(lessonId)
+    }
+
+    override fun onError(exception: Exception?) {
+        Toast.makeText(requireContext(), exception?.message ?: getString(R.string.error_general), Toast.LENGTH_SHORT).show()
+    }
+
+    override fun showLoading() {
+        // Implement loading indicator if needed
+    }
+
+    override fun hideLoading() {
+        // Hide loading indicator if needed
+    }
+
+    override fun updateSaveButtonUI(isSaved: Boolean) {
+        isWordSaved = isSaved
+        val container = viewBinding.btnSaveWordContainer
+        val imageView = viewBinding.btnSaveWord
+
+        if (isSaved) {
+            // Saved state - highlight with accent color
+            container.backgroundTintList = ColorStateList.valueOf(
+                ContextCompat.getColor(requireContext(), R.color.flashcard_primary)
+            )
+            imageView.imageTintList = ColorStateList.valueOf(
+                ContextCompat.getColor(requireContext(), R.color.white)
+            )
+            container.alpha = 1.0f
+        } else {
+            // Not saved state - default appearance
+            container.backgroundTintList = null
+            imageView.imageTintList = ColorStateList.valueOf(
+                ContextCompat.getColor(requireContext(), R.color.white)
+            )
+            container.alpha = 0.8f
+        }
+    }
+
+    override fun updateLearnedButtonUI(isLearned: Boolean) {
+        isWordLearned = isLearned
+        if (isLearned) {
+            // Learned state - change to success color and text
+            viewBinding.btnMarkLearned.apply {
+                text = getString(R.string.learned_checkmark)
+                backgroundTintList = ColorStateList.valueOf(
+                    ContextCompat.getColor(requireContext(), R.color.state_success)
+                )
+                iconTint = ColorStateList.valueOf(
+                    ContextCompat.getColor(requireContext(), R.color.white)
+                )
+                isEnabled = false // Disable further clicks
+                alpha = 0.9f
+            }
+        } else {
+            // Not learned state - default appearance
+            viewBinding.btnMarkLearned.apply {
+                text = getString(R.string.mark_as_learned)
+                backgroundTintList = ColorStateList.valueOf(
+                    ContextCompat.getColor(requireContext(), R.color.flashcard_primary)
+                )
+                iconTint = ColorStateList.valueOf(
+                    ContextCompat.getColor(requireContext(), R.color.white)
+                )
+                isEnabled = true
+                alpha = 1.0f
+            }
+        }
+    }
+
+    override fun showWordSavedStatus(isSaved: Boolean) {
+        isWordSaved = isSaved
+        updateSaveButtonUI(isSaved)
+    }
+
+    override fun showWordLearnedStatus(isLearned: Boolean) {
+        isWordLearned = isLearned
+        updateLearnedButtonUI(isLearned)
+    }
+
     override fun onDestroyView() {
+        mFlashcardPresenter.detachView()
         super.onDestroyView()
-        _binding = null
     }
 }

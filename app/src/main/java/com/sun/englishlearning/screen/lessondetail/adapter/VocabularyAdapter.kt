@@ -8,6 +8,7 @@ import com.sun.englishlearning.databinding.ItemVocabularyCardBinding
 
 class VocabularyAdapter(
     private var words: List<Word> = emptyList(),
+    private var learnedWordIds: Set<String> = emptySet(),
     private val onWordClick: (Word) -> Unit = {},
     private val onSoundClick: (Word) -> Unit = {}
 ) : RecyclerView.Adapter<VocabularyAdapter.VocabularyViewHolder>() {
@@ -27,8 +28,10 @@ class VocabularyAdapter(
 
     override fun getItemCount(): Int = words.size
 
-    fun updateWords(newWords: List<Word>) {
-        words = newWords
+    fun updateWords(newWords: List<Word>, learnedWordIds: Set<String> = emptySet()) {
+        // Sort: unlearned first, then learned
+        this.learnedWordIds = learnedWordIds
+        words = newWords.sortedBy { learnedWordIds.contains(it.id) }
         notifyDataSetChanged()
     }
 
@@ -38,15 +41,19 @@ class VocabularyAdapter(
 
         fun bind(word: Word) {
             binding.apply {
-                // Set word name
                 textWordName.text = word.word
-
-                // Sound button click listener
+                // Show learned indicator
+                if (learnedWordIds.contains(word.id)) {
+                    // Example: show a checkmark icon and change background color
+                    imgLearned.visibility = android.view.View.VISIBLE
+                    root.setBackgroundResource(com.sun.englishlearning.R.drawable.bg_learned_word)
+                } else {
+                    imgLearned.visibility = android.view.View.GONE
+                    root.setBackgroundResource(com.sun.englishlearning.R.drawable.bg_vocabulary_card)
+                }
                 btnSound.setOnClickListener {
                     onSoundClick(word)
                 }
-
-                // Card click listener - when user clicks on the word, open flashcard
                 root.setOnClickListener {
                     onWordClick(word)
                 }

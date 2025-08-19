@@ -1,11 +1,6 @@
 package com.sun.englishlearning.screen.courses
 
-import android.app.Activity
-import android.content.Intent
-import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
@@ -15,27 +10,31 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.sun.englishlearning.R
 import com.sun.englishlearning.databinding.ActivityLessonsBinding
 import com.sun.englishlearning.data.model.Lesson
-import androidx.fragment.app.Fragment
 import com.sun.englishlearning.screen.courses.adapter.CoursesAdapter
+import com.sun.englishlearning.utils.base.BaseFragment
 
-class CoursesFragment : Fragment(), CoursesContract.View {
-
-    private var _viewBinding: ActivityLessonsBinding? = null
-    private val viewBinding get() = _viewBinding!!
+class CoursesFragment : BaseFragment<ActivityLessonsBinding>(), CoursesContract.View {
 
     private lateinit var coursesAdapter: CoursesAdapter
     private lateinit var presenter: CoursesContract.Presenter
     private var isOngoingTabSelected = true
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        _viewBinding = ActivityLessonsBinding.inflate(inflater, container, false)
-        return viewBinding.root
+    override val isInsets = true
+
+    override fun inflateViewBinding(inflater: LayoutInflater, container: ViewGroup?): ActivityLessonsBinding {
+        return ActivityLessonsBinding.inflate(inflater, container, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        initPresenter()
-        initView()
+    override fun initView() {
+        setupRecyclerView()
+        setupTabs()
+    }
+
+    override fun initData() {
+        presenter = CoursesPresenter()
+        (presenter as CoursesPresenter).setContext(requireContext())
+        presenter.attachView(this)
+        presenter.onTabSelected(isOngoingTabSelected)
     }
 
     override fun onStart() {
@@ -57,35 +56,8 @@ class CoursesFragment : Fragment(), CoursesContract.View {
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
         presenter.detachView()
-        _viewBinding = null
-    }
-    
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        
-        // Handle result from activities that might update progress
-        if (requestCode == 1001 && resultCode == Activity.RESULT_OK) {
-            val updatedLessonId = data?.getStringExtra("updated_lesson_id")
-            if (updatedLessonId != null) {
-                Log.d("CoursesFragment", "Received updated lesson ID: $updatedLessonId")
-                // Refresh data to show updated progress
-                refreshData()
-            }
-        }
-    }
-
-    private fun initPresenter() {
-        presenter = CoursesPresenter()
-        (presenter as CoursesPresenter).setContext(requireContext())
-        presenter.attachView(this)
-    }
-
-    private fun initView() {
-        setupRecyclerView()
-        setupTabs()
-        setupBackButton()
+        super.onDestroyView()
     }
 
     private fun setupRecyclerView() {
@@ -130,14 +102,6 @@ class CoursesFragment : Fragment(), CoursesContract.View {
         }
     }
 
-    private fun setupBackButton() {
-        viewBinding.btnBack.setOnClickListener {
-            // Handle back button click
-            findNavController().navigateUp()
-        }
-    }
-
-    // MVP View implementations
     override fun showLoading() {
         // Show loading indicator
     }

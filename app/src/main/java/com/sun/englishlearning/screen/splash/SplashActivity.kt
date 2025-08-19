@@ -19,7 +19,7 @@ class SplashActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         // Navigation logic
-//        AppPreferences.setFirstLaunch(this, true) // Set first launch to true for demo purposes
+        AppPreferences.setFirstLaunch(this, false)
         if (AppPreferences.isFirstLaunch(this)) {
             startActivity(Intent(this, OnboardingActivity::class.java))
         } else {

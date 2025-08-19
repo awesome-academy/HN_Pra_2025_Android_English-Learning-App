@@ -70,6 +70,23 @@
             android:letterSpacing="0.1"
             tools:text="1 / 10" />
 
+        <!-- Test Progress Indicator -->
+        <TextView
+            android:id="@+id/textProgress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_part_of_speech_modern"
+            android:fontFamily="@font/nunito_bold"
+            android:paddingHorizontal="@dimen/dp_12"
+            android:paddingVertical="@dimen/dp_6"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_12"
+            android:contentDescription="@string/current_flashcard_position"
+            android:elevation="@dimen/dp_4"
+            android:letterSpacing="0.1"
+            android:layout_marginStart="@dimen/dp_8"
+            tools:text="1 / 10" />
+
     </LinearLayout>
 
     <androidx.viewpager2.widget.ViewPager2

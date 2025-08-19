@@ -159,11 +159,11 @@
     <string name="pronunciation_with_content">Pronunciation: %s</string>
     <string name="part_of_speech_with_content">Part of speech: %s</string>
 
-    <string name="check_learned_definition_placeholder">Định nghĩa từ sẽ hiển thị ở đây</string>
-    <string name="check_learned_hint">Nhập đáp án của bạn...</string>
-    <string name="check_learned_button">Kiểm tra</string>
-    <string name="check_learned_result_correct">Chính xác! Bạn đã trả lời đúng.</string>
-    <string name="check_learned_result_incorrect">Sai rồi, hãy thử lại nhé!</string>
+    <string name="check_learned_definition_placeholder">The definition will be shown here</string>
+    <string name="check_learned_hint">Enter your answer...</string>
+    <string name="check_learned_button">Check</string>
+    <string name="check_learned_result_correct">Correct! You answered right.</string>
+    <string name="check_learned_result_incorrect">Incorrect, please try again!</string>
 
     <!-- Test Flashcard -->
     <string name="test_vocabulary">Test Vocabulary</string>
@@ -175,4 +175,9 @@
     <string name="exit_test_positive">Exit</string>
     <string name="exit_test_negative">Continue Testing</string>
     <string name="text_correct_word">The correct word is: %1$s</string>
+
+    <!-- Lesson Detail Strings -->
+    <string name="lesson_topic_format">Topic: %1$s</string>
+    <string name="word_count_format">%1$d words</string>
+    <string name="words_learned_format">%1$d / %2$d words learned</string>
 </resources>

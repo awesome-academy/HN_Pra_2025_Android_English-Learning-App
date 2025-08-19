@@ -28,16 +28,13 @@ import androidx.fragment.app.Fragment
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import android.app.Activity
-import android.content.Intent
+import androidx.activity.result.contract.ActivityResultContracts
 import com.sun.englishlearning.utils.AudioManager
 
 class LessonDetailFragment : Fragment(), LessonDetailContract.View {
 
     companion object {
         private const val TAG = "LessonDetailFragment"
-        private const val REQUEST_CODE_FLASHCARD = 1001
-        private const val REQUEST_CODE_TEST = 1002
     }
 
     private var _viewBinding: FragmentLessonDetailBinding? = null
@@ -59,6 +56,42 @@ class LessonDetailFragment : Fragment(), LessonDetailContract.View {
 
     // Audio manager for playing word sounds
     private val audioManager = AudioManager.getInstance()
+
+    // Activity Result Launchers
+    private val flashcardLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == android.app.Activity.RESULT_OK) {
+            val updatedLessonId = result.data?.getStringExtra("updated_lesson_id")
+            if (updatedLessonId != null) {
+                Log.d(TAG, "Received updated lesson ID: $updatedLessonId")
+                // Refresh progress UI for this lesson
+                loadUserProgress(updatedLessonId)
+            }
+        }
+    }
+
+    private val testFlashcardLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == android.app.Activity.RESULT_OK) {
+            val testCompleted = result.data?.getBooleanExtra("test_completed", false) ?: false
+            val lessonId = result.data?.getStringExtra("lesson_id") ?: ""
+            val correctAnswers = result.data?.getIntExtra("correct_answers", 0) ?: 0
+            val totalWords = result.data?.getIntExtra("total_words", 0) ?: 0
+
+            if (testCompleted && lessonId.isNotEmpty()) {
+                Toast.makeText(
+                    requireContext(),
+                    "Test completed! Score: $correctAnswers/$totalWords",
+                    Toast.LENGTH_LONG
+                ).show()
+
+                // Refresh progress UI for this lesson
+                loadUserProgress(lessonId)
+            }
+        }
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _viewBinding = FragmentLessonDetailBinding.inflate(inflater, container, false)
@@ -91,39 +124,6 @@ class LessonDetailFragment : Fragment(), LessonDetailContract.View {
         super.onDestroyView()
         presenter.detachView()
         _viewBinding = null
-    }
-    
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        
-        // Handle result from FlashcardActivity
-        if (requestCode == REQUEST_CODE_FLASHCARD && resultCode == Activity.RESULT_OK) {
-            val updatedLessonId = data?.getStringExtra("updated_lesson_id")
-            if (updatedLessonId != null) {
-                Log.d(TAG, "Received updated lesson ID: $updatedLessonId")
-                // Refresh progress UI for this lesson
-                loadUserProgress(updatedLessonId)
-            }
-        }
-
-        // Handle result from TestFlashcardActivity
-        if (requestCode == REQUEST_CODE_TEST && resultCode == Activity.RESULT_OK) {
-            val testCompleted = data?.getBooleanExtra("test_completed", false) ?: false
-            val lessonId = data?.getStringExtra("lesson_id") ?: ""
-            val correctAnswers = data?.getIntExtra("correct_answers", 0) ?: 0
-            val totalWords = data?.getIntExtra("total_words", 0) ?: 0
-
-            if (testCompleted && lessonId.isNotEmpty()) {
-                Toast.makeText(
-                    requireContext(),
-                    "Test completed! Score: $correctAnswers/$totalWords",
-                    Toast.LENGTH_LONG
-                ).show()
-
-                // Refresh progress UI for this lesson
-                loadUserProgress(lessonId)
-            }
-        }
     }
 
     private fun initPresenter() {
@@ -164,24 +164,22 @@ class LessonDetailFragment : Fragment(), LessonDetailContract.View {
                     return@setOnClickListener
                 }
 
-                navigateToTest(currentVocabulary, 0, lesson.title, lesson.id)
+                navigateToTest(currentVocabulary, lesson.title, lesson.id)
             }
         }
     }
 
-    private fun navigateToTest(words: List<Word>, currentIndex: Int, lessonTitle: String, lessonId: String) {
+    private fun navigateToTest(words: List<Word>, lessonTitle: String, lessonId: String) {
         try {
-            Log.d(TAG, "Navigating to test flashcard: ${words.size} words, index: $currentIndex, title: $lessonTitle")
-            val sortedWords = words
-            val index = if (currentIndex < 0 || currentIndex >= sortedWords.size) 0 else currentIndex
+            Log.d(TAG, "Navigating to test flashcard: ${words.size} words, title: $lessonTitle")
             val intent = TestFlashcardActivity.newIntent(
                 context = requireContext(),
-                words = ArrayList(sortedWords),
-                currentIndex = index,
+                words = ArrayList(words),
+                currentIndex = 0,
                 lessonTitle = lessonTitle,
                 lessonId = lessonId
             )
-            startActivityForResult(intent, REQUEST_CODE_TEST)
+            testFlashcardLauncher.launch(intent)
         } catch (e: Exception) {
             Log.e(TAG, "Error navigating to test flashcard", e)
             DialogUtils.showErrorDialog(
@@ -206,7 +204,7 @@ class LessonDetailFragment : Fragment(), LessonDetailContract.View {
             textLessonTitle.text = lesson.title
 
             // Set lesson details
-            textLessonPoints.text = "Topic: ${lesson.title}"
+            textLessonPoints.text = getString(R.string.lesson_topic_format, lesson.title)
             textLessonDescription.text = lesson.description
 
             // Load lesson image
@@ -229,7 +227,7 @@ class LessonDetailFragment : Fragment(), LessonDetailContract.View {
     override fun showVocabulary(words: List<Word>) {
         currentVocabulary = words
         updateVocabularyAdapter()
-        viewBinding.textWordCount.text = "${words.size} words"
+        viewBinding.textWordCount.text = getString(R.string.word_count_format, words.size)
     }
 
     private fun updateVocabularyAdapter() {
@@ -285,7 +283,7 @@ class LessonDetailFragment : Fragment(), LessonDetailContract.View {
                 currentIndex = index,
                 lessonTitle = lessonTitle
             )
-            startActivityForResult(intent, REQUEST_CODE_FLASHCARD)
+            flashcardLauncher.launch(intent)
         } catch (e: Exception) {
             Log.e(TAG, "Error navigating to flashcard", e)
             DialogUtils.showErrorDialog(
@@ -303,23 +301,22 @@ class LessonDetailFragment : Fragment(), LessonDetailContract.View {
                 if (progressResult.isSuccess) {
                     val progress = progressResult.getOrNull()
                     learnedWordIds = progress?.learnedWordIds?.toSet() ?: emptySet()
-                    updateProgressUI(progress, lessonId)
+                    updateProgressUI(progress)
                 } else {
                     learnedWordIds = emptySet()
-                    val lesson = currentLesson ?: return@launch
-                    updateProgressUI(null, lessonId)
+                    updateProgressUI(null)
                 }
                 updateVocabularyAdapter()
             } catch (e: Exception) {
+                Log.w(TAG, "Failed to load user progress", e)
                 learnedWordIds = emptySet()
-                val lesson = currentLesson ?: return@launch
-                updateProgressUI(null, lessonId)
+                updateProgressUI(null)
                 updateVocabularyAdapter()
             }
         }
     }
     
-    private fun updateProgressUI(progress: UserLessonProgress?, lessonId: String) {
+    private fun updateProgressUI(progress: UserLessonProgress?) {
         val lesson = currentLesson ?: return
         val totalWords = lesson.vocabulary.size
         
@@ -334,7 +331,7 @@ class LessonDetailFragment : Fragment(), LessonDetailContract.View {
             
             // Update points text
             val wordsLearned = if (progress != null) progress.wordsLearned else 0
-            textLessonPoints.text = "$wordsLearned / $totalWords words learned"
+            textLessonPoints.text = getString(R.string.words_learned_format, wordsLearned, totalWords)
         }
     }
 }

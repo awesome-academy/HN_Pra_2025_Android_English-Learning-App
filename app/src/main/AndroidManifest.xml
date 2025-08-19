@@ -54,9 +54,12 @@
             android:name=".screen.vocabulary.VocabularyByTypeActivity"
             android:exported="false" />
         
-        <receiver
-            
+        <activity
             android:name=".screen.register.RegisterActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".screen.flashcard.test.TestFlashcardActivity"
             android:exported="false" />
 
         <receiver

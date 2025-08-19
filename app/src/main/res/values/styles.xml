@@ -78,5 +78,7 @@
     <style name="CustomBottomNavigationView" parent="Widget.MaterialComponents.BottomNavigationView">
         <item name="itemPaddingTop">@dimen/dp_6</item>
         <item name="itemPaddingBottom">@dimen/dp_6</item>
+        <item name="android:background">@color/white</item>
+        <item name="android:elevation">@dimen/dp_8</item>
     </style>
 </resources>

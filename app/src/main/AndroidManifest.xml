@@ -66,6 +66,7 @@
             android:name=".screen.me.ReminderReceiver"
             android:enabled="true"
             android:exported="true" />
+
     </application>
 
 </manifest>

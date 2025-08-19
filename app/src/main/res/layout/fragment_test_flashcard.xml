@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/flashcard_background">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/dp_8"
+        android:background="@drawable/bg_flashcard_modern"
+        app:cardBackgroundColor="@color/flashcard_surface"
+        app:cardCornerRadius="@dimen/dp_20"
+        app:cardElevation="@dimen/dp_8"
+        app:cardUseCompatPadding="false">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/dp_24"
+                android:paddingTop="@dimen/dp_64"
+                android:gravity="center_horizontal">
+
+                <!-- Definition Section -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/dp_32"
+                    android:orientation="vertical"
+                    android:background="@color/white"
+                    android:padding="@dimen/dp_20"
+                    android:elevation="@dimen/dp_2">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/dp_12"
+                        android:fontFamily="@font/nunito_bold"
+                        android:text="@string/definition"
+                        android:textColor="@color/flashcard_primary"
+                        android:textSize="@dimen/sp_16"
+                        android:letterSpacing="0.05" />
+
+                    <TextView
+                        android:id="@+id/text_definition"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/nunito_medium"
+                        android:lineSpacingExtra="@dimen/dp_4"
+                        android:textColor="@color/flashcard_text_primary"
+                        android:textSize="@dimen/sp_18"
+                        tools:text="An institution for educating children and young people" />
+
+                </LinearLayout>
+
+                <!-- Audio Button -->
+                <FrameLayout
+                    android:layout_width="@dimen/dp_56"
+                    android:layout_height="@dimen/dp_56"
+                    android:layout_marginBottom="@dimen/dp_32"
+                    android:background="@drawable/bg_audio_button_modern"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                    <ImageView
+                        android:id="@+id/btn_audio"
+                        android:layout_width="@dimen/dp_24"
+                        android:layout_height="@dimen/dp_24"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_volume"
+                        android:contentDescription="@string/play_pronunciation_audio"
+                        app:tint="@color/white"
+                        android:scaleType="centerInside" />
+
+                </FrameLayout>
+
+                <!-- Input Field -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/input_layout_answer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/dp_24"
+                    android:hint="Enter the word"
+                    app:boxBackgroundColor="@color/white"
+                    app:boxCornerRadiusBottomEnd="@dimen/dp_12"
+                    app:boxCornerRadiusBottomStart="@dimen/dp_12"
+                    app:boxCornerRadiusTopEnd="@dimen/dp_12"
+                    app:boxCornerRadiusTopStart="@dimen/dp_12"
+                    app:boxStrokeWidth="0dp"
+                    app:boxStrokeWidthFocused="0dp"
+                    app:hintEnabled="true"
+                    app:hintTextColor="@color/flashcard_secondary"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edit_answer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/nunito_medium"
+                        android:textColor="@color/flashcard_text_primary"
+                        android:textSize="@dimen/sp_16"
+                        android:inputType="text"
+                        android:imeOptions="actionDone"
+                        android:maxLines="1" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Check Button -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_check_answer"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_56"
+                    android:layout_marginBottom="@dimen/dp_16"
+                    android:fontFamily="@font/nunito_bold"
+                    android:text="Check Answer"
+                    android:textAllCaps="false"
+                    android:textSize="@dimen/sp_16"
+                    app:cornerRadius="@dimen/dp_12"
+                    style="@style/Widget.Material3.Button"/>
+
+                <!-- Result Section (Initially Hidden) -->
+                <LinearLayout
+                    android:id="@+id/layout_result"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/dp_16"
+                    android:visibility="gone"
+                    tools:visibility="visible">
+
+                    <!-- Result Icon -->
+                    <ImageView
+                        android:id="@+id/image_result_icon"
+                        android:layout_width="@dimen/dp_48"
+                        android:layout_height="@dimen/dp_48"
+                        android:layout_gravity="center"
+                        android:layout_marginBottom="@dimen/dp_16"
+                        android:src="@drawable/ic_star"
+                        app:tint="@color/flashcard_primary" />
+
+                    <!-- Result Message -->
+                    <TextView
+                        android:id="@+id/text_result_message"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/dp_16"
+                        android:fontFamily="@font/nunito_bold"
+                        android:gravity="center"
+                        android:textColor="@color/flashcard_primary"
+                        android:textSize="@dimen/sp_18"
+                        tools:text="Correct!" />
+
+                    <!-- Correct Word (shown if answer is wrong) -->
+                    <TextView
+                        android:id="@+id/text_correct_word"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/dp_16"
+                        android:fontFamily="@font/nunito_medium"
+                        android:gravity="center"
+                        android:textColor="@color/flashcard_text_primary"
+                        android:textSize="@dimen/sp_16"
+                        android:visibility="gone"
+                        tools:text="The correct word is: school"
+                        tools:visibility="visible" />
+
+                </LinearLayout>
+
+                <!-- Next Button -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_next"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_56"
+                    android:layout_marginTop="@dimen/dp_8"
+                    android:fontFamily="@font/nunito_bold"
+                    android:text="Next"
+                    android:textAllCaps="false"
+                    android:textSize="@dimen/sp_16"
+                    app:cornerRadius="@dimen/dp_12"
+                    android:visibility="gone"
+                    tools:visibility="visible"
+                    style="@style/Widget.Material3.Button.OutlinedButton"/>
+
+            </LinearLayout>
+
+        </ScrollView>
+
+    </androidx.cardview.widget.CardView>
+
+</FrameLayout>

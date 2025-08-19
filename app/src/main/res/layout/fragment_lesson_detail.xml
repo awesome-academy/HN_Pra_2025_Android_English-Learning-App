@@ -186,6 +186,22 @@
 
         </LinearLayout>
 
+        <!-- Test Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_test_vocabulary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/dp_16"
+            android:layout_marginBottom="@dimen/dp_12"
+            android:fontFamily="@font/nunito_bold"
+            android:text="Test Vocabulary"
+            android:textAllCaps="false"
+            android:textSize="@dimen/sp_16"
+            app:cornerRadius="@dimen/dp_12"
+            app:icon="@drawable/ic_star"
+            app:iconGravity="textStart"
+            style="@style/Widget.Material3.Button"/>
+
         <!-- Vocabulary List -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view_vocabulary"

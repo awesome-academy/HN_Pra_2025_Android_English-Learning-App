@@ -23,6 +23,7 @@ import com.sun.englishlearning.data.model.Word
 import com.sun.englishlearning.data.repository.UserLessonProgressRepositoryImpl
 import com.sun.englishlearning.screen.lessondetail.adapter.VocabularyAdapter
 import com.sun.englishlearning.screen.flashcard.FlashcardActivity
+import com.sun.englishlearning.screen.flashcard.test.TestFlashcardActivity
 import androidx.fragment.app.Fragment
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -36,6 +37,7 @@ class LessonDetailFragment : Fragment(), LessonDetailContract.View {
     companion object {
         private const val TAG = "LessonDetailFragment"
         private const val REQUEST_CODE_FLASHCARD = 1001
+        private const val REQUEST_CODE_TEST = 1002
     }
 
     private var _viewBinding: FragmentLessonDetailBinding? = null
@@ -103,6 +105,25 @@ class LessonDetailFragment : Fragment(), LessonDetailContract.View {
                 loadUserProgress(updatedLessonId)
             }
         }
+
+        // Handle result from TestFlashcardActivity
+        if (requestCode == REQUEST_CODE_TEST && resultCode == Activity.RESULT_OK) {
+            val testCompleted = data?.getBooleanExtra("test_completed", false) ?: false
+            val lessonId = data?.getStringExtra("lesson_id") ?: ""
+            val correctAnswers = data?.getIntExtra("correct_answers", 0) ?: 0
+            val totalWords = data?.getIntExtra("total_words", 0) ?: 0
+
+            if (testCompleted && lessonId.isNotEmpty()) {
+                Toast.makeText(
+                    requireContext(),
+                    "Test completed! Score: $correctAnswers/$totalWords",
+                    Toast.LENGTH_LONG
+                ).show()
+
+                // Refresh progress UI for this lesson
+                loadUserProgress(lessonId)
+            }
+        }
     }
 
     private fun initPresenter() {
@@ -114,6 +135,7 @@ class LessonDetailFragment : Fragment(), LessonDetailContract.View {
     private fun initView() {
         setupRecyclerView()
         setupBackButton()
+        setupTestButton()
     }
 
     private fun setupRecyclerView() {
@@ -131,6 +153,41 @@ class LessonDetailFragment : Fragment(), LessonDetailContract.View {
     private fun setupBackButton() {
         viewBinding.btnBack.setOnClickListener {
             presenter.onBackClicked()
+        }
+    }
+
+    private fun setupTestButton() {
+        viewBinding.btnTestVocabulary.setOnClickListener {
+            currentLesson?.let { lesson ->
+                if (currentVocabulary.isEmpty()) {
+                    Toast.makeText(requireContext(), "No vocabulary words available for testing", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+
+                navigateToTest(currentVocabulary, 0, lesson.title, lesson.id)
+            }
+        }
+    }
+
+    private fun navigateToTest(words: List<Word>, currentIndex: Int, lessonTitle: String, lessonId: String) {
+        try {
+            Log.d(TAG, "Navigating to test flashcard: ${words.size} words, index: $currentIndex, title: $lessonTitle")
+            val sortedWords = words
+            val index = if (currentIndex < 0 || currentIndex >= sortedWords.size) 0 else currentIndex
+            val intent = TestFlashcardActivity.newIntent(
+                context = requireContext(),
+                words = ArrayList(sortedWords),
+                currentIndex = index,
+                lessonTitle = lessonTitle,
+                lessonId = lessonId
+            )
+            startActivityForResult(intent, REQUEST_CODE_TEST)
+        } catch (e: Exception) {
+            Log.e(TAG, "Error navigating to test flashcard", e)
+            DialogUtils.showErrorDialog(
+                context = requireContext(),
+                message = "Failed to open vocabulary test: ${e.message}"
+            )
         }
     }
 

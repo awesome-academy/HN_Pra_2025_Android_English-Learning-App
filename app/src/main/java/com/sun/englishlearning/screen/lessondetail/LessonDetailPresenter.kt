@@ -36,15 +36,32 @@ class LessonDetailPresenter : LessonDetailContract.Presenter {
 
     override fun loadVocabulary(lessonId: String) {
         view?.showLoading()
-        val lessonVocabSet = currentLesson?.vocabulary?.toSet() ?: emptySet()
+        val lessonVocabList = currentLesson?.vocabulary ?: emptyList()
         wordDataSource.getWordsLocal(object : OnResultListener<MutableList<Word>> {
             override fun onSuccess(data: MutableList<Word>) {
-                val filtered = data.filter { lessonVocabSet.contains(it.word) || lessonVocabSet.contains(it.id) }
-                currentVocabulary = filtered
+                // Map each vocabulary string to a Word object from local DB if available, else create new
+                val vocabWords = lessonVocabList.map { vocab ->
+                    data.find { it.word == vocab || it.id == vocab } ?: Word(
+                        id = vocab,
+                        word = vocab,
+                        lessonId = lessonId
+                    )
+                }
+                currentVocabulary = vocabWords
+                view?.showVocabulary(vocabWords)
                 view?.hideLoading()
-                view?.showVocabulary(filtered)
             }
             override fun onError(exception: Exception?) {
+                // On error, fallback to showing lesson vocabulary as Word objects
+                val fallbackWords = lessonVocabList.map { vocab ->
+                    Word(
+                        id = vocab,
+                        word = vocab,
+                        lessonId = lessonId
+                    )
+                }
+                currentVocabulary = fallbackWords
+                view?.showVocabulary(fallbackWords)
                 view?.hideLoading()
                 view?.showError("Error loading vocabulary: ${exception?.message}")
             }

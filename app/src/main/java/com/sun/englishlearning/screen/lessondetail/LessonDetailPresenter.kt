@@ -39,7 +39,7 @@ class LessonDetailPresenter : LessonDetailContract.Presenter {
     }
 
     override fun loadVocabulary(lessonId: String) {
-        TODO("Not yet implemented")
+
     }
 
     override fun getWords(vocabulary: List<String>) {

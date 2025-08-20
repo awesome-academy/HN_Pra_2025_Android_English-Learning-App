@@ -217,10 +217,10 @@ class LessonDetailFragment : BaseFragment<FragmentLessonDetailBinding>(), Lesson
             if (::vocabularyAdapter.isInitialized) {
                 vocabularyAdapter.updateWords(currentVocabulary, learnedWordIds)
             } else {
-                android.util.Log.w("LessonDetailFragment", "VocabularyAdapter not initialized")
+                Log.w("LessonDetailFragment", "VocabularyAdapter not initialized")
             }
         } catch (e: Exception) {
-            android.util.Log.e("LessonDetailFragment", "Error updating vocabulary adapter", e)
+            Log.e("LessonDetailFragment", "Error updating vocabulary adapter", e)
         }
     }
 
@@ -264,7 +264,6 @@ class LessonDetailFragment : BaseFragment<FragmentLessonDetailBinding>(), Lesson
 
     override fun showWordDetail(word: Word) {
         Toast.makeText(requireContext(), "Word: ${word.word}", Toast.LENGTH_SHORT).show()
-        // TODO: Implement word detail functionality
     }
 
     override fun navigateToFlashcard(words: List<Word>, currentIndex: Int, lessonTitle: String) {

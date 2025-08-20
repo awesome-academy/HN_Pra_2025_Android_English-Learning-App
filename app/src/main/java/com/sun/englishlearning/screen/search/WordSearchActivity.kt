@@ -1,6 +1,5 @@
 package com.sun.englishlearning.screen.search
 
-import android.content.Intent
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.text.Editable
@@ -34,7 +33,6 @@ class WordSearchActivity : BaseActivity<ActivityWordSearchBinding>() {
     private val savedWordsRepository: SavedWordsRepository = SavedWordsRepositoryImpl()
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
 
-    // Use existing WordRepository instead of DictionaryRepository
     private val wordRepository: WordRepository by lazy {
         WordRepository.getInstance(
             WordRemoteDataSource.getInstance(),
@@ -109,7 +107,6 @@ class WordSearchActivity : BaseActivity<ActivityWordSearchBinding>() {
 
         showLoading()
 
-        // Use existing WordRepository API call
         wordRepository.getWords(query, object : OnResultListener<MutableList<Word>> {
             override fun onSuccess(data: MutableList<Word>) {
                 if (data.isNotEmpty()) {
@@ -301,11 +298,5 @@ class WordSearchActivity : BaseActivity<ActivityWordSearchBinding>() {
     override fun onDestroy() {
         super.onDestroy()
         mediaPlayer?.release()
-    }
-
-    companion object {
-        fun createIntent(activity: android.app.Activity): Intent {
-            return Intent(activity, WordSearchActivity::class.java)
-        }
     }
 }

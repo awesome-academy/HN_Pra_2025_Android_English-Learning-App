@@ -213,14 +213,28 @@ class LessonDetailFragment : BaseFragment<FragmentLessonDetailBinding>(), Lesson
     }
 
     private fun updateVocabularyAdapter() {
-        vocabularyAdapter.updateWords(currentVocabulary, learnedWordIds)
+        try {
+            if (::vocabularyAdapter.isInitialized) {
+                vocabularyAdapter.updateWords(currentVocabulary, learnedWordIds)
+            } else {
+                android.util.Log.w("LessonDetailFragment", "VocabularyAdapter not initialized")
+            }
+        } catch (e: Exception) {
+            android.util.Log.e("LessonDetailFragment", "Error updating vocabulary adapter", e)
+        }
     }
 
     override fun showError(message: String) {
-        DialogUtils.showErrorDialog(
-            context = requireContext(),
-            message = message
-        )
+        try {
+            if (isAdded && !isDetached) {
+                DialogUtils.showErrorDialog(
+                    context = requireContext(),
+                    message = message
+                )
+            }
+        } catch (e: Exception) {
+            android.util.Log.e("LessonDetailFragment", "Error showing error dialog", e)
+        }
     }
 
     override fun navigateBack() {
@@ -314,5 +328,14 @@ class LessonDetailFragment : BaseFragment<FragmentLessonDetailBinding>(), Lesson
             val wordsLearned = if (progress != null) progress.wordsLearned else 0
             textLessonPoints.text = getString(R.string.words_learned_format, wordsLearned, totalWords)
         }
+    }
+
+    override fun onGetWordsSuccess(words: MutableList<Word>) {
+        currentVocabulary = words
+        vocabularyAdapter.updateWords(words, learnedWordIds)
+    }
+
+    override fun onError(exception: Exception?) {
+        Toast.makeText(requireContext(), exception?.message ?: "Error loading words", Toast.LENGTH_SHORT).show()
     }
 }

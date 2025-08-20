@@ -161,16 +161,56 @@ class CoursesFragment : BaseFragment<ActivityLessonsBinding>(), CoursesContract.
     }
 
     override fun navigateToLessonDetail(lesson: Lesson) {
-        val action = CoursesFragmentDirections.actionCoursesToLessonDetail(lesson)
-        findNavController().navigate(action)
+        try {
+            // Add validation for lesson data
+            if (lesson.id.isEmpty() || lesson.title.isEmpty()) {
+                android.util.Log.w("CoursesFragment", "Invalid lesson data: id=${lesson.id}, title=${lesson.title}")
+                showError("Invalid lesson data")
+                return
+            }
+
+            // Check if fragment is still valid before navigation
+            if (!isAdded || isDetached || view == null) {
+                android.util.Log.w("CoursesFragment", "Fragment not in valid state for navigation")
+                return
+            }
+
+            // Validate navigation controller
+            val navController = try {
+                findNavController()
+            } catch (e: Exception) {
+                android.util.Log.e("CoursesFragment", "Error getting nav controller", e)
+                showError("Navigation error")
+                return
+            }
+
+            android.util.Log.d("CoursesFragment", "Navigating to lesson: ${lesson.title}")
+            val action = CoursesFragmentDirections.actionCoursesToLessonDetail(lesson)
+            navController.navigate(action)
+        } catch (e: Exception) {
+            android.util.Log.e("CoursesFragment", "Error navigating to lesson detail", e)
+            showError("Failed to open lesson: ${e.message}")
+        }
     }
 
     override fun updateTabSelection(isOngoing: Boolean) {
-        selectTab(isOngoing)
+        try {
+            if (isAdded && !isDetached) {
+                selectTab(isOngoing)
+            }
+        } catch (e: Exception) {
+            android.util.Log.e("CoursesFragment", "Error updating tab selection", e)
+        }
     }
     
     private fun refreshData() {
-        // Refresh data when fragment becomes visible
-        presenter.onTabSelected(isOngoingTabSelected)
+        try {
+            // Refresh data when fragment becomes visible
+            if (::presenter.isInitialized && isAdded && !isDetached) {
+                presenter.onTabSelected(isOngoingTabSelected)
+            }
+        } catch (e: Exception) {
+            android.util.Log.e("CoursesFragment", "Error refreshing data", e)
+        }
     }
 }

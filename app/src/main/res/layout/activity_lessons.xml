@@ -13,28 +13,25 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:padding="@dimen/dp_16"
-        android:paddingTop="@dimen/dp_1"
-        android:paddingBottom="@dimen/dp_16"
+        android:padding="@dimen/dp_12"
+        android:paddingTop="@dimen/dp_8"
+        android:paddingBottom="@dimen/dp_8"
         android:background="@color/white"
-        android:fitsSystemWindows="true"
         android:elevation="@dimen/dp_4">
 
         <!-- Back Button -->
         <ImageView
             android:id="@+id/btn_back"
-            android:layout_width="@dimen/dp_40"
-            android:layout_height="@dimen/dp_40"
+            android:layout_width="@dimen/dp_32"
+            android:layout_height="@dimen/dp_32"
             android:src="@drawable/ic_arrow_back"
             android:background="?android:attr/selectableItemBackgroundBorderless"
-            android:padding="@dimen/dp_8"
-            android:layout_marginTop="@dimen/dp_4"
-            android:layout_marginStart="@dimen/dp_8"
+            android:padding="@dimen/dp_4"
+            android:layout_marginStart="@dimen/dp_4"
             android:layout_marginEnd="@dimen/dp_8"
             android:tint="@android:color/black"
             android:clickable="true"
-            android:focusable="true"
-            android:elevation="@dimen/dp_8" />
+            android:focusable="true" />
 
         <TextView
             android:layout_width="0dp"
@@ -46,7 +43,7 @@
             android:textColor="@color/black"
             android:fontFamily="@font/nunito_semibold"
             android:layout_marginStart="@dimen/dp_8"
-            android:layout_marginEnd="@dimen/dp_54" />
+            android:layout_marginEnd="@dimen/dp_32" />
 
     </LinearLayout>
 

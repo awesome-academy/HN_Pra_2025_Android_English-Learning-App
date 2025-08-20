@@ -1,5 +1,6 @@
 package com.sun.englishlearning.screen.courses.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -31,7 +32,7 @@ class CoursesAdapter(
         if (position >= 0 && position < lessons.size) {
             holder.bind(lessons[position])
         } else {
-            android.util.Log.e("CoursesAdapter", "Invalid position: $position, lessons size: ${lessons.size}")
+            Log.e("CoursesAdapter", "Invalid position: $position, lessons size: ${lessons.size}")
         }
     }
 
@@ -59,7 +60,7 @@ class CoursesAdapter(
                 notifyDataSetChanged()
             }
         } catch (e: Exception) {
-            android.util.Log.e("CoursesAdapter", "Error updating lessons", e)
+            Log.e("CoursesAdapter", "Error updating lessons", e)
             lessons = emptyList()
             userProgressMap = emptyMap()
             wordsLearnedMap = emptyMap()
@@ -91,7 +92,7 @@ class CoursesAdapter(
                 notifyDataSetChanged()
             }
         } catch (e: Exception) {
-            android.util.Log.e("CoursesAdapter", "Error updating lessons with progress", e)
+            Log.e("CoursesAdapter", "Error updating lessons with progress", e)
             lessons = emptyList()
             userProgressMap = emptyMap()
             this.wordsLearnedMap = emptyMap()
@@ -144,7 +145,7 @@ class CoursesAdapter(
                                 .error(R.drawable.ic_launcher_background)
                                 .into(imageLesson)
                         } catch (e: Exception) {
-                            android.util.Log.w("CoursesAdapter", "Error loading image for lesson: ${lesson.title}", e)
+                            Log.w("CoursesAdapter", "Error loading image for lesson: ${lesson.title}", e)
                             imageLesson.setImageResource(R.drawable.ic_launcher_background)
                         }
                     } else {
@@ -154,15 +155,15 @@ class CoursesAdapter(
                     // Set click listener with safe handling
                     root.setOnClickListener {
                         try {
-                            android.util.Log.d("CoursesAdapter", "Lesson clicked: ${lesson.title}, ID: ${lesson.id}")
+                            Log.d("CoursesAdapter", "Lesson clicked: ${lesson.title}, ID: ${lesson.id}")
                             onLessonClick(lesson)
                         } catch (e: Exception) {
-                            android.util.Log.e("CoursesAdapter", "Error handling lesson click", e)
+                            Log.e("CoursesAdapter", "Error handling lesson click", e)
                         }
                     }
                 }
             } catch (e: Exception) {
-                android.util.Log.e("CoursesAdapter", "Error binding lesson data", e)
+                Log.e("CoursesAdapter", "Error binding lesson data", e)
                 // Set fallback values to prevent blank items using string resources
                 binding.textLessonTitle.text = binding.root.context.getString(R.string.error_loading_lesson)
                 binding.textLessonPoints.text = binding.root.context.getString(R.string.words_progress_error)

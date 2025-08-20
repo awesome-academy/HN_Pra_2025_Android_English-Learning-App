@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.OvershootInterpolator
+import android.widget.Toast
 import androidx.viewpager2.widget.ViewPager2
 import com.sun.englishlearning.data.model.Word
 import com.sun.englishlearning.databinding.ActivityFlashcardBinding
@@ -241,10 +242,10 @@ class FlashcardActivity : BaseActivity<ActivityFlashcardBinding>(), FlashcardFra
                 }
             )
         } else {
-            android.widget.Toast.makeText(
+            Toast.makeText(
                 this,
                 "Audio pronunciation not available for '${word.word}'",
-                android.widget.Toast.LENGTH_SHORT
+                Toast.LENGTH_SHORT
             ).show()
         }
     }

@@ -23,6 +23,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.sun.englishlearning.databinding.ActivityWordSearchBinding
 import com.sun.englishlearning.utils.base.BaseActivity
 import com.sun.englishlearning.utils.DialogUtils
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class WordSearchActivity : BaseActivity<ActivityWordSearchBinding>() {
@@ -206,7 +208,7 @@ class WordSearchActivity : BaseActivity<ActivityWordSearchBinding>() {
         }
 
         // Using coroutines for async operation
-        kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.Main).launch {
+        CoroutineScope(Dispatchers.Main).launch {
             try {
                 val savedWordResult = savedWordsRepository.isWordSavedWithType(
                     currentUser.uid, 
@@ -232,7 +234,7 @@ class WordSearchActivity : BaseActivity<ActivityWordSearchBinding>() {
             return
         }
 
-        kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.Main).launch {
+        CoroutineScope(Dispatchers.Main).launch {
             try {
                 if (isWordSaved) {
                     // Delete the word

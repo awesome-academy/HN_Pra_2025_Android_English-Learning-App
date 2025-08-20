@@ -233,7 +233,7 @@ class LessonDetailFragment : BaseFragment<FragmentLessonDetailBinding>(), Lesson
                 )
             }
         } catch (e: Exception) {
-            android.util.Log.e("LessonDetailFragment", "Error showing error dialog", e)
+            Log.e("LessonDetailFragment", "Error showing error dialog", e)
         }
     }
 

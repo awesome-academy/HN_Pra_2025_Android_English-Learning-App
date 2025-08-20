@@ -1,5 +1,6 @@
 package com.sun.englishlearning.screen.courses
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
@@ -164,14 +165,14 @@ class CoursesFragment : BaseFragment<ActivityLessonsBinding>(), CoursesContract.
         try {
             // Add validation for lesson data
             if (lesson.id.isEmpty() || lesson.title.isEmpty()) {
-                android.util.Log.w("CoursesFragment", "Invalid lesson data: id=${lesson.id}, title=${lesson.title}")
+                Log.w("CoursesFragment", "Invalid lesson data: id=${lesson.id}, title=${lesson.title}")
                 showError("Invalid lesson data")
                 return
             }
 
             // Check if fragment is still valid before navigation
             if (!isAdded || isDetached || view == null) {
-                android.util.Log.w("CoursesFragment", "Fragment not in valid state for navigation")
+                Log.w("CoursesFragment", "Fragment not in valid state for navigation")
                 return
             }
 
@@ -179,16 +180,16 @@ class CoursesFragment : BaseFragment<ActivityLessonsBinding>(), CoursesContract.
             val navController = try {
                 findNavController()
             } catch (e: Exception) {
-                android.util.Log.e("CoursesFragment", "Error getting nav controller", e)
+                Log.e("CoursesFragment", "Error getting nav controller", e)
                 showError("Navigation error")
                 return
             }
 
-            android.util.Log.d("CoursesFragment", "Navigating to lesson: ${lesson.title}")
+            Log.d("CoursesFragment", "Navigating to lesson: ${lesson.title}")
             val action = CoursesFragmentDirections.actionCoursesToLessonDetail(lesson)
             navController.navigate(action)
         } catch (e: Exception) {
-            android.util.Log.e("CoursesFragment", "Error navigating to lesson detail", e)
+            Log.e("CoursesFragment", "Error navigating to lesson detail", e)
             showError("Failed to open lesson: ${e.message}")
         }
     }
@@ -199,7 +200,7 @@ class CoursesFragment : BaseFragment<ActivityLessonsBinding>(), CoursesContract.
                 selectTab(isOngoing)
             }
         } catch (e: Exception) {
-            android.util.Log.e("CoursesFragment", "Error updating tab selection", e)
+            Log.e("CoursesFragment", "Error updating tab selection", e)
         }
     }
     
@@ -210,7 +211,7 @@ class CoursesFragment : BaseFragment<ActivityLessonsBinding>(), CoursesContract.
                 presenter.onTabSelected(isOngoingTabSelected)
             }
         } catch (e: Exception) {
-            android.util.Log.e("CoursesFragment", "Error refreshing data", e)
+            Log.e("CoursesFragment", "Error refreshing data", e)
         }
     }
 }

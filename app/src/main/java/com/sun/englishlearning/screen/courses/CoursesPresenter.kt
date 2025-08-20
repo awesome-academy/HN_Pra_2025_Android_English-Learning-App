@@ -1,6 +1,7 @@
 package com.sun.englishlearning.screen.courses
 
 import android.content.Context
+import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.sun.englishlearning.data.model.Lesson
 import com.sun.englishlearning.data.repository.LessonRepository
@@ -117,34 +118,34 @@ class CoursesPresenter : CoursesContract.Presenter {
         try {
             // Validate lesson data before navigation
             if (lesson.id.isEmpty()) {
-                android.util.Log.w("CoursesPresenter", "Lesson clicked with empty ID: ${lesson.title}")
+                Log.w("CoursesPresenter", "Lesson clicked with empty ID: ${lesson.title}")
                 view?.showError("Invalid lesson selected")
                 return
             }
 
             if (lesson.title.isEmpty()) {
-                android.util.Log.w("CoursesPresenter", "Lesson clicked with empty title: ${lesson.id}")
+                Log.w("CoursesPresenter", "Lesson clicked with empty title: ${lesson.id}")
                 view?.showError("Invalid lesson data")
                 return
             }
 
             // Validate vocabulary list
             if (lesson.vocabulary.isEmpty()) {
-                android.util.Log.w("CoursesPresenter", "Lesson has no vocabulary: ${lesson.title}")
+                Log.w("CoursesPresenter", "Lesson has no vocabulary: ${lesson.title}")
                 view?.showError("This lesson has no vocabulary words available")
                 return
             }
 
             // Check if view is still attached
             if (view == null) {
-                android.util.Log.w("CoursesPresenter", "View is null when trying to navigate")
+                Log.w("CoursesPresenter", "View is null when trying to navigate")
                 return
             }
 
-            android.util.Log.d("CoursesPresenter", "Navigating to lesson: ${lesson.title} with ${lesson.vocabulary.size} vocabulary words")
+            Log.d("CoursesPresenter", "Navigating to lesson: ${lesson.title} with ${lesson.vocabulary.size} vocabulary words")
             view?.navigateToLessonDetail(lesson)
         } catch (e: Exception) {
-            android.util.Log.e("CoursesPresenter", "Error handling lesson click", e)
+            Log.e("CoursesPresenter", "Error handling lesson click", e)
             view?.showError("Failed to open lesson: ${e.message}")
         }
     }

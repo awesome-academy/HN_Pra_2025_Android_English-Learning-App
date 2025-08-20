@@ -1,5 +1,6 @@
 package com.sun.englishlearning.screen.lessondetail.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -52,7 +53,7 @@ class VocabularyAdapter(
             }
         } catch (e: Exception) {
             // Log error and fallback to empty list
-            android.util.Log.e("VocabularyAdapter", "Error updating words", e)
+            Log.e("VocabularyAdapter", "Error updating words", e)
             val oldSize = words.size
             words = emptyList()
             this.learnedWordIds = emptySet()
@@ -87,7 +88,7 @@ class VocabularyAdapter(
                         try {
                             onSoundClick(word)
                         } catch (e: Exception) {
-                            android.util.Log.e("VocabularyAdapter", "Error playing sound", e)
+                            Log.e("VocabularyAdapter", "Error playing sound", e)
                         }
                     }
 
@@ -96,12 +97,12 @@ class VocabularyAdapter(
                         try {
                             onWordClick(word)
                         } catch (e: Exception) {
-                            android.util.Log.e("VocabularyAdapter", "Error handling word click", e)
+                            Log.e("VocabularyAdapter", "Error handling word click", e)
                         }
                     }
                 }
             } catch (e: Exception) {
-                android.util.Log.e("VocabularyAdapter", "Error binding word data", e)
+                Log.e("VocabularyAdapter", "Error binding word data", e)
             }
         }
     }

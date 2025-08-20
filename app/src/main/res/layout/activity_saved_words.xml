@@ -63,14 +63,57 @@
 
     </LinearLayout>
 
-    <!-- Words List -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_saved_words"
+    <!-- Content Area -->
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:padding="@dimen/dp_16"
-        android:clipToPadding="false" />
+        android:layout_weight="1">
+
+        <!-- Words List -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_saved_words"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="@dimen/dp_16"
+            android:clipToPadding="false" />
+
+        <!-- Empty State -->
+        <LinearLayout
+            android:id="@+id/layout_empty_state"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="@dimen/dp_64"
+                android:layout_height="@dimen/dp_64"
+                android:src="@drawable/ic_bookmark"
+                app:tint="#CCCCCC"
+                android:layout_marginBottom="@dimen/dp_16" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Let's start learning!"
+                android:textSize="@dimen/sp_16"
+                android:textColor="#999999"
+                android:gravity="center"
+                android:layout_marginBottom="@dimen/dp_8" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Save words while learning to review them later"
+                android:textSize="@dimen/sp_14"
+                android:textColor="#CCCCCC"
+                android:gravity="center" />
+
+        </LinearLayout>
+
+    </FrameLayout>
 
 </LinearLayout>
 

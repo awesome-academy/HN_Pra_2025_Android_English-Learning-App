@@ -121,6 +121,9 @@ class SavedWordsActivity : BaseActivity<ActivitySavedWordsBinding>() {
                     
                     if (savedWords.isEmpty()) {
                         showEmptyState()
+                    } else {
+                        binding.rvSavedWords.visibility = View.VISIBLE
+                        binding.layoutEmptyState.visibility = View.GONE
                     }
                 } else {
                     hideLoading()
@@ -144,7 +147,8 @@ class SavedWordsActivity : BaseActivity<ActivitySavedWordsBinding>() {
     }
 
     private fun showEmptyState() {
-        // You can show an empty state message if the layout supports it
+        binding.rvSavedWords.visibility = View.GONE
+        binding.layoutEmptyState.visibility = View.VISIBLE
     }
 
     private fun playWordSound(soundUrl: String) {

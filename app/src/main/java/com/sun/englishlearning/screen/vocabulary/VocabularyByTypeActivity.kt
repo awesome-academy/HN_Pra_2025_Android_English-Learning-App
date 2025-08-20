@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
+import com.sun.englishlearning.R
 import com.sun.englishlearning.data.model.SavedWord
 import com.sun.englishlearning.data.model.WordType
 import com.sun.englishlearning.data.repository.SavedWordsRepository
@@ -136,7 +137,34 @@ class VocabularyByTypeActivity : BaseActivity<ActivityVocabularyByTypeBinding>()
             progressLoading.visibility = View.GONE
             rvWords.visibility = View.GONE
             layoutEmptyState.visibility = View.VISIBLE
-            tvEmptyMessage.text = "No $typeTitle found"
+            
+            when (wordType) {
+                WordType.WEAK -> {
+                    ivEmptyIcon.setImageResource(R.drawable.ic_book)
+                    tvEmptyMessage.text = "Let's start learning!"
+                    tvEmptySubtitle.text = "Practice lessons to build your vocabulary"
+                }
+                WordType.MEDIUM -> {
+                    ivEmptyIcon.setImageResource(R.drawable.ic_book)
+                    tvEmptyMessage.text = "Let's start learning!"
+                    tvEmptySubtitle.text = "Keep practicing to strengthen your words"
+                }
+                WordType.STRONG -> {
+                    ivEmptyIcon.setImageResource(R.drawable.ic_book)
+                    tvEmptyMessage.text = "Let's start learning!"
+                    tvEmptySubtitle.text = "Master words through practice"
+                }
+                WordType.SAVED -> {
+                    ivEmptyIcon.setImageResource(R.drawable.ic_bookmark)
+                    tvEmptyMessage.text = "Let's start learning!"
+                    tvEmptySubtitle.text = "Save words while learning to review them later"
+                }
+                else -> {
+                    ivEmptyIcon.setImageResource(R.drawable.ic_book)
+                    tvEmptyMessage.text = "Let's start learning!"
+                    tvEmptySubtitle.text = "Complete lessons to see words here"
+                }
+            }
         }
     }
 

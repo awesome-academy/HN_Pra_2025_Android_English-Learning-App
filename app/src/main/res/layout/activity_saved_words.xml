@@ -87,7 +87,7 @@
             android:padding="@dimen/dp_16"
             android:clipToPadding="false" />
 
-        <!-- Empty State -->
+        <!-- Empty State for No Saved Words -->
         <LinearLayout
             android:id="@+id/layout_empty_state"
             android:layout_width="match_parent"
@@ -120,6 +120,46 @@
                 android:textSize="@dimen/sp_14"
                 android:textColor="#CCCCCC"
                 android:gravity="center" />
+
+        </LinearLayout>
+
+        <!-- Empty Search State -->
+        <LinearLayout
+            android:id="@+id/layout_empty_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            android:padding="@dimen/dp_32">
+
+            <ImageView
+                android:layout_width="@dimen/dp_80"
+                android:layout_height="@dimen/dp_80"
+                android:src="@drawable/ic_search"
+                app:tint="#CCCCCC"
+                android:layout_marginBottom="@dimen/dp_24" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="No words found"
+                android:textSize="@dimen/sp_18"
+                android:textColor="#666666"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_marginBottom="@dimen/dp_12" />
+
+            <TextView
+                android:id="@+id/tv_search_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="The word you are searching for is not in your saved list"
+                android:textSize="@dimen/sp_14"
+                android:textColor="#999999"
+                android:gravity="center"
+                android:layout_marginHorizontal="@dimen/dp_16" />
 
         </LinearLayout>
 

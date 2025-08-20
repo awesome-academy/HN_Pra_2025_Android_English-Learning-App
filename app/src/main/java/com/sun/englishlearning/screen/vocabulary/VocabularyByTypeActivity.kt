@@ -5,6 +5,8 @@ import android.content.Intent
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
@@ -24,7 +26,8 @@ import kotlinx.coroutines.launch
 class VocabularyByTypeActivity : BaseActivity<ActivityVocabularyByTypeBinding>() {
 
     private lateinit var wordsAdapter: SavedWordsAdapter
-    private var wordsList = mutableListOf<SavedWord>()
+    private var allWords = mutableListOf<SavedWord>()
+    private var filteredWords = mutableListOf<SavedWord>()
     private val savedWordsRepository: SavedWordsRepository = SavedWordsRepositoryImpl()
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
     private var mediaPlayer: MediaPlayer? = null
@@ -52,6 +55,7 @@ class VocabularyByTypeActivity : BaseActivity<ActivityVocabularyByTypeBinding>()
         setupExtras()
         setupToolbar()
         setupRecyclerView()
+        setupSearchView()
     }
 
     override fun initData() {
@@ -74,7 +78,7 @@ class VocabularyByTypeActivity : BaseActivity<ActivityVocabularyByTypeBinding>()
     }
 
     private fun setupRecyclerView() {
-        wordsAdapter = SavedWordsAdapter(wordsList) { savedWord, action ->
+        wordsAdapter = SavedWordsAdapter(filteredWords) { savedWord, action ->
             when (action) {
                 SavedWordsAdapter.Action.PLAY_SOUND -> {
                     playWordSound(savedWord.soundUrl)
@@ -89,6 +93,32 @@ class VocabularyByTypeActivity : BaseActivity<ActivityVocabularyByTypeBinding>()
             layoutManager = LinearLayoutManager(this@VocabularyByTypeActivity)
             adapter = wordsAdapter
         }
+    }
+
+    private fun setupSearchView() {
+        binding.etSearch.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                filterWords(s.toString())
+            }
+            
+            override fun afterTextChanged(s: Editable?) {}
+        })
+    }
+
+    private fun filterWords(query: String) {
+        filteredWords.clear()
+        if (query.isEmpty()) {
+            filteredWords.addAll(allWords)
+        } else {
+            val filtered = allWords.filter { savedWord ->
+                savedWord.word.lowercase().contains(query.lowercase()) ||
+                        savedWord.definition.lowercase().contains(query.lowercase())
+            }
+            filteredWords.addAll(filtered)
+        }
+        wordsAdapter.notifyDataSetChanged()
     }
 
     private fun loadWords() {
@@ -108,8 +138,12 @@ class VocabularyByTypeActivity : BaseActivity<ActivityVocabularyByTypeBinding>()
                 if (result.isSuccess) {
                     val words = result.getOrNull() ?: emptyList()
                     if (words.isNotEmpty()) {
-                        wordsList.clear()
-                        wordsList.addAll(words)
+                        allWords.clear()
+                        allWords.addAll(words)
+                        
+                        filteredWords.clear()
+                        filteredWords.addAll(allWords)
+                        
                         wordsAdapter.notifyDataSetChanged()
                         showWordsList()
                     } else {
@@ -199,13 +233,14 @@ class VocabularyByTypeActivity : BaseActivity<ActivityVocabularyByTypeBinding>()
             try {
                 val result = savedWordsRepository.deleteWord(savedWord.id)
                 if (result.isSuccess) {
-                    // Remove from local list
-                    wordsList.removeAll { it.id == savedWord.id }
+                    // Remove from both lists
+                    allWords.removeAll { it.id == savedWord.id }
+                    filteredWords.removeAll { it.id == savedWord.id }
                     wordsAdapter.notifyDataSetChanged()
                     
                     Toast.makeText(this@VocabularyByTypeActivity, "Word removed successfully", Toast.LENGTH_SHORT).show()
                     
-                    if (wordsList.isEmpty()) {
+                    if (filteredWords.isEmpty()) {
                         showEmptyState()
                     }
                 } else {

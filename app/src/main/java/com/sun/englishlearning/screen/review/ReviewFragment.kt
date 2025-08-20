@@ -33,89 +33,12 @@ class ReviewFragment : BaseFragment<FragmentReviewBinding>() {
     }
 
     private fun loadWordCounts() {
-        val currentUser = auth.currentUser
-        if (currentUser == null) {
-            Toast.makeText(context, "Please login to view your vocabulary", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        lifecycleScope.launch {
-            try {
-                // Load counts for each word type
-                loadWordCountForType(WordType.WEAK, "Weak words")
-                loadWordCountForType(WordType.MEDIUM, "Medium words") 
-                loadWordCountForType(WordType.STRONG, "Strong words")
-                
-                // Load saved words count
-                val savedWordsResult = savedWordsRepository.getWordCountByType(currentUser.uid, WordType.SAVED)
-                if (savedWordsResult.isSuccess) {
-                    val count = savedWordsResult.getOrNull() ?: 0
-                    // The saved words section doesn't show count in the current layout
-                }
-            } catch (e: Exception) {
-                Toast.makeText(context, "Error loading vocabulary data", Toast.LENGTH_SHORT).show()
-            }
-        }
+        // Vocabulary level cards have been removed from the UI
     }
 
-    private suspend fun loadWordCountForType(wordType: WordType, typeName: String) {
-        val currentUser = auth.currentUser ?: return
-        
-        try {
-            val result = savedWordsRepository.getWordCountByType(currentUser.uid, wordType)
-            if (result.isSuccess) {
-                val count = result.getOrNull() ?: 0
-                updateCardCount(wordType, count)
-            }
-        } catch (e: Exception) {
-            Toast.makeText(context, "Error loading $typeName", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    private fun updateCardCount(wordType: WordType, count: Int) {
-        when (wordType) {
-            WordType.WEAK -> {
-                viewBinding.tvWeakWordsCount.text = count.toString()
-            }
-            WordType.MEDIUM -> {
-                viewBinding.tvMediumWordsCount.text = count.toString()
-            }
-            WordType.STRONG -> {
-                viewBinding.tvStrongWordsCount.text = count.toString()
-            }
-            else -> {}
-        }
-    }
 
     private fun setupClickListeners() {
         with(viewBinding) {
-            cardWeekWords.setOnClickListener {
-                val intent = VocabularyByTypeActivity.createIntent(
-                    requireContext(),
-                    WordType.WEAK,
-                    "Weak words"
-                )
-                startActivity(intent)
-            }
-
-            cardMediumWords.setOnClickListener {
-                val intent = VocabularyByTypeActivity.createIntent(
-                    requireContext(),
-                    WordType.MEDIUM,
-                    "Medium words"
-                )
-                startActivity(intent)
-            }
-
-            cardStrongWords.setOnClickListener {
-                val intent = VocabularyByTypeActivity.createIntent(
-                    requireContext(),
-                    WordType.STRONG,
-                    "Strong words"
-                )
-                startActivity(intent)
-            }
-
             layoutSaveWords.setOnClickListener {
                 val intent = Intent(requireContext(), SavedWordsActivity::class.java)
                 startActivity(intent)

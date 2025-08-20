@@ -15,6 +15,9 @@ interface LessonDetailContract {
         fun playWordSound(word: Word)
         fun showWordDetail(word: Word)
         fun navigateToFlashcard(words: List<Word>, currentIndex: Int, lessonTitle: String)
+        // New: MVP-style callback for word API results
+        fun onGetWordsSuccess(words: MutableList<Word>)
+        fun onError(exception: Exception?)
     }
 
     interface Presenter : BasePresenter<View> {
@@ -23,5 +26,7 @@ interface LessonDetailContract {
         fun onBackClicked()
         fun onWordClicked(word: Word)
         fun onSoundClicked(word: Word)
+        // New: MVP-style API fetch
+        fun getWords(vocabulary: List<String>)
     }
 }

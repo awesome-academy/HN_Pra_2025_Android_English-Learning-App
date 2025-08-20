@@ -93,7 +93,7 @@ class FlashcardFragment :
                 animateButtonPress(view) {
                     // Get parent activity and play audio
                     (activity as? FlashcardActivity)?.playWordAudio(word)
-                    mFlashcardPresenter.playAudio(word.soundUrl)
+                    mFlashcardPresenter.playAudio(word.phonetics.firstOrNull()?.audio.orEmpty())
                 }
             }
 
@@ -121,43 +121,38 @@ class FlashcardFragment :
             textWordName.contentDescription = getString(R.string.english_word_with_name, word.word)
 
             // Set definition
-            val definition = if (word.definition.isNotEmpty()) {
-                word.definition
-            } else {
-                getString(R.string.definition_not_available)
-            }
+            val definition = word.meanings.firstOrNull()?.definitions?.firstOrNull()?.definition.orEmpty()
             textDefinition.text = definition
             textDefinition.contentDescription = getString(R.string.definition_with_content, definition)
 
             // Set example
-            val example = if (word.example.isNotEmpty()) {
-                word.example
-            } else {
-                getString(R.string.example_not_available)
-            }
+            val example = word.meanings.firstOrNull()?.definitions?.firstOrNull()?.example.orEmpty()
             textExample.text = example
             textExample.contentDescription = getString(R.string.example_sentence_with_content, example)
 
             // Set phonetic transcription
-            if (word.phonetic.isNotEmpty()) {
-                textPhonetic.text = word.phonetic
-                textPhonetic.contentDescription = getString(R.string.pronunciation_with_content, word.phonetic)
+            val phonetic = word.phonetic.ifEmpty { word.phonetics.firstOrNull()?.text.orEmpty() }
+            if (phonetic.isNotEmpty()) {
+                textPhonetic.text = phonetic
+                textPhonetic.contentDescription = getString(R.string.pronunciation_with_content, phonetic)
                 textPhonetic.visibility = View.VISIBLE
             } else {
                 textPhonetic.visibility = View.GONE
             }
 
             // Set part of speech
-            if (word.partOfSpeech.isNotEmpty()) {
-                textPartOfSpeech.text = word.partOfSpeech
-                textPartOfSpeech.contentDescription = getString(R.string.part_of_speech_with_content, word.partOfSpeech)
+            val partOfSpeech = word.meanings.firstOrNull()?.partOfSpeech.orEmpty()
+            if (partOfSpeech.isNotEmpty()) {
+                textPartOfSpeech.text = partOfSpeech
+                textPartOfSpeech.contentDescription = getString(R.string.part_of_speech_with_content, partOfSpeech)
                 textPartOfSpeech.visibility = View.VISIBLE
             } else {
                 textPartOfSpeech.visibility = View.GONE
             }
 
             // Set audio button content description
-            btnAudio.contentDescription = if (word.soundUrl.isNotEmpty()) {
+            val soundUrl = word.phonetics.firstOrNull()?.audio.orEmpty()
+            btnAudio.contentDescription = if (soundUrl.isNotEmpty()) {
                 getString(R.string.play_pronunciation_for, word.word)
             } else {
                 getString(R.string.audio_not_available, word.word)

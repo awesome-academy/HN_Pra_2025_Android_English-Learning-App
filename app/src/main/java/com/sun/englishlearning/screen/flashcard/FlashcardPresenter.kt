@@ -71,11 +71,11 @@ class FlashcardPresenter internal constructor() : FlashcardContract.Presenter {
                 val savedWord = SavedWord(
                     userId = userId,
                     word = word.word,
-                    ipa = word.phonetic,
-                    partOfSpeech = word.partOfSpeech,
-                    definition = word.definition,
-                    example = word.example,
-                    soundUrl = "",
+                    ipa = word.phonetic.ifEmpty { word.phonetics.firstOrNull()?.text.orEmpty() },
+                    partOfSpeech = word.meanings.firstOrNull()?.partOfSpeech.orEmpty(),
+                    definition = word.meanings.firstOrNull()?.definitions?.firstOrNull()?.definition.orEmpty(),
+                    example = word.meanings.firstOrNull()?.definitions?.firstOrNull()?.example.orEmpty(),
+                    soundUrl = word.phonetics.firstOrNull()?.audio.orEmpty(),
                     wordType = WordType.SAVED.value
                 )
 

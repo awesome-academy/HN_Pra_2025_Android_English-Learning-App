@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.OvershootInterpolator
+import android.widget.Toast
 import androidx.viewpager2.widget.ViewPager2
 import com.sun.englishlearning.data.model.Word
 import com.sun.englishlearning.databinding.ActivityFlashcardBinding
@@ -89,12 +90,32 @@ class FlashcardActivity : BaseActivity<ActivityFlashcardBinding>(), FlashcardFra
                 @Suppress("DEPRECATION")
                 intent.getParcelableArrayListExtra<Word>(EXTRA_WORDS) ?: emptyList()
             }
+
+            // Filter out null or invalid words
+            words = words.filter { word ->
+                word != null && word.word.isNotEmpty()
+            }
+
             currentIndex = intent.getIntExtra(EXTRA_CURRENT_INDEX, 0)
             lessonTitle = intent.getStringExtra(EXTRA_LESSON_TITLE) ?: ""
 
-            Log.d(TAG, "Intent data: ${words.size} words, index: $currentIndex, title: $lessonTitle")
+            // Validate and fix currentIndex
+            if (currentIndex < 0 || currentIndex >= words.size) {
+                Log.w(TAG, "Invalid current index: $currentIndex, resetting to 0")
+                currentIndex = 0
+            }
+
+            Log.d(TAG, "Intent data: ${words.size} valid words, index: $currentIndex, title: $lessonTitle")
+
+            // Additional validation
+            if (words.isEmpty()) {
+                Log.e(TAG, "No valid words received in intent")
+                throw IllegalArgumentException("No valid vocabulary words provided")
+            }
+
         } catch (e: Exception) {
             Log.e(TAG, "Error getting intent data", e)
+            // Set safe defaults
             words = emptyList()
             currentIndex = 0
             lessonTitle = ""
@@ -207,30 +228,24 @@ class FlashcardActivity : BaseActivity<ActivityFlashcardBinding>(), FlashcardFra
     }
 
     fun playWordAudio(word: Word) {
-        if (word.soundUrl.isNotEmpty()) {
+        val soundUrl = word.phonetics.firstOrNull()?.audio.orEmpty()
+        if (soundUrl.isNotEmpty()) {
             audioManager.playAudio(
                 context = this,
-                audioUrl = word.soundUrl,
+                audioUrl = soundUrl,
                 listener = object : AudioManager.AudioPlaybackListener {
-                    override fun onAudioStarted() {
+                    override fun onAudioStarted() {}
 
-                    }
+                    override fun onAudioCompleted() {}
 
-                    override fun onAudioCompleted() {
-                        // Audio finished playing
-                    }
-
-                    override fun onAudioError(error: String) {
-
-                    }
+                    override fun onAudioError(error: String) {}
                 }
             )
         } else {
-            // Show message that audio is not available
-            android.widget.Toast.makeText(
+            Toast.makeText(
                 this,
                 "Audio pronunciation not available for '${word.word}'",
-                android.widget.Toast.LENGTH_SHORT
+                Toast.LENGTH_SHORT
             ).show()
         }
     }

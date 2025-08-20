@@ -213,14 +213,28 @@ class LessonDetailFragment : BaseFragment<FragmentLessonDetailBinding>(), Lesson
     }
 
     private fun updateVocabularyAdapter() {
-        vocabularyAdapter.updateWords(currentVocabulary, learnedWordIds)
+        try {
+            if (::vocabularyAdapter.isInitialized) {
+                vocabularyAdapter.updateWords(currentVocabulary, learnedWordIds)
+            } else {
+                Log.w("LessonDetailFragment", "VocabularyAdapter not initialized")
+            }
+        } catch (e: Exception) {
+            Log.e("LessonDetailFragment", "Error updating vocabulary adapter", e)
+        }
     }
 
     override fun showError(message: String) {
-        DialogUtils.showErrorDialog(
-            context = requireContext(),
-            message = message
-        )
+        try {
+            if (isAdded && !isDetached) {
+                DialogUtils.showErrorDialog(
+                    context = requireContext(),
+                    message = message
+                )
+            }
+        } catch (e: Exception) {
+            Log.e("LessonDetailFragment", "Error showing error dialog", e)
+        }
     }
 
     override fun navigateBack() {
@@ -228,17 +242,16 @@ class LessonDetailFragment : BaseFragment<FragmentLessonDetailBinding>(), Lesson
     }
 
     override fun playWordSound(word: Word) {
-        if (word.soundUrl.isNotEmpty()) {
+        val soundUrl = word.phonetics.firstOrNull()?.audio.orEmpty()
+        if (soundUrl.isNotEmpty()) {
             audioManager.playAudio(
                 context = requireContext(),
-                audioUrl = word.soundUrl,
+                audioUrl = soundUrl,
                 listener = object : AudioManager.AudioPlaybackListener {
-                    override fun onAudioStarted() {
+                    override fun onAudioStarted() {}
 
-                    }
-                    override fun onAudioCompleted() {
+                    override fun onAudioCompleted() {}
 
-                    }
                     override fun onAudioError(error: String) {
                         Toast.makeText(requireContext(), "Error playing audio: $error", Toast.LENGTH_SHORT).show()
                     }
@@ -251,7 +264,6 @@ class LessonDetailFragment : BaseFragment<FragmentLessonDetailBinding>(), Lesson
 
     override fun showWordDetail(word: Word) {
         Toast.makeText(requireContext(), "Word: ${word.word}", Toast.LENGTH_SHORT).show()
-        // TODO: Implement word detail functionality
     }
 
     override fun navigateToFlashcard(words: List<Word>, currentIndex: Int, lessonTitle: String) {
@@ -315,5 +327,14 @@ class LessonDetailFragment : BaseFragment<FragmentLessonDetailBinding>(), Lesson
             val wordsLearned = if (progress != null) progress.wordsLearned else 0
             textLessonPoints.text = getString(R.string.words_learned_format, wordsLearned, totalWords)
         }
+    }
+
+    override fun onGetWordsSuccess(words: MutableList<Word>) {
+        currentVocabulary = words
+        vocabularyAdapter.updateWords(words, learnedWordIds)
+    }
+
+    override fun onError(exception: Exception?) {
+        Toast.makeText(requireContext(), exception?.message ?: "Error loading words", Toast.LENGTH_SHORT).show()
     }
 }

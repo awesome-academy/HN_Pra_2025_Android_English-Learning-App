@@ -1,6 +1,7 @@
 package com.sun.englishlearning.screen.lessondetail
 
 import android.content.Context
+import android.util.Log
 import com.sun.englishlearning.data.model.Lesson
 import com.sun.englishlearning.data.model.Word
 import com.sun.englishlearning.data.repository.LessonRepository
@@ -33,7 +34,7 @@ class LessonDetailPresenter : LessonDetailContract.Presenter {
             view?.displayLessonInfo(lesson)
             getWords(lesson.vocabulary)
         } catch (e: Exception) {
-            android.util.Log.e("LessonDetailPresenter", "Error loading lesson detail", e)
+            Log.e("LessonDetailPresenter", "Error loading lesson detail", e)
             view?.showError("Failed to load lesson: ${e.message}")
         }
     }
@@ -96,19 +97,19 @@ class LessonDetailPresenter : LessonDetailContract.Presenter {
                                 handleWordsLoadingComplete(resultWords.values.toMutableList())
                             }
                         } catch (e: Exception) {
-                            android.util.Log.e("LessonDetailPresenter", "Error processing word success", e)
+                            Log.e("LessonDetailPresenter", "Error processing word success", e)
                             handleWordError(vocab, index, resultWords, completed, totalWords)
                         }
                     }
 
                     override fun onError(exception: Exception?) {
-                        android.util.Log.w("LessonDetailPresenter", "Error loading word: $vocab", exception)
+                        Log.w("LessonDetailPresenter", "Error loading word: $vocab", exception)
                         handleWordError(vocab, index, resultWords, completed, totalWords)
                     }
                 })
             }
         } catch (e: Exception) {
-            android.util.Log.e("LessonDetailPresenter", "Error in getWords", e)
+            Log.e("LessonDetailPresenter", "Error in getWords", e)
             view?.hideLoading()
             view?.showError("Failed to load vocabulary: ${e.message}")
         }
@@ -126,7 +127,7 @@ class LessonDetailPresenter : LessonDetailContract.Presenter {
                 handleWordsLoadingComplete(resultWords.values.toMutableList())
             }
         } catch (e: Exception) {
-            android.util.Log.e("LessonDetailPresenter", "Error handling word error", e)
+            Log.e("LessonDetailPresenter", "Error handling word error", e)
         }
     }
 
@@ -136,7 +137,7 @@ class LessonDetailPresenter : LessonDetailContract.Presenter {
             view?.onGetWordsSuccess(words)
             view?.hideLoading()
         } catch (e: Exception) {
-            android.util.Log.e("LessonDetailPresenter", "Error completing words loading", e)
+            Log.e("LessonDetailPresenter", "Error completing words loading", e)
             view?.hideLoading()
             view?.showError("Failed to process vocabulary words")
         }
@@ -148,43 +149,43 @@ class LessonDetailPresenter : LessonDetailContract.Presenter {
 
     override fun onWordClicked(word: Word) {
         try {
-            android.util.Log.d("LessonDetailPresenter", "Word clicked: ${word.word}")
+            Log.d("LessonDetailPresenter", "Word clicked: ${word.word}")
 
             // Validate word and current vocabulary
             if (word.word.isEmpty()) {
-                android.util.Log.w("LessonDetailPresenter", "Empty word clicked")
+                Log.w("LessonDetailPresenter", "Empty word clicked")
                 view?.showError("Invalid word selected")
                 return
             }
 
             if (currentVocabulary.isEmpty()) {
-                android.util.Log.w("LessonDetailPresenter", "No vocabulary available")
+                Log.w("LessonDetailPresenter", "No vocabulary available")
                 view?.showError("No vocabulary available")
                 return
             }
 
-            android.util.Log.d("LessonDetailPresenter", "Current vocabulary size: ${currentVocabulary.size}")
+            Log.d("LessonDetailPresenter", "Current vocabulary size: ${currentVocabulary.size}")
 
             // Find the index of the clicked word in the current vocabulary list
             val wordIndex = currentVocabulary.indexOfFirst {
                 it.word.equals(word.word, ignoreCase = true) || it.id == word.id
             }
-            android.util.Log.d("LessonDetailPresenter", "Word index found: $wordIndex")
+            Log.d("LessonDetailPresenter", "Word index found: $wordIndex")
 
             if (wordIndex != -1 && wordIndex < currentVocabulary.size) {
                 val lessonTitle = currentLesson?.title ?: "Lesson"
-                android.util.Log.d("LessonDetailPresenter", "Navigating to flashcard with title: $lessonTitle")
+                Log.d("LessonDetailPresenter", "Navigating to flashcard with title: $lessonTitle")
 
                 // Create a safe copy of vocabulary to prevent concurrent modification
                 val safeVocabulary = currentVocabulary.toList()
                 view?.navigateToFlashcard(safeVocabulary, wordIndex, lessonTitle)
             } else {
-                android.util.Log.w("LessonDetailPresenter", "Word index not found, showing word detail")
+                Log.w("LessonDetailPresenter", "Word index not found, showing word detail")
                 // Fallback to showing word detail if index not found
                 view?.showWordDetail(word)
             }
         } catch (e: Exception) {
-            android.util.Log.e("LessonDetailPresenter", "Error handling word click", e)
+            Log.e("LessonDetailPresenter", "Error handling word click", e)
             view?.showError("Error opening flashcard: ${e.message}")
         }
     }
@@ -192,12 +193,12 @@ class LessonDetailPresenter : LessonDetailContract.Presenter {
     override fun onSoundClicked(word: Word) {
         try {
             if (word.word.isEmpty()) {
-                android.util.Log.w("LessonDetailPresenter", "Empty word for sound")
+                Log.w("LessonDetailPresenter", "Empty word for sound")
                 return
             }
             view?.playWordSound(word)
         } catch (e: Exception) {
-            android.util.Log.e("LessonDetailPresenter", "Error playing sound", e)
+            Log.e("LessonDetailPresenter", "Error playing sound", e)
             view?.showError("Error playing sound: ${e.message}")
         }
     }

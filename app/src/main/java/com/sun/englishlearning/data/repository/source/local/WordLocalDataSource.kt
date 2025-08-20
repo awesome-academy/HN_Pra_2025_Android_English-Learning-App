@@ -1,5 +1,6 @@
 package com.sun.englishlearning.data.repository.source.local
 
+import com.google.firebase.firestore.FirebaseFirestore
 import com.sun.englishlearning.data.model.Word
 import com.sun.englishlearning.data.repository.source.WordDataSource
 import com.sun.englishlearning.data.repository.source.remote.OnResultListener
@@ -7,7 +8,7 @@ import com.sun.englishlearning.data.repository.source.remote.OnResultListener
 class WordLocalDataSource : WordDataSource.Local {
 
     override fun getWordsLocal(listener: OnResultListener<MutableList<Word>>) {
-        val db = com.google.firebase.firestore.FirebaseFirestore.getInstance()
+        val db = FirebaseFirestore.getInstance()
         db.collection("words")
             .get()
             .addOnSuccessListener { result ->
@@ -28,7 +29,7 @@ class WordLocalDataSource : WordDataSource.Local {
     }
 
     override fun addWordLocal(word: Word, listener: OnResultListener<Boolean>) {
-        val db = com.google.firebase.firestore.FirebaseFirestore.getInstance()
+        val db = FirebaseFirestore.getInstance()
         db.collection("words")
             .document(word.word)
             .set(word)

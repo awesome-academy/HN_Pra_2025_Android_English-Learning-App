@@ -29,6 +29,7 @@ class CoursesFragment : BaseFragment<ActivityLessonsBinding>(), CoursesContract.
     override fun initView() {
         setupRecyclerView()
         setupTabs()
+        setupBackButton()
     }
 
     override fun initData() {
@@ -82,6 +83,12 @@ class CoursesFragment : BaseFragment<ActivityLessonsBinding>(), CoursesContract.
 
         viewBinding.tabCompleted.setOnClickListener {
             presenter.onTabSelected(false)
+        }
+    }
+
+    private fun setupBackButton() {
+        viewBinding.btnBack.setOnClickListener {
+            findNavController().navigateUp()
         }
     }
 

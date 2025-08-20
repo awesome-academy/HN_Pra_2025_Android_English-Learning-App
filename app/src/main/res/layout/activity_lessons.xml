@@ -14,7 +14,27 @@
         android:orientation="horizontal"
         android:gravity="center_vertical"
         android:padding="@dimen/dp_16"
-        android:background="@color/white">
+        android:paddingTop="@dimen/dp_48"
+        android:paddingBottom="@dimen/dp_16"
+        android:background="@color/white"
+        android:fitsSystemWindows="true"
+        android:elevation="@dimen/dp_4">
+
+        <!-- Back Button -->
+        <ImageView
+            android:id="@+id/btn_back"
+            android:layout_width="@dimen/dp_40"
+            android:layout_height="@dimen/dp_40"
+            android:src="@drawable/ic_arrow_back"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:padding="@dimen/dp_8"
+            android:layout_marginTop="@dimen/dp_16"
+            android:layout_marginStart="@dimen/dp_8"
+            android:layout_marginEnd="@dimen/dp_8"
+            android:tint="@android:color/black"
+            android:clickable="true"
+            android:focusable="true"
+            android:elevation="@dimen/dp_8" />
 
         <TextView
             android:layout_width="0dp"
@@ -24,12 +44,9 @@
             android:textAlignment="center"
             android:textSize="@dimen/sp_18"
             android:textColor="@color/black"
-            android:fontFamily="@font/nunito_semibold" />
-
-        <!-- Invisible view for balance -->
-        <View
-            android:layout_width="@dimen/dp_24"
-            android:layout_height="@dimen/dp_24" />
+            android:fontFamily="@font/nunito_semibold"
+            android:layout_marginStart="@dimen/dp_16"
+            android:layout_marginEnd="@dimen/dp_40" />
 
     </LinearLayout>
 

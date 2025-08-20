@@ -40,7 +40,7 @@ class VocabularyAdapter(
             // Sort: unlearned first, then learned
             this.learnedWordIds = safeLearnedIds
             val oldSize = words.size
-            words = safeWords.sortedBy { it.id.isNotEmpty() && safeLearnedIds.contains(it.id) }
+            words = safeWords.sortedBy { safeLearnedIds.contains(it.id) }
 
             // Use more efficient notify methods when possible
             if (oldSize == 0 && words.isNotEmpty()) {

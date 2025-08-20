@@ -53,7 +53,7 @@ class LessonDetailPresenter : LessonDetailContract.Presenter {
             }
 
             // Use thread-safe collections and atomic counter
-            val resultWords = arrayOfNulls<Word>(vocabulary.size)
+            val resultWords = java.util.concurrent.ConcurrentHashMap<Int, Word>()
             val completed = AtomicInteger(0)
             val totalWords = vocabulary.size
 
@@ -67,7 +67,7 @@ class LessonDetailPresenter : LessonDetailContract.Presenter {
                         phonetics = emptyList()
                     )
                     if (completed.incrementAndGet() == totalWords) {
-                        handleWordsLoadingComplete(resultWords.filterNotNull().toMutableList())
+                        handleWordsLoadingComplete(resultWords.values.toMutableList())
                     }
                     continue
                 }
@@ -79,7 +79,7 @@ class LessonDetailPresenter : LessonDetailContract.Presenter {
                                 val w = data[0]
                                 w.copy(
                                     id = w.id.takeIf { it.isNotEmpty() } ?: vocab,
-                                    phonetics = w.phonetics ?: emptyList(),
+                                    phonetics = w.phonetics,
                                     lessonId = currentLesson?.id ?: ""
                                 )
                             } else {
@@ -93,7 +93,7 @@ class LessonDetailPresenter : LessonDetailContract.Presenter {
                             resultWords[index] = word
 
                             if (completed.incrementAndGet() == totalWords) {
-                                handleWordsLoadingComplete(resultWords.filterNotNull().toMutableList())
+                                handleWordsLoadingComplete(resultWords.values.toMutableList())
                             }
                         } catch (e: Exception) {
                             android.util.Log.e("LessonDetailPresenter", "Error processing word success", e)
@@ -114,7 +114,7 @@ class LessonDetailPresenter : LessonDetailContract.Presenter {
         }
     }
 
-    private fun handleWordError(vocab: String, index: Int, resultWords: Array<Word?>, completed: AtomicInteger, totalWords: Int) {
+    private fun handleWordError(vocab: String, index: Int, resultWords: java.util.concurrent.ConcurrentHashMap<Int, Word>, completed: AtomicInteger, totalWords: Int) {
         try {
             resultWords[index] = Word(
                 id = vocab,
@@ -123,7 +123,7 @@ class LessonDetailPresenter : LessonDetailContract.Presenter {
                 phonetics = emptyList()
             )
             if (completed.incrementAndGet() == totalWords) {
-                handleWordsLoadingComplete(resultWords.filterNotNull().toMutableList())
+                handleWordsLoadingComplete(resultWords.values.toMutableList())
             }
         } catch (e: Exception) {
             android.util.Log.e("LessonDetailPresenter", "Error handling word error", e)

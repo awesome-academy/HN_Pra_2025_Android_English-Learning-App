@@ -8,11 +8,12 @@ import com.sun.englishlearning.data.model.WordEntry
 import org.json.JSONObject
 
 class ParseJson {
-
-    fun wordParseJson(jsonObject: JSONObject) = Word().apply {
-        // Word
-        word = jsonObject.optString(WordEntry.WORD)
-        phonetic = jsonObject.optString(WordEntry.PHONETIC)
+    fun wordParseJson(jsonObject: JSONObject): Word {
+        // Word fields
+        val word = jsonObject.optString(WordEntry.WORD)
+        val phonetic = jsonObject.optString(WordEntry.PHONETIC)
+        val id = jsonObject.optString("id") // If available, otherwise use word as id
+        val lessonId = jsonObject.optString("lessonId")
 
         // Phonetics
         val phoneticsArray = jsonObject.optJSONArray(WordEntry.PHONETICS)
@@ -27,7 +28,6 @@ class ParseJson {
                 )
             }
         }
-        phonetics = phoneticsList
 
         // Meanings
         val meaningsArray = jsonObject.optJSONArray(WordEntry.MEANINGS)
@@ -47,7 +47,6 @@ class ParseJson {
                         )
                     }
                 }
-
                 meaningsList.add(
                     Meaning(
                         partOfSpeech = m.optString(WordEntry.PART_OF_SPEECH),
@@ -56,6 +55,14 @@ class ParseJson {
                 )
             }
         }
-        meanings = meaningsList
+
+        return Word(
+            id = if (id.isNotEmpty()) id else word,
+            word = word,
+            phonetic = phonetic,
+            phonetics = phoneticsList,
+            meanings = meaningsList,
+            lessonId = lessonId
+        )
     }
 }

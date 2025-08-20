@@ -31,7 +31,11 @@ class GetJsonFromUrl<T> constructor(
             val responseJson = getJsonStringFromUrl(urlString)
             data = ParseDataWithJson().parseJsonToData(JSONArray(responseJson), keyEntity) as? T
             mHandler.post {
-                data?.let { listener.onSuccess(it) }
+                if (data != null) {
+                    listener.onSuccess(data!!)
+                } else {
+                    listener.onError(Exception("Failed to parse data from JSON"))
+                }
             }
         }
     }

@@ -117,8 +117,7 @@ class FlashcardActivity : BaseActivity<ActivityFlashcardBinding>(), FlashcardFra
             // Set safe defaults
             words = emptyList()
             currentIndex = 0
-            lessonTitle = "Lesson"
-            throw e // Re-throw to be handled by caller
+            lessonTitle = ""
         }
     }
 

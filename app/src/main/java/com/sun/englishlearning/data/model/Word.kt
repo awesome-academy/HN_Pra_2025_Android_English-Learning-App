@@ -5,30 +5,30 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class Word(
-    var id: String = "",
-    var word: String = "",
-    var phonetic: String = "",
-    var phonetics: List<Phonetic> = emptyList(),
-    var meanings: List<Meaning> = emptyList(),
-     var lessonId: String = ""
+    val id: String = "",
+    val word: String = "",
+    val phonetic: String = "",
+    val phonetics: List<Phonetic> = emptyList(),
+    val meanings: List<Meaning> = emptyList(),
+    val lessonId: String = ""
 ) : Parcelable
 
 @Parcelize
 data class Phonetic(
-    var text: String = "",
-    var audio: String = ""
+    val text: String = "",
+    val audio: String = ""
 ) : Parcelable
 
 @Parcelize
 data class Meaning(
-    var partOfSpeech: String = "",
-    var definitions: List<Definition> = emptyList()
+    val partOfSpeech: String = "",
+    val definitions: List<Definition> = emptyList()
 ) : Parcelable
 
 @Parcelize
 data class Definition(
-    var definition: String = "",
-    var example: String = ""
+    val definition: String = "",
+    val example: String = ""
 ) : Parcelable
 
 object WordEntry {

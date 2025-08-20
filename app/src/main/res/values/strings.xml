@@ -174,4 +174,38 @@
     <string name="next">Next</string>
     <string name="check_answer">Check Answer</string>
     <string name="enter_the_word">Enter the word</string>
+
+    <!-- Word Search Activity Strings -->
+    <string name="please_enter_word_to_search">Please enter a word to search</string>
+    <string name="word_not_found">Word not found</string>
+    <string name="network_error_try_again">Network error. Please try again.</string>
+    <string name="no_audio_available">No audio available for this word</string>
+    <string name="playing_pronunciation">Playing pronunciation...</string>
+    <string name="unable_to_play_audio">Unable to play audio</string>
+    <string name="unable_to_play_sound">Unable to play sound</string>
+    <string name="please_login_to_save_words">Please login to save words</string>
+    <string name="word_removed_from_saved_list">Word removed from saved list</string>
+    <string name="failed_to_remove_word">Failed to remove word</string>
+    <string name="word_saved_successfully">Word saved successfully!</string>
+    <string name="failed_to_save_word">Failed to save word</string>
+    <string name="remove_word">Remove Word</string>
+    <string name="save_word">Save Word</string>
+    <string name="error_format">Error: %1$s</string>
+    <!-- Example label for flashcard -->
+    <string name="example">Example</string>
+
+    <!-- FlashcardFragment string resources -->
+    <string name="english_word_with_name">English word: %1$s</string>
+    <string name="definition_with_content">Definition: %1$s</string>
+    <string name="example_sentence_with_content">Example: %1$s</string>
+    <string name="pronunciation_with_content">Pronunciation: %1$s</string>
+
+    <!-- FlashcardFragment required strings -->
+    <string name="audio_not_available">Audio not available for %1$s</string>
+    <string name="play_pronunciation_for">Play pronunciation for %1$s</string>
+    <string name="part_of_speech_with_content">Part of speech: %1$s</string>
+    <!-- TestFlashcardFragment required strings -->
+    <string name="check_learned_result_incorrect">Incorrect! Try again.</string>
+    <string name="check_learned_result_correct">Correct! Well done.</string>
+    <string name="definition_not_available">Definition not available.</string>
 </resources>

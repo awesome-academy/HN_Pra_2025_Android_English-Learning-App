@@ -228,17 +228,16 @@ class LessonDetailFragment : BaseFragment<FragmentLessonDetailBinding>(), Lesson
     }
 
     override fun playWordSound(word: Word) {
-        if (word.soundUrl.isNotEmpty()) {
+        val soundUrl = word.phonetics.firstOrNull()?.audio.orEmpty()
+        if (soundUrl.isNotEmpty()) {
             audioManager.playAudio(
                 context = requireContext(),
-                audioUrl = word.soundUrl,
+                audioUrl = soundUrl,
                 listener = object : AudioManager.AudioPlaybackListener {
-                    override fun onAudioStarted() {
+                    override fun onAudioStarted() {}
 
-                    }
-                    override fun onAudioCompleted() {
+                    override fun onAudioCompleted() {}
 
-                    }
                     override fun onAudioError(error: String) {
                         Toast.makeText(requireContext(), "Error playing audio: $error", Toast.LENGTH_SHORT).show()
                     }

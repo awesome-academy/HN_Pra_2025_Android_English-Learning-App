@@ -7,7 +7,7 @@ import com.sun.englishlearning.data.repository.LessonRepository
 import com.sun.englishlearning.data.repository.LessonRepositoryImpl
 import com.sun.englishlearning.data.repository.UserLessonProgressRepository
 import com.sun.englishlearning.data.repository.UserLessonProgressRepositoryImpl
-import com.sun.englishlearning.data.repository.source.VocabularyDataSource
+import com.sun.englishlearning.data.repository.source.WordDataSource
 import com.sun.englishlearning.data.repository.source.remote.OnResultListener
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -18,7 +18,7 @@ class LessonDetailPresenter : LessonDetailContract.Presenter {
     private var currentLesson: Lesson? = null
     private var currentVocabulary: List<Word> = emptyList()
     private var context: Context? = null
-    private val vocabularyDataSource = VocabularyDataSource()
+    private val wordDataSource: WordDataSource.Local = com.sun.englishlearning.data.repository.source.local.WordLocalDataSource.getInstance()
     private var lessonRepository: LessonRepository? = null
     private val userProgressRepository: UserLessonProgressRepository = UserLessonProgressRepositoryImpl()
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
@@ -36,19 +36,17 @@ class LessonDetailPresenter : LessonDetailContract.Presenter {
 
     override fun loadVocabulary(lessonId: String) {
         view?.showLoading()
-        val context = this.context ?: return
-        vocabularyDataSource.getVocabularyForLesson(context, lessonId, object : OnResultListener<List<Word>> {
-            override fun onLoading() {
-                view?.showLoading()
-            }
-            override fun onSuccess(result: List<Word>) {
-                currentVocabulary = result
+        val lessonVocabSet = currentLesson?.vocabulary?.toSet() ?: emptySet()
+        wordDataSource.getWordsLocal(object : OnResultListener<MutableList<Word>> {
+            override fun onSuccess(data: MutableList<Word>) {
+                val filtered = data.filter { lessonVocabSet.contains(it.word) || lessonVocabSet.contains(it.id) }
+                currentVocabulary = filtered
                 view?.hideLoading()
-                view?.showVocabulary(result)
+                view?.showVocabulary(filtered)
             }
-            override fun onError(error: String) {
+            override fun onError(exception: Exception?) {
                 view?.hideLoading()
-                view?.showError("Error loading vocabulary: $error")
+                view?.showError("Error loading vocabulary: ${exception?.message}")
             }
         })
     }
@@ -92,8 +90,6 @@ class LessonDetailPresenter : LessonDetailContract.Presenter {
 
     override fun detachView() {
         this.view = null
-        // Shutdown vocabulary data source to release resources
-        vocabularyDataSource.shutdown()
     }
 
     override fun onStart() {

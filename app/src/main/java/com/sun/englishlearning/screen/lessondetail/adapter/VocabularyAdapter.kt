@@ -44,13 +44,13 @@ class VocabularyAdapter(
                 textWordName.text = word.word
                 // Show learned indicator
                 if (learnedWordIds.contains(word.id)) {
-                    // Example: show a checkmark icon and change background color
                     imgLearned.visibility = android.view.View.VISIBLE
                     root.setBackgroundResource(com.sun.englishlearning.R.drawable.bg_learned_word)
                 } else {
                     imgLearned.visibility = android.view.View.GONE
                     root.setBackgroundResource(com.sun.englishlearning.R.drawable.bg_vocabulary_card)
                 }
+                // Sound button
                 btnSound.setOnClickListener {
                     onSoundClick(word)
                 }

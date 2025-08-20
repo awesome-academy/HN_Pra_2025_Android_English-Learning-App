@@ -1,12 +1,11 @@
 package com.sun.englishlearning.data.repository.source.remote
 
-import com.sun.englishlearning.data.model.Word
+import java.lang.Exception
 
 /**
  * Interface for handling async results from remote data source
  */
 interface OnResultListener<T> {
     fun onSuccess(data: T)
-    fun onError(error: String)
-    fun onLoading()
+    fun onError(exception: Exception?)
 }

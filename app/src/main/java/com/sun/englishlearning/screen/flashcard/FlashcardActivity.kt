@@ -207,26 +207,20 @@ class FlashcardActivity : BaseActivity<ActivityFlashcardBinding>(), FlashcardFra
     }
 
     fun playWordAudio(word: Word) {
-        if (word.soundUrl.isNotEmpty()) {
+        val soundUrl = word.phonetics.firstOrNull()?.audio.orEmpty()
+        if (soundUrl.isNotEmpty()) {
             audioManager.playAudio(
                 context = this,
-                audioUrl = word.soundUrl,
+                audioUrl = soundUrl,
                 listener = object : AudioManager.AudioPlaybackListener {
-                    override fun onAudioStarted() {
+                    override fun onAudioStarted() {}
 
-                    }
+                    override fun onAudioCompleted() {}
 
-                    override fun onAudioCompleted() {
-                        // Audio finished playing
-                    }
-
-                    override fun onAudioError(error: String) {
-
-                    }
+                    override fun onAudioError(error: String) {}
                 }
             )
         } else {
-            // Show message that audio is not available
             android.widget.Toast.makeText(
                 this,
                 "Audio pronunciation not available for '${word.word}'",

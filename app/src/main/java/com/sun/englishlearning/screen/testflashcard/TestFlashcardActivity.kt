@@ -241,10 +241,11 @@ class TestFlashcardActivity : BaseActivity<ActivityFlashcardBinding>(),
     }
 
     override fun onPlayWordAudio(word: Word) {
-        if (word.soundUrl.isNotEmpty()) {
+        val soundUrl = word.phonetics.firstOrNull()?.audio.orEmpty()
+        if (soundUrl.isNotEmpty()) {
             audioManager.playAudio(
                 context = this,
-                audioUrl = word.soundUrl,
+                audioUrl = soundUrl,
                 listener = object : AudioManager.AudioPlaybackListener {
                     override fun onAudioStarted() {
                         // Audio playback started

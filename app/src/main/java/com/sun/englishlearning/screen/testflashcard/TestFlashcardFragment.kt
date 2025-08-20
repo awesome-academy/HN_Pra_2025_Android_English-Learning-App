@@ -89,7 +89,8 @@ class TestFlashcardFragment :
             btnAudio.setOnClickListener { view ->
                 animateButtonPress(view) {
                     testProgressListener?.onPlayWordAudio(word)
-                    mTestVocabularyPresenter.playAudio(word.soundUrl)
+                    val soundUrl = word.phonetics.firstOrNull()?.audio.orEmpty()
+                    mTestVocabularyPresenter.playAudio(soundUrl)
                 }
             }
 
@@ -126,16 +127,13 @@ class TestFlashcardFragment :
     private fun setupTestData() {
         viewBinding.apply {
             // Set definition
-            val definition = if (word.definition.isNotEmpty()) {
-                word.definition
-            } else {
-                getString(R.string.definition_not_available)
-            }
-            textDefinition.text = definition
+            val definition = word.meanings.firstOrNull()?.definitions?.firstOrNull()?.definition.orEmpty()
+            textDefinition.text = if (definition.isNotEmpty()) definition else getString(R.string.definition_not_available)
             textDefinition.contentDescription = getString(R.string.definition_with_content, definition)
 
             // Set audio button content description
-            btnAudio.contentDescription = if (word.soundUrl.isNotEmpty()) {
+            val soundUrl = word.phonetics.firstOrNull()?.audio.orEmpty()
+            btnAudio.contentDescription = if (soundUrl.isNotEmpty()) {
                 getString(R.string.play_pronunciation_for, word.word)
             } else {
                 getString(R.string.audio_not_available, word.word)

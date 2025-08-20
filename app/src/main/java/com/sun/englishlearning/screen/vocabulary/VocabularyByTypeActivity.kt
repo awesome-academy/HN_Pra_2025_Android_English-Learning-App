@@ -68,7 +68,7 @@ class VocabularyByTypeActivity : BaseActivity<ActivityVocabularyByTypeBinding>()
         binding.apply {
             tvTitle.text = typeTitle
             btnBack.setOnClickListener {
-                finish()
+                onBackPressed()
             }
         }
     }

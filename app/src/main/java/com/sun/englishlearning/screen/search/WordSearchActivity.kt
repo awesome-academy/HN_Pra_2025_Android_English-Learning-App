@@ -56,7 +56,7 @@ class WordSearchActivity : BaseActivity<ActivityWordSearchBinding>() {
 
     private fun setupClickListeners() {
         binding.btnBack.setOnClickListener {
-            finish()
+            onBackPressed()
         }
 
         binding.btnSearch.setOnClickListener {

@@ -167,7 +167,7 @@ class FlashcardActivity : BaseActivity<ActivityFlashcardBinding>(), FlashcardFra
         binding.btnBack.setOnClickListener { view ->
             // Animate button press
             animateButtonPress(view) {
-                finish()
+                onBackPressed()
             }
         }
     }

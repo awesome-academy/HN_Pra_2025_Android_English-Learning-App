@@ -18,7 +18,8 @@
         android:orientation="horizontal"
         android:paddingHorizontal="@dimen/dp_16"
         android:paddingVertical="@dimen/dp_12"
-        android:paddingTop="@dimen/dp_16">
+        android:paddingTop="@dimen/dp_48"
+        android:paddingBottom="@dimen/dp_16">
 
         <!-- Back Button -->
         <FrameLayout
@@ -26,12 +27,16 @@
             android:layout_height="@dimen/dp_40"
             android:background="@drawable/bg_audio_button_modern"
             android:clickable="true"
-            android:focusable="true">
+            android:focusable="true"
+            android:layout_marginTop="@dimen/dp_16"
+            android:layout_marginStart="@dimen/dp_8"
+            android:layout_marginEnd="@dimen/dp_8"
+            android:elevation="@dimen/dp_8">
 
             <ImageView
                 android:id="@+id/btn_back"
-                android:layout_width="@dimen/dp_20"
-                android:layout_height="@dimen/dp_20"
+                android:layout_width="@dimen/dp_24"
+                android:layout_height="@dimen/dp_24"
                 android:layout_gravity="center"
                 android:src="@drawable/ic_arrow_back"
                 android:contentDescription="@string/go_back_to_lesson"

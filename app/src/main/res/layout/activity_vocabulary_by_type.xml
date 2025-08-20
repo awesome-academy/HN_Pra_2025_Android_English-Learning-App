@@ -13,7 +13,7 @@
         android:orientation="horizontal"
         android:gravity="center_vertical"
         android:padding="@dimen/dp_16"
-        android:paddingTop="@dimen/dp_56"
+        android:paddingTop="@dimen/system_window_top_padding"
         android:paddingBottom="@dimen/dp_16"
         android:background="@android:color/white"
         android:fitsSystemWindows="true"

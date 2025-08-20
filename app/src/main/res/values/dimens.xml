@@ -524,4 +524,7 @@
 	<dimen name="sp_58">58.00sp</dimen>
 	<dimen name="sp_59">59.00sp</dimen>
 	<dimen name="sp_60">60.00sp</dimen>
+
+	<!-- System window padding for consistent status bar spacing -->
+	<dimen name="system_window_top_padding">48.00dp</dimen>
 </resources>

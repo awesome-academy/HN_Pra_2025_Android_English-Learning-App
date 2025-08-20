@@ -64,11 +64,9 @@ class SavedWordsActivity : BaseActivity<ActivitySavedWordsBinding>() {
     private fun setupClickListeners() {
         binding.apply {
             btnBack.setOnClickListener {
-                android.util.Log.d("SavedWordsActivity", "Back button clicked!")
                 onBackPressed()
             }
         }
-        android.util.Log.d("SavedWordsActivity", "Click listener setup completed")
     }
 
     private fun setupSearchView() {

@@ -9,12 +9,12 @@ import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sun.englishlearning.R
-import com.sun.englishlearning.databinding.ActivityLessonsBinding
 import com.sun.englishlearning.data.model.Lesson
+import com.sun.englishlearning.databinding.FragmentLessonsBinding
 import com.sun.englishlearning.screen.courses.adapter.CoursesAdapter
 import com.sun.englishlearning.utils.base.BaseFragment
 
-class CoursesFragment : BaseFragment<ActivityLessonsBinding>(), CoursesContract.View {
+class CoursesFragment : BaseFragment<FragmentLessonsBinding>(), CoursesContract.View {
 
     private lateinit var coursesAdapter: CoursesAdapter
     private lateinit var presenter: CoursesContract.Presenter
@@ -22,8 +22,8 @@ class CoursesFragment : BaseFragment<ActivityLessonsBinding>(), CoursesContract.
 
     override val isInsets = true
 
-    override fun inflateViewBinding(inflater: LayoutInflater, container: ViewGroup?): ActivityLessonsBinding {
-        return ActivityLessonsBinding.inflate(inflater, container, false)
+    override fun inflateViewBinding(inflater: LayoutInflater, container: ViewGroup?): FragmentLessonsBinding {
+        return FragmentLessonsBinding.inflate(inflater, container, false)
     }
 
     override fun initView() {

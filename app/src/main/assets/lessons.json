@@ -19,7 +19,7 @@
       "title": "Extracurricular Activities",
       "description": "Learn about activities outside of regular classes",
       "imageUrl": "https://learn.mochidemy.com/_next/image?url=https%3A%2F%2Fmochien3.1-api.mochidemy.com%2Fpublic%2Fimages%2Flesson%2FTACB_lesson_2.webp&w=256&q=70",
-      "vocabulary": ["club", "sports", "music", "drama", "competition", "tournament", "practice", "performance", "team", "activity"]
+      "vocabulary": ["club", "sports", "drama", "competition", "tournament", "practice", "performance", "team", "activity"]
     },
     {
       "id": "4",
@@ -33,7 +33,7 @@
       "title": "School Subjects",
       "description": "Different academic subjects taught in school",
       "imageUrl": "https://learn.mochidemy.com/_next/image?url=https%3A%2F%2Fmochien3.1-api.mochidemy.com%2Fpublic%2Fimages%2Flesson%2FTACB_lesson_32.webp&w=256&q=70",
-      "vocabulary": ["mathematics", "science", "history", "geography", "literature", "physics", "chemistry", "biology", "art", "music"]
+      "vocabulary": ["mathematics", "science", "history", "geography", "literature", "physics", "chemistry", "biology", "art"]
     },
     {
       "id": "6",
@@ -61,7 +61,7 @@
       "title": "Appearance",
       "description": "Describing physical appearance and looks",
       "imageUrl": "https://learn.mochidemy.com/_next/image?url=https%3A%2F%2Fmochien3.1-api.mochidemy.com%2Fpublic%2Fimages%2Flesson%2FTACB_lesson_9.webp&w=256&q=70",
-      "vocabulary": ["tall", "short", "beautiful", "handsome", "pretty", "ugly", "thin", "fat", "young", "old"]
+      "vocabulary": ["tall", "short", "beautiful", "handsome", "pretty", "ugly", "thin", "fat"]
     },
     {
       "id": "10",
@@ -75,7 +75,7 @@
       "title": "Age",
       "description": "Age-related vocabulary and expressions",
       "imageUrl": "https://learn.mochidemy.com/_next/image?url=https%3A%2F%2Fmochien3.1-api.mochidemy.com%2Fpublic%2Fimages%2Flesson%2FTACB_lesson_11.webp&w=256&q=70",
-      "vocabulary": ["young", "old", "baby", "child", "teenager", "adult", "elderly", "middle-aged", "infant", "senior"]
+      "vocabulary": ["baby", "child", "teenager", "adult", "elderly", "middle-aged", "infant", "senior"]
     },
     {
       "id": "12",
@@ -128,10 +128,10 @@
     },
     {
       "id": "19",
-      "title": "Days in a week",
-      "description": "Days of the week and weekly schedule",
-      "imageUrl": "https://learn.mochidemy.com/_next/image?url=https%3A%2F%2Fmochien3.1-api.mochidemy.com%2Fpublic%2Fimages%2Flesson%2FTACB_lesson_95.webp&w=256&q=70",
-      "vocabulary": ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday", "weekday", "weekend", "week"]
+      "title": "Cooking",
+      "description": "Common cooking terms and kitchen vocabulary",
+      "imageUrl": "https://learn.mochidemy.com/_next/image?url=https%3A%2F%2Fmochien3.1-api.mochidemy.com%2Fpublic%2Fimages%2Flesson%2FTACB_lesson_61.webp&w=256&q=70",
+      "vocabulary": ["cook", "bake", "fry", "boil", "grill", "roast", "chop", "slice", "stir", "season"]
     },
     {
       "id": "20",

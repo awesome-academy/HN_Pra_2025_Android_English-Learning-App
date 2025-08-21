@@ -65,7 +65,7 @@ class VocabularyByTypeActivity : BaseActivity<ActivityVocabularyByTypeBinding>()
     private fun setupExtras() {
         val wordTypeValue = intent.getIntExtra(EXTRA_WORD_TYPE, WordType.SAVED.value)
         wordType = WordType.values().find { it.value == wordTypeValue } ?: WordType.SAVED
-        typeTitle = intent.getStringExtra(EXTRA_TYPE_TITLE) ?: "Words"
+        typeTitle = intent.getStringExtra(EXTRA_TYPE_TITLE) ?: getString(R.string.default_words_title)
     }
 
     private fun setupToolbar() {
@@ -175,28 +175,28 @@ class VocabularyByTypeActivity : BaseActivity<ActivityVocabularyByTypeBinding>()
             when (wordType) {
                 WordType.WEAK -> {
                     ivEmptyIcon.setImageResource(R.drawable.ic_book)
-                    tvEmptyMessage.text = "Let's start learning!"
-                    tvEmptySubtitle.text = "Practice lessons to build your vocabulary"
+                    tvEmptyMessage.text = getString(R.string.lets_start_learning)
+                    tvEmptySubtitle.text = getString(R.string.practice_lessons_to_build_vocabulary)
                 }
                 WordType.MEDIUM -> {
                     ivEmptyIcon.setImageResource(R.drawable.ic_book)
-                    tvEmptyMessage.text = "Let's start learning!"
-                    tvEmptySubtitle.text = "Keep practicing to strengthen your words"
+                    tvEmptyMessage.text = getString(R.string.lets_start_learning)
+                    tvEmptySubtitle.text = getString(R.string.keep_practicing_to_strengthen_words)
                 }
                 WordType.STRONG -> {
                     ivEmptyIcon.setImageResource(R.drawable.ic_book)
-                    tvEmptyMessage.text = "Let's start learning!"
-                    tvEmptySubtitle.text = "Master words through practice"
+                    tvEmptyMessage.text = getString(R.string.lets_start_learning)
+                    tvEmptySubtitle.text = getString(R.string.master_words_through_practice)
                 }
                 WordType.SAVED -> {
                     ivEmptyIcon.setImageResource(R.drawable.ic_bookmark)
-                    tvEmptyMessage.text = "Let's start learning!"
-                    tvEmptySubtitle.text = "Save words while learning to review them later"
+                    tvEmptyMessage.text = getString(R.string.lets_start_learning)
+                    tvEmptySubtitle.text = getString(R.string.save_words_while_learning)
                 }
                 else -> {
                     ivEmptyIcon.setImageResource(R.drawable.ic_book)
-                    tvEmptyMessage.text = "Let's start learning!"
-                    tvEmptySubtitle.text = "Complete lessons to see words here"
+                    tvEmptyMessage.text = getString(R.string.lets_start_learning)
+                    tvEmptySubtitle.text = getString(R.string.complete_lessons_to_see_words)
                 }
             }
         }
@@ -204,7 +204,7 @@ class VocabularyByTypeActivity : BaseActivity<ActivityVocabularyByTypeBinding>()
 
     private fun playWordSound(soundUrl: String) {
         if (soundUrl.isEmpty()) {
-            Toast.makeText(this, "No audio available for this word", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.no_audio_available_for_word), Toast.LENGTH_SHORT).show()
             return
         }
         
@@ -215,16 +215,16 @@ class VocabularyByTypeActivity : BaseActivity<ActivityVocabularyByTypeBinding>()
                 setDataSource(soundUrl)
                 setOnPreparedListener { 
                     start()
-                    Toast.makeText(this@VocabularyByTypeActivity, "Playing pronunciation...", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@VocabularyByTypeActivity, getString(R.string.playing_pronunciation_ellipsis), Toast.LENGTH_SHORT).show()
                 }
                 setOnErrorListener { _, _, _ ->
-                    Toast.makeText(this@VocabularyByTypeActivity, "Unable to play audio", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@VocabularyByTypeActivity, getString(R.string.unable_to_play_audio), Toast.LENGTH_SHORT).show()
                     false
                 }
                 prepareAsync()
             }
         } catch (e: Exception) {
-            Toast.makeText(this, "Unable to play sound: ${e.message}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.unable_to_play_sound_format, e.message), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -238,16 +238,16 @@ class VocabularyByTypeActivity : BaseActivity<ActivityVocabularyByTypeBinding>()
                     filteredWords.removeAll { it.id == savedWord.id }
                     wordsAdapter.notifyDataSetChanged()
                     
-                    Toast.makeText(this@VocabularyByTypeActivity, "Word removed successfully", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@VocabularyByTypeActivity, getString(R.string.word_removed_successfully), Toast.LENGTH_SHORT).show()
                     
                     if (filteredWords.isEmpty()) {
                         showEmptyState()
                     }
                 } else {
-                    Toast.makeText(this@VocabularyByTypeActivity, "Failed to remove word", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@VocabularyByTypeActivity, getString(R.string.failed_to_remove_word_generic), Toast.LENGTH_SHORT).show()
                 }
             } catch (e: Exception) {
-                Toast.makeText(this@VocabularyByTypeActivity, "Error removing word: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@VocabularyByTypeActivity, getString(R.string.error_removing_word_format, e.message), Toast.LENGTH_SHORT).show()
             }
         }
     }

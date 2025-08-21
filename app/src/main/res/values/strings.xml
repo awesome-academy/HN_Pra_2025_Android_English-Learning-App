@@ -208,4 +208,45 @@
     <string name="check_learned_result_incorrect">Incorrect! Try again.</string>
     <string name="check_learned_result_correct">Correct! Well done.</string>
     <string name="definition_not_available">Definition not available.</string>
+
+    <!-- VocabularyByTypeActivity strings -->
+    <string name="default_words_title">Words</string>
+    <string name="lets_start_learning">Let\'s start learning!</string>
+    <string name="practice_lessons_to_build_vocabulary">Practice lessons to build your vocabulary</string>
+    <string name="keep_practicing_to_strengthen_words">Keep practicing to strengthen your words</string>
+    <string name="master_words_through_practice">Master words through practice</string>
+    <string name="save_words_while_learning">Save words while learning to review them later</string>
+    <string name="complete_lessons_to_see_words">Complete lessons to see words here</string>
+    <string name="no_audio_available_for_word">No audio available for this word</string>
+    <string name="playing_pronunciation_ellipsis">Playing pronunciation...</string>
+    <string name="unable_to_play_sound_format">Unable to play sound: %1$s</string>
+    <string name="word_removed_successfully">Word removed successfully</string>
+    <string name="failed_to_remove_word_generic">Failed to remove word</string>
+    <string name="error_removing_word_format">Error removing word: %1$s</string>
+    <string name="search_hint">Search</string>
+    <string name="no_words_found">No words found</string>
+    <string name="word_you_are_searching_for_not_in_saved_list">The word you are searching for is not in your saved list</string>
+
+    <!-- Activity Lessons strings -->
+    <string name="ongoing">Ongoing</string>
+    <string name="completed">Completed</string>
+    
+    <!-- Hard-coded strings that need to be moved to resources -->
+    <string name="sample_word_as_many_as">as many as</string>
+    <string name="sample_lesson_count">Lesson: 3</string>
+    <string name="sample_advanced_count">Advanced: 76</string>
+    <string name="sample_progress_count">6/10</string>
+    <string name="sample_lesson_count_five">5 lessons</string>
+    <string name="word_search_title">Word Search</string>
+    <string name="search_button">Search</string>
+    <string name="sample_word_example">example</string>
+    <string name="sample_phonetic">/ɪɡˈzæm.pəl/</string>
+    <string name="sample_part_of_speech">noun</string>
+    <string name="sample_definition">a thing characteristic of its kind or illustrating a general rule</string>
+    <string name="search_prompt">Search for a word to see its definition</string>
+    <string name="please_try_different_word">Please try a different word</string>
+    <string name="lesson_details_title">Lesson Details</string>
+    <string name="vocabulary_label">Vocabulary</string>
+    <string name="test_label">Test</string>
+    <string name="enter_word_to_search_hint">Enter word to search...</string>
 </resources>

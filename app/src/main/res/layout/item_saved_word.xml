@@ -39,7 +39,7 @@
                         android:id="@+id/tv_word"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="as many as"
+                        android:text="@string/sample_word_as_many_as"
                         android:textSize="16sp"
                         android:textColor="@android:color/black"
                         android:textStyle="bold" />
@@ -72,7 +72,7 @@
                 android:id="@+id/btn_remove_word"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/dp_32"
-                android:text="Remove Word"
+                android:text="@string/remove_word"
                 android:textSize="@dimen/sp_12"
                 android:textColor="@android:color/white"
                 android:background="@drawable/bg_purple_button"

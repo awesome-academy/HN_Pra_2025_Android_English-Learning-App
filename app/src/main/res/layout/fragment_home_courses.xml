@@ -22,7 +22,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Khóa học"
+                android:text="@string/courses"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:textColor="@android:color/black" />
@@ -30,7 +30,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Xem toàn bộ →"
+                android:text="@string/see_all"
                 android:textSize="14sp"
                 android:textColor="@android:color/holo_blue_dark"
                 android:clickable="true"

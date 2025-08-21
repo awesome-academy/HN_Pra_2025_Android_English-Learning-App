@@ -27,7 +27,7 @@
             android:id="@+id/tvCategoryTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Travel"
+            android:text="@string/travel"
             android:textSize="12sp"
             android:textStyle="bold"
             android:gravity="center"
@@ -39,7 +39,7 @@
             android:id="@+id/tvLessonCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="5 lessons"
+            android:text="@string/sample_lesson_count_five"
             android:textSize="10sp"
             android:textColor="@android:color/darker_gray"
             android:gravity="center" />

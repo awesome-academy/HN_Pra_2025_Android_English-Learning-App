@@ -28,7 +28,7 @@
             android:background="@drawable/bg_audio_button_modern"
             android:clickable="true"
             android:focusable="true"
-            android:layout_marginTop="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_4"
             android:layout_marginStart="@dimen/dp_8"
             android:layout_marginEnd="@dimen/dp_8"
             android:elevation="@dimen/dp_8">

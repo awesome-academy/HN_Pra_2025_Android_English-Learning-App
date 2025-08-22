@@ -337,4 +337,13 @@ class LessonDetailFragment : BaseFragment<FragmentLessonDetailBinding>(), Lesson
     override fun onError(exception: Exception?) {
         Toast.makeText(requireContext(), exception?.message ?: "Error loading words", Toast.LENGTH_SHORT).show()
     }
+
+    override fun onResume() {
+        super.onResume()
+        // Always reload progress and vocabulary from Firebase when returning to this screen
+        currentLesson?.let { lesson ->
+            loadUserProgress(lesson.id)
+            presenter.getWords(lesson.vocabulary)
+        }
+    }
 }

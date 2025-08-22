@@ -336,8 +336,6 @@ class FlashcardFragment :
     override fun onWordMarkedAsLearned(success: Boolean) {
         if (success) {
             Toast.makeText(requireContext(), "Word marked as learned!", Toast.LENGTH_SHORT).show()
-        } else {
-            Toast.makeText(requireContext(), "Failed to update progress", Toast.LENGTH_SHORT).show()
         }
     }
 

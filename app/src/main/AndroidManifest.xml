@@ -19,7 +19,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.EnglishLearning">
+        android:theme="@style/Theme.EnglishLearning"
+        android:enableOnBackInvokedCallback="true">
         <activity
             android:name=".screen.login.LoginActivity"
             android:exported="false" />

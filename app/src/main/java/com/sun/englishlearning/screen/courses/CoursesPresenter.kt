@@ -12,23 +12,22 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class CoursesPresenter : CoursesContract.Presenter {
+class CoursesPresenter internal constructor(private val lessonRepository: LessonRepository?) :
+    CoursesContract.Presenter {
 
-    private var view: CoursesContract.View? = null
+    private var mView: CoursesContract.View? = null
     private var context: Context? = null
     private var isOngoingTabSelected = true
     private val userProgressRepository: UserLessonProgressRepository = UserLessonProgressRepositoryImpl()
-    private var lessonRepository: LessonRepository? = null
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
     private val auth = FirebaseAuth.getInstance()
 
     fun setContext(context: Context) {
         this.context = context
-        lessonRepository = LessonRepositoryImpl(context, userProgressRepository)
+        LessonRepositoryImpl(context, userProgressRepository)
     }
 
     override fun loadOngoingLessons() {
-        view?.showLoading()
         coroutineScope.launch {
             // Use lessonRepository safely
             val repo = lessonRepository ?: return@launch
@@ -51,23 +50,19 @@ class CoursesPresenter : CoursesContract.Presenter {
                         lesson.id to progress.wordsLearned
                     }
 
-                    view?.hideLoading()
                     // Pass both progress and words learned to view
-                    (view as? CoursesFragment)?.showOngoingLessonsWithProgress(lessons, progressMap, wordsLearnedMap) ?:
-                        view?.showOngoingLessons(lessons)
+                    (mView as? CoursesFragment)?.showOngoingLessons(lessons, progressMap, wordsLearnedMap) ?:
+                        mView?.showOngoingLessons(lessons, progressMap, wordsLearnedMap)
                 } else {
-                    view?.hideLoading()
-                    view?.showError("Error loading lessons")
+                    mView?.showError("Error loading lessons")
                 }
             } catch (e: Exception) {
-                view?.hideLoading()
-                view?.showError(e.message ?: "Error loading ongoing lessons")
+                mView?.showError(e.message ?: "Error loading ongoing lessons")
             }
         }
     }
 
     override fun loadCompletedLessons() {
-        view?.showLoading()
         coroutineScope.launch {
             try {
                 val userId = auth.currentUser?.uid ?: return@launch
@@ -88,24 +83,21 @@ class CoursesPresenter : CoursesContract.Presenter {
                         lesson.id to progress.wordsLearned
                     }
 
-                    view?.hideLoading()
                     // Pass both progress and words learned to view
-                    (view as? CoursesFragment)?.showCompletedLessonsWithProgress(lessons, progressMap, wordsLearnedMap) ?:
-                        view?.showCompletedLessons(lessons)
+                    (mView as? CoursesFragment)?.showCompletedLessons(lessons, progressMap, wordsLearnedMap) ?:
+                        mView?.showCompletedLessons(lessons, progressMap, wordsLearnedMap)
                 } else {
-                    view?.hideLoading()
-                    view?.showError("Error loading completed lessons")
+                    mView?.showError("Error loading completed lessons")
                 }
             } catch (e: Exception) {
-                view?.hideLoading()
-                view?.showError(e.message ?: "Error loading completed lessons")
+                mView?.showError(e.message ?: "Error loading completed lessons")
             }
         }
     }
 
     override fun onTabSelected(isOngoing: Boolean) {
         isOngoingTabSelected = isOngoing
-        view?.updateTabSelection(isOngoing)
+        mView?.updateTabSelection(isOngoing)
 
         if (isOngoing) {
             loadOngoingLessons()
@@ -119,34 +111,34 @@ class CoursesPresenter : CoursesContract.Presenter {
             // Validate lesson data before navigation
             if (lesson.id.isEmpty()) {
                 Log.w("CoursesPresenter", "Lesson clicked with empty ID: ${lesson.title}")
-                view?.showError("Invalid lesson selected")
+                mView?.showError("Invalid lesson selected")
                 return
             }
 
             if (lesson.title.isEmpty()) {
                 Log.w("CoursesPresenter", "Lesson clicked with empty title: ${lesson.id}")
-                view?.showError("Invalid lesson data")
+                mView?.showError("Invalid lesson data")
                 return
             }
 
             // Validate vocabulary list
             if (lesson.vocabulary.isEmpty()) {
                 Log.w("CoursesPresenter", "Lesson has no vocabulary: ${lesson.title}")
-                view?.showError("This lesson has no vocabulary words available")
+                mView?.showError("This lesson has no vocabulary words available")
                 return
             }
 
             // Check if view is still attached
-            if (view == null) {
+            if (mView == null) {
                 Log.w("CoursesPresenter", "View is null when trying to navigate")
                 return
             }
 
             Log.d("CoursesPresenter", "Navigating to lesson: ${lesson.title} with ${lesson.vocabulary.size} vocabulary words")
-            view?.navigateToLessonDetail(lesson)
+            mView?.navigateToLessonDetail(lesson)
         } catch (e: Exception) {
             Log.e("CoursesPresenter", "Error handling lesson click", e)
-            view?.showError("Failed to open lesson: ${e.message}")
+            mView?.showError("Failed to open lesson: ${e.message}")
         }
     }
 
@@ -158,14 +150,6 @@ class CoursesPresenter : CoursesContract.Presenter {
         }
     }
 
-    override fun attachView(view: CoursesContract.View?) {
-        this.view = view
-    }
-
-    override fun detachView() {
-        this.view = null
-    }
-
     override fun onStart() {
         // Load initial data - start with ongoing tab
         onTabSelected(true)
@@ -173,5 +157,13 @@ class CoursesPresenter : CoursesContract.Presenter {
 
     override fun onStop() {
 
+    }
+
+    override fun attachView(view: CoursesContract.View?) {
+        mView = view
+    }
+
+    override fun detachView() {
+        mView = null
     }
 }

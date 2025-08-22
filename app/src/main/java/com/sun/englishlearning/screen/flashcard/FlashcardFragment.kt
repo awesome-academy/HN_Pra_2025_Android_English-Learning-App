@@ -19,6 +19,7 @@ import com.sun.englishlearning.data.model.Word
 import com.sun.englishlearning.databinding.FragmentFlashcardBinding
 import com.sun.englishlearning.utils.base.BaseFragment
 import java.lang.Exception
+import androidx.core.view.isVisible
 
 class FlashcardFragment :
     BaseFragment<FragmentFlashcardBinding>(),
@@ -121,20 +122,24 @@ class FlashcardFragment :
             textWordName.contentDescription = getString(R.string.english_word_with_name, word.word)
 
             // Set definition
-            val definition = word.meanings.firstOrNull()?.definitions?.firstOrNull()?.definition.orEmpty()
+            val definition =
+                word.meanings.firstOrNull()?.definitions?.firstOrNull()?.definition.orEmpty()
             textDefinition.text = definition
-            textDefinition.contentDescription = getString(R.string.definition_with_content, definition)
+            textDefinition.contentDescription =
+                getString(R.string.definition_with_content, definition)
 
             // Set example
             val example = word.meanings.firstOrNull()?.definitions?.firstOrNull()?.example.orEmpty()
             textExample.text = example
-            textExample.contentDescription = getString(R.string.example_sentence_with_content, example)
+            textExample.contentDescription =
+                getString(R.string.example_sentence_with_content, example)
 
             // Set phonetic transcription
             val phonetic = word.phonetic.ifEmpty { word.phonetics.firstOrNull()?.text.orEmpty() }
             if (phonetic.isNotEmpty()) {
                 textPhonetic.text = phonetic
-                textPhonetic.contentDescription = getString(R.string.pronunciation_with_content, phonetic)
+                textPhonetic.contentDescription =
+                    getString(R.string.pronunciation_with_content, phonetic)
                 textPhonetic.visibility = View.VISIBLE
             } else {
                 textPhonetic.visibility = View.GONE
@@ -144,7 +149,8 @@ class FlashcardFragment :
             val partOfSpeech = word.meanings.firstOrNull()?.partOfSpeech.orEmpty()
             if (partOfSpeech.isNotEmpty()) {
                 textPartOfSpeech.text = partOfSpeech
-                textPartOfSpeech.contentDescription = getString(R.string.part_of_speech_with_content, partOfSpeech)
+                textPartOfSpeech.contentDescription =
+                    getString(R.string.part_of_speech_with_content, partOfSpeech)
                 textPartOfSpeech.visibility = View.VISIBLE
             } else {
                 textPartOfSpeech.visibility = View.GONE
@@ -288,7 +294,7 @@ class FlashcardFragment :
         }
 
         // Animate part of speech if visible
-        if (viewBinding.textPartOfSpeech.visibility == View.VISIBLE) {
+        if (viewBinding.textPartOfSpeech.isVisible) {
             viewBinding.textPartOfSpeech.apply {
                 alpha = 0f
                 scaleX = 0.8f
@@ -320,7 +326,8 @@ class FlashcardFragment :
 
     override fun onWordUnsaved(success: Boolean) {
         if (success) {
-            Toast.makeText(requireContext(), "Word removed from saved list", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Word removed from saved list", Toast.LENGTH_SHORT)
+                .show()
         } else {
             Toast.makeText(requireContext(), "Failed to remove word", Toast.LENGTH_SHORT).show()
         }
@@ -339,7 +346,11 @@ class FlashcardFragment :
     }
 
     override fun onError(exception: Exception?) {
-        Toast.makeText(requireContext(), exception?.message ?: getString(R.string.error_general), Toast.LENGTH_SHORT).show()
+        Toast.makeText(
+            requireContext(),
+            exception?.message ?: getString(R.string.error_general),
+            Toast.LENGTH_SHORT
+        ).show()
     }
 
     override fun showLoading() {

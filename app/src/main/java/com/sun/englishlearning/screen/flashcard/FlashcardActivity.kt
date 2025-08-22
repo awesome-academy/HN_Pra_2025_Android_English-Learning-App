@@ -1,7 +1,5 @@
 package com.sun.englishlearning.screen.flashcard
 
-import android.animation.AnimatorSet
-import android.animation.ObjectAnimator
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -46,6 +44,7 @@ class FlashcardActivity : BaseActivity<ActivityFlashcardBinding>(), FlashcardFra
     private var lessonTitle: String = ""
     private val audioManager = AudioManager.getInstance()
     private var lessonIdForUpdate: String? = null
+    private var pageChangeCallback: ViewPager2.OnPageChangeCallback? = null
 
     override fun inflateBinding(inflater: LayoutInflater): ActivityFlashcardBinding {
         return ActivityFlashcardBinding.inflate(inflater)
@@ -90,32 +89,21 @@ class FlashcardActivity : BaseActivity<ActivityFlashcardBinding>(), FlashcardFra
                 @Suppress("DEPRECATION")
                 intent.getParcelableArrayListExtra<Word>(EXTRA_WORDS) ?: emptyList()
             }
-
-            // Filter out null or invalid words
-            words = words.filter { word ->
-                word != null && word.word.isNotEmpty()
-            }
-
+            // Only check for non-empty word, no need for null check
+            words = words.filter { it.word.isNotEmpty() }
             currentIndex = intent.getIntExtra(EXTRA_CURRENT_INDEX, 0)
             lessonTitle = intent.getStringExtra(EXTRA_LESSON_TITLE) ?: ""
-
-            // Validate and fix currentIndex
             if (currentIndex < 0 || currentIndex >= words.size) {
                 Log.w(TAG, "Invalid current index: $currentIndex, resetting to 0")
                 currentIndex = 0
             }
-
             Log.d(TAG, "Intent data: ${words.size} valid words, index: $currentIndex, title: $lessonTitle")
-
-            // Additional validation
             if (words.isEmpty()) {
                 Log.e(TAG, "No valid words received in intent")
                 throw IllegalArgumentException("No valid vocabulary words provided")
             }
-
         } catch (e: Exception) {
             Log.e(TAG, "Error getting intent data", e)
-            // Set safe defaults
             words = emptyList()
             currentIndex = 0
             lessonTitle = ""
@@ -133,18 +121,14 @@ class FlashcardActivity : BaseActivity<ActivityFlashcardBinding>(), FlashcardFra
 
     private fun setupViewPager() {
         flashcardAdapter = FlashcardAdapter(this, words)
-
         binding.viewPagerFlashcards.apply {
             adapter = flashcardAdapter
             currentItem = currentIndex
-
-            // Enable smooth scrolling
             isUserInputEnabled = true
-
             setPageTransformer(PageTransformer())
-
-            // Add page change callback
-            registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            // Unregister previous callback if exists
+            pageChangeCallback?.let { unregisterOnPageChangeCallback(it) }
+            pageChangeCallback = object : ViewPager2.OnPageChangeCallback() {
                 override fun onPageSelected(position: Int) {
                     super.onPageSelected(position)
                     currentIndex = position
@@ -159,46 +143,9 @@ class FlashcardActivity : BaseActivity<ActivityFlashcardBinding>(), FlashcardFra
                         audioManager.stopAudio()
                     }
                 }
-            })
-        }
-    }
-
-    private fun setupClickListeners() {
-        binding.btnBack.setOnClickListener { view ->
-            // Animate button press
-            animateButtonPress(view) {
-                onBackPressed()
             }
+            registerOnPageChangeCallback(pageChangeCallback!!)
         }
-    }
-
-    private fun animateButtonPress(view: android.view.View, onComplete: () -> Unit) {
-        val scaleDown = AnimatorSet().apply {
-            playTogether(
-                ObjectAnimator.ofFloat(view, "scaleX", 1f, 0.9f),
-                ObjectAnimator.ofFloat(view, "scaleY", 1f, 0.9f)
-            )
-            duration = 100
-            interpolator = AccelerateDecelerateInterpolator()
-        }
-
-        val scaleUp = AnimatorSet().apply {
-            playTogether(
-                ObjectAnimator.ofFloat(view, "scaleX", 0.9f, 1f),
-                ObjectAnimator.ofFloat(view, "scaleY", 0.9f, 1f)
-            )
-            duration = 100
-            interpolator = OvershootInterpolator()
-        }
-
-        scaleDown.addListener(object : android.animation.AnimatorListenerAdapter() {
-            override fun onAnimationEnd(animation: android.animation.Animator) {
-                scaleUp.start()
-                onComplete()
-            }
-        })
-
-        scaleDown.start()
     }
 
     private fun updatePositionIndicator(position: Int) {
@@ -224,7 +171,7 @@ class FlashcardActivity : BaseActivity<ActivityFlashcardBinding>(), FlashcardFra
     }
 
     private fun updateNavigationHints(position: Int) {
-
+        // No-op for now
     }
 
     fun playWordAudio(word: Word) {
@@ -250,14 +197,19 @@ class FlashcardActivity : BaseActivity<ActivityFlashcardBinding>(), FlashcardFra
         }
     }
 
-    private fun setupAccessibility() {
-        // Set up accessibility for the ViewPager
-        binding.viewPagerFlashcards.contentDescription = "Swipe left or right to navigate between flashcards"
+    private fun setupClickListeners() {
+        binding.btnBack.setOnClickListener { view ->
+            // Animate button press
+            animateButtonPress(view) {
+                onBackPressedDispatcher.onBackPressed()
+            }
+        }
+    }
 
-        // Announce current position for screen readers
-        binding.viewPagerFlashcards.announceForAccessibility(
-            "Showing flashcard ${currentIndex + 1} of ${words.size}"
-        )
+    private fun setupAccessibility() {
+        binding.viewPagerFlashcards.contentDescription = "Swipe left or right to navigate between flashcards"
+        // Use sendAccessibilityEvent instead of deprecated announceForAccessibility
+        binding.viewPagerFlashcards.sendAccessibilityEvent(android.view.accessibility.AccessibilityEvent.TYPE_ANNOUNCEMENT)
     }
 
     private fun animateInitialAppearance() {
@@ -328,6 +280,50 @@ class FlashcardActivity : BaseActivity<ActivityFlashcardBinding>(), FlashcardFra
         }
     }
 
+    private fun animateButtonPress(view: android.view.View, onAnimationEnd: () -> Unit) {
+        val scaleDown = android.animation.AnimatorSet().apply {
+            playTogether(
+                android.animation.ObjectAnimator.ofFloat(view, "scaleX", 1f, 0.95f),
+                android.animation.ObjectAnimator.ofFloat(view, "scaleY", 1f, 0.95f)
+            )
+            duration = 100
+            interpolator = OvershootInterpolator()
+        }
+
+        val scaleUp = android.animation.AnimatorSet().apply {
+            playTogether(
+                android.animation.ObjectAnimator.ofFloat(view, "scaleX", 0.95f, 1.05f),
+                android.animation.ObjectAnimator.ofFloat(view, "scaleY", 0.95f, 1.05f)
+            )
+            duration = 150
+            interpolator = OvershootInterpolator()
+        }
+
+        val scaleNormal = android.animation.AnimatorSet().apply {
+            playTogether(
+                android.animation.ObjectAnimator.ofFloat(view, "scaleX", 1.05f, 1f),
+                android.animation.ObjectAnimator.ofFloat(view, "scaleY", 1.05f, 1f)
+            )
+            duration = 100
+            interpolator = OvershootInterpolator()
+        }
+
+        scaleDown.addListener(object : android.animation.AnimatorListenerAdapter() {
+            override fun onAnimationEnd(animation: android.animation.Animator) {
+                scaleUp.start()
+                onAnimationEnd()
+            }
+        })
+
+        scaleUp.addListener(object : android.animation.AnimatorListenerAdapter() {
+            override fun onAnimationEnd(animation: android.animation.Animator) {
+                scaleNormal.start()
+            }
+        })
+
+        scaleDown.start()
+    }
+
     // Implementation of OnProgressUpdateListener
     override fun onProgressUpdated(lessonId: String) {
         Log.d(TAG, "Progress updated for lesson: $lessonId")
@@ -336,17 +332,26 @@ class FlashcardActivity : BaseActivity<ActivityFlashcardBinding>(), FlashcardFra
     }
 
     override fun onDestroy() {
-        super.onDestroy()
-        audioManager.release()
-    }
-    
-    override fun finish() {
-        // Send back to the calling activity/fragment
-        if (lessonIdForUpdate != null) {
-            val resultIntent = Intent()
-            resultIntent.putExtra("updated_lesson_id", lessonIdForUpdate)
-            setResult(RESULT_OK, resultIntent)
+        // Stop all audio playback
+        try {
+            audioManager.stopAudio()
+        } catch (e: Exception) {
+            Log.w(TAG, "Error stopping audio in onDestroy", e)
         }
+        // Clean up ViewPager2 callback
+        pageChangeCallback?.let { callback ->
+            binding.viewPagerFlashcards.unregisterOnPageChangeCallback(callback)
+            pageChangeCallback = null
+        }
+        // Clear ViewPager2 adapter to release fragments
+        binding.viewPagerFlashcards.adapter = null
+        words = emptyList()
+        lessonIdForUpdate = null
+        super.onDestroy()
+    }
+
+    override fun finish() {
+        // Custom finish logic if needed
         super.finish()
     }
 }

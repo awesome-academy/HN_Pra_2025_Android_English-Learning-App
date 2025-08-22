@@ -3,7 +3,7 @@ package com.sun.englishlearning.screen.courses
 import com.sun.englishlearning.data.model.Lesson
 import com.sun.englishlearning.utils.base.BasePresenter
 
-class CoursesContract {
+interface CoursesContract {
     interface View {
         fun showOngoingLessons(
             lessons: List<Lesson>,

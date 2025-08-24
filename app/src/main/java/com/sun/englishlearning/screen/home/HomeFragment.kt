@@ -83,13 +83,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 
 
             tvSeeAllCourses.setOnClickListener {
-                // Navigate to Courses tab
-                findNavController().navigate(R.id.navigation_courses)
+                navigateToCoursesTab()
             }
 
             tvSeeAllRecent.setOnClickListener {
-                // Navigate to Courses tab
-                findNavController().navigate(R.id.navigation_courses)
+                navigateToCoursesTab()
             }
 
             ivRefresh.setOnClickListener {
@@ -436,6 +434,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     private fun hideCoursesLoading() {
         viewBinding.pbCoursesLoading.visibility = View.GONE
         viewBinding.rvCourseCategories.visibility = View.VISIBLE
+    }
+
+    private fun navigateToCoursesTab() {
+        // Simulate bottom navigation tab selection
+        val bottomNavigationView = requireActivity().findViewById<com.google.android.material.bottomnavigation.BottomNavigationView>(R.id.bottom_navigation_view)
+        bottomNavigationView?.selectedItemId = R.id.navigation_courses
     }
 
 }

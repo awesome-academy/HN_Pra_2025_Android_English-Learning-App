@@ -80,6 +80,20 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    
+    // Unit Testing
+    testImplementation("org.mockito:mockito-core:5.1.1")
+    testImplementation("org.mockito:mockito-inline:5.1.1") 
+    testImplementation("org.mockito.kotlin:mockito-kotlin:4.1.0")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+    testImplementation("androidx.arch.core:core-testing:2.2.0")
+    testImplementation("org.robolectric:robolectric:4.9.2")
+    testImplementation("androidx.test:core-ktx:1.5.0")
+    testImplementation("androidx.fragment:fragment-testing:1.6.2")
+    testImplementation("org.jetbrains.kotlin:kotlin-test:1.9.10")
+    
+    // MockWebServer for API testing
+    testImplementation("com.squareup.okhttp3:mockwebserver:4.11.0")
 
     //Navigation component
     implementation("androidx.navigation:navigation-fragment-ktx:2.7.0")

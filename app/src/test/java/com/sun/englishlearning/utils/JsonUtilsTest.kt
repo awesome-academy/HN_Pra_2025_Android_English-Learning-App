@@ -16,16 +16,16 @@ class JsonUtilsTest {
           "lessons": [
             {
               "id": "1",
-              "name": "Schools",
+              "title": "Schools",
               "description": "Learn vocabulary about schools and educational institutions",
-              "image": "https://example.com/image1.png",
+              "imageUrl": "https://example.com/image1.png",
               "vocabulary": ["school", "teacher", "student", "classroom", "homework"]
             },
             {
               "id": "2",
-              "name": "Examination",
+              "title": "Examination",
               "description": "Vocabulary and phrases related to exams and testing",
-              "image": "https://example.com/image2.png",
+              "imageUrl": "https://example.com/image2.png",
               "vocabulary": ["exam", "test", "quiz", "grade", "score"]
             }
           ]
@@ -40,18 +40,18 @@ class JsonUtilsTest {
         
         val firstLesson = lessons[0]
         assertEquals("1", firstLesson.id)
-        assertEquals("Schools", firstLesson.name)
+        assertEquals("Schools", firstLesson.title)
         assertEquals("Learn vocabulary about schools and educational institutions", firstLesson.description)
-        assertEquals("https://example.com/image1.png", firstLesson.image)
+        assertEquals("https://example.com/image1.png", firstLesson.imageUrl)
         assertEquals(5, firstLesson.vocabulary.size)
         assertTrue(firstLesson.vocabulary.contains("school"))
         assertTrue(firstLesson.vocabulary.contains("teacher"))
         
         val secondLesson = lessons[1]
         assertEquals("2", secondLesson.id)
-        assertEquals("Examination", secondLesson.name)
+        assertEquals("Examination", secondLesson.title)
         assertEquals("Vocabulary and phrases related to exams and testing", secondLesson.description)
-        assertEquals("https://example.com/image2.png", secondLesson.image)
+        assertEquals("https://example.com/image2.png", secondLesson.imageUrl)
         assertEquals(5, secondLesson.vocabulary.size)
         assertTrue(secondLesson.vocabulary.contains("exam"))
         assertTrue(secondLesson.vocabulary.contains("test"))
@@ -89,9 +89,9 @@ class JsonUtilsTest {
           "lessons": [
             {
               "id": "1",
-              "name": "Test Lesson",
+              "title": "Test Lesson",
               "description": "Test description",
-              "image": "https://example.com/image.png"
+              "imageUrl": "https://example.com/image.png"
             }
           ]
         }
@@ -104,7 +104,7 @@ class JsonUtilsTest {
         assertEquals(1, lessons.size)
         val lesson = lessons[0]
         assertEquals("1", lesson.id)
-        assertEquals("Test Lesson", lesson.name)
+        assertEquals("Test Lesson", lesson.title)
         assertTrue(lesson.vocabulary.isEmpty())
     }
 }

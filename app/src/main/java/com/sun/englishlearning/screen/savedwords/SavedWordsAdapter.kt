@@ -33,7 +33,7 @@ class SavedWordsAdapter(
 
     override fun getItemCount(): Int = savedWords.size
 
-    inner class SavedWordViewHolder(private val binding: ItemSavedWordBinding) : 
+    inner class SavedWordViewHolder(internal val binding: ItemSavedWordBinding) : 
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(savedWord: SavedWord) {

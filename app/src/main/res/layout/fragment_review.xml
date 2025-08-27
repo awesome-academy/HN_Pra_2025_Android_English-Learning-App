@@ -35,6 +35,92 @@
             android:textColor="@color/black"
             android:layout_marginBottom="@dimen/dp_24" />
 
+        <!-- Vocabulary cards grid -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="@dimen/dp_32">
+
+            <!-- First row: Weak words (single card) -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="@dimen/dp_16">
+
+                <!-- Weak words card -->
+                <LinearLayout
+                    android:id="@+id/layout_weak_words"
+                    android:layout_width="match_parent"
+                    android:layout_height="120dp"
+                    android:orientation="vertical"
+                    android:padding="@dimen/dp_16"
+                    android:background="@drawable/bg_red_card"
+                    android:gravity="bottom">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/weak_words"
+                        style="@style/TextSemiBold.14sp"
+                        android:textColor="@color/white" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- Second row: Medium words and Strong words -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <!-- Medium words card -->
+                <LinearLayout
+                    android:id="@+id/layout_medium_words"
+                    android:layout_width="0dp"
+                    android:layout_height="120dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:padding="@dimen/dp_16"
+                    android:background="@drawable/bg_green_card"
+                    android:layout_marginEnd="@dimen/dp_8"
+                    android:gravity="bottom">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/medium_words"
+                        style="@style/TextSemiBold.14sp"
+                        android:textColor="@color/white" />
+
+                </LinearLayout>
+
+                <!-- Strong words card -->
+                <LinearLayout
+                    android:id="@+id/layout_strong_words"
+                    android:layout_width="0dp"
+                    android:layout_height="120dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:padding="@dimen/dp_16"
+                    android:background="@drawable/bg_blue_card"
+                    android:layout_marginStart="@dimen/dp_8"
+                    android:gravity="bottom">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/strong_words"
+                        style="@style/TextSemiBold.14sp"
+                        android:textColor="@color/white" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
 
         <!-- Your save words section -->
         <LinearLayout

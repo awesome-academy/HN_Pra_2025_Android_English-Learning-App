@@ -1,5 +1,6 @@
 package com.sun.englishlearning.screen.vocabulary
 
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.media.AudioManager
@@ -85,6 +86,9 @@ class VocabularyByTypeActivity : BaseActivity<ActivityVocabularyByTypeBinding>()
                 }
                 SavedWordsAdapter.Action.REMOVE_WORD -> {
                     removeWord(savedWord)
+                }
+                SavedWordsAdapter.Action.VIEW_DETAILS -> {
+                    showWordDetailsDialog(savedWord)
                 }
             }
         }
@@ -250,6 +254,37 @@ class VocabularyByTypeActivity : BaseActivity<ActivityVocabularyByTypeBinding>()
                 Toast.makeText(this@VocabularyByTypeActivity, getString(R.string.error_removing_word_format, e.message), Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    private fun showWordDetailsDialog(savedWord: SavedWord) {
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_word_details, null)
+        
+        dialogView.findViewById<android.widget.TextView>(R.id.tv_word_popup).text = savedWord.word
+        dialogView.findViewById<android.widget.TextView>(R.id.tv_part_of_speech_popup).text = savedWord.partOfSpeech.ifEmpty { "N/A" }
+        dialogView.findViewById<android.widget.TextView>(R.id.tv_definition_popup).text = savedWord.definition
+        
+        val tvExample = dialogView.findViewById<android.widget.TextView>(R.id.tv_example_popup)
+        if (savedWord.example.isNotEmpty()) {
+            tvExample.text = getString(R.string.example_format, savedWord.example)
+            tvExample.visibility = View.VISIBLE
+        } else {
+            tvExample.visibility = View.GONE
+        }
+        
+        val dialog = AlertDialog.Builder(this)
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+        
+        dialogView.findViewById<android.widget.ImageView>(R.id.iv_sound_popup).setOnClickListener {
+            playWordSound(savedWord.soundUrl)
+        }
+        
+        dialogView.findViewById<android.widget.Button>(R.id.btn_close_popup).setOnClickListener {
+            dialog.dismiss()
+        }
+        
+        dialog.show()
     }
 
     override fun onDestroy() {

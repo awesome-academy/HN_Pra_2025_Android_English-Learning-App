@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import com.google.firebase.auth.FirebaseAuth
+import com.sun.englishlearning.R
 import com.sun.englishlearning.data.model.WordType
 import com.sun.englishlearning.data.repository.SavedWordsRepository
 import com.sun.englishlearning.data.repository.SavedWordsRepositoryImpl
@@ -41,6 +42,33 @@ class ReviewFragment : BaseFragment<FragmentReviewBinding>() {
         with(viewBinding) {
             layoutSaveWords.setOnClickListener {
                 val intent = Intent(requireContext(), SavedWordsActivity::class.java)
+                startActivity(intent)
+            }
+            
+            layoutWeakWords.setOnClickListener {
+                val intent = VocabularyByTypeActivity.createIntent(
+                    requireContext(),
+                    WordType.WEAK,
+                    getString(R.string.weak_words)
+                )
+                startActivity(intent)
+            }
+            
+            layoutMediumWords.setOnClickListener {
+                val intent = VocabularyByTypeActivity.createIntent(
+                    requireContext(),
+                    WordType.MEDIUM,
+                    getString(R.string.medium_words)
+                )
+                startActivity(intent)
+            }
+            
+            layoutStrongWords.setOnClickListener {
+                val intent = VocabularyByTypeActivity.createIntent(
+                    requireContext(),
+                    WordType.STRONG,
+                    getString(R.string.strong_words)
+                )
                 startActivity(intent)
             }
         }

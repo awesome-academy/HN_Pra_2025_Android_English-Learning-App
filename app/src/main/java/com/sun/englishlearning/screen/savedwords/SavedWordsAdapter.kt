@@ -14,7 +14,8 @@ class SavedWordsAdapter(
 
     enum class Action {
         PLAY_SOUND,
-        REMOVE_WORD
+        REMOVE_WORD,
+        VIEW_DETAILS
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SavedWordViewHolder {
@@ -39,6 +40,10 @@ class SavedWordsAdapter(
             binding.apply {
                 tvWord.text = savedWord.word
                 tvDefinition.text = savedWord.definition
+                
+                root.setOnClickListener {
+                    onAction(savedWord, Action.VIEW_DETAILS)
+                }
                 
                 ivSound.setOnClickListener {
                     onAction(savedWord, Action.PLAY_SOUND)

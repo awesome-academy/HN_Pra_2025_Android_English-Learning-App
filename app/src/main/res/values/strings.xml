@@ -222,4 +222,6 @@
     <string name="vocabulary_label">Vocabulary</string>
     <string name="test_label">Test</string>
     <string name="enter_word_to_search_hint">Enter word to search...</string>
+    <string name="close">Close</string>
+    <string name="example_format">Example: %1$s</string>
 </resources>

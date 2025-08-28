@@ -5,6 +5,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.sun.englishlearning.data.model.SavedWord
+import com.sun.englishlearning.data.model.Word
 import com.sun.englishlearning.data.model.WordType
 import kotlinx.coroutines.tasks.await
 import java.util.Date
@@ -19,7 +20,7 @@ interface SavedWordsRepository {
     suspend fun isWordSaved(userId: String, word: String): Result<Boolean>
     suspend fun isWordSavedWithType(userId: String, word: String, wordType: WordType): Result<SavedWord?>
     suspend fun deleteWordByUserAndName(userId: String, word: String, wordType: WordType): Result<Unit>
-    suspend fun saveOrUpdateTestedWord(userId: String, word: com.sun.englishlearning.data.model.Word, wordType: WordType): Result<Unit>
+    suspend fun saveOrUpdateTestedWord(userId: String, word: Word, isCorrect: Boolean): Result<Unit>
 }
 
 class SavedWordsRepositoryImpl : SavedWordsRepository {
@@ -218,53 +219,85 @@ class SavedWordsRepositoryImpl : SavedWordsRepository {
         }
     }
 
-    override suspend fun saveOrUpdateTestedWord(userId: String, word: com.sun.englishlearning.data.model.Word, wordType: WordType): Result<Unit> {
+    override suspend fun saveOrUpdateTestedWord(userId: String, word: Word, isCorrect: Boolean): Result<Unit> {
         return try {
-            Log.d(TAG, "Saving/updating tested word: ${word.word} for user: $userId, type: ${wordType.name}")
-
+            Log.d(TAG, "Saving/updating tested word: ${word.word} for user: $userId, isCorrect: $isCorrect")
             val snapshot = db.collection(COLLECTION_NAME)
                 .whereEqualTo("userId", userId)
                 .whereEqualTo("word", word.word)
-                .whereEqualTo("wordType", wordType.value)
                 .get()
                 .await()
-
+            var streak = 0
+            var wordType = WordType.WEAK
+            var savedWordId = ""
             if (snapshot.isEmpty) {
-                // Word not found, save as new
+                // New word
+                if (isCorrect) {
+                    streak = 1
+                    wordType = WordType.MEDIUM
+                }
+            } else {
+                val doc = snapshot.documents.first()
+                val savedWord = doc.toObject(SavedWord::class.java)
+                savedWordId = doc.id
+                if (isCorrect) {
+                    streak = (savedWord?.streak ?: 0) + 1
+                    if (streak >= 3) {
+                        wordType = WordType.STRONG
+                        streak = 0
+                    } else {
+                        wordType = WordType.MEDIUM
+                    }
+                } else {
+                    streak = 0
+                    wordType = WordType.WEAK
+                }
+            }
+            // Save/update word
+            if (snapshot.isEmpty) {
                 val document = db.collection(COLLECTION_NAME).document()
                 val wordToSave = SavedWord(
                     id = document.id,
                     userId = userId,
                     word = word.word,
+                    ipa = word.phonetic,
+                    partOfSpeech = word.meanings.firstOrNull()?.partOfSpeech ?: "",
+                    definition = word.meanings.firstOrNull()?.definitions?.firstOrNull()?.definition ?: "",
+                    example = word.meanings.firstOrNull()?.definitions?.firstOrNull()?.example ?: "",
+                    soundUrl = word.phonetics.firstOrNull()?.audio ?: "",
                     wordType = wordType.value,
                     createdAt = Date(),
-                    updatedAt = Date()
+                    updatedAt = Date(),
+                    streak = streak
                 )
-
                 document.set(wordToSave).await()
-                Log.d(TAG, "Successfully saved new tested word: ${word.word}")
             } else {
-                // Word found, update existing
-                val documentId = snapshot.documents.first().id
-
                 db.collection(COLLECTION_NAME)
-                    .document(documentId)
+                    .document(savedWordId)
                     .update(
                         mapOf(
-                            "word" to word.word,
                             "wordType" to wordType.value,
-                            "updatedAt" to Date()
+                            "updatedAt" to Date(),
+                            "streak" to streak
                         )
                     )
                     .await()
-
-                Log.d(TAG, "Successfully updated tested word: ${word.word}")
             }
-
+            // Update user points if correct
+            if (isCorrect) {
+                updateUserPoints(userId, 1)
+            }
             Result.success(Unit)
         } catch (e: Exception) {
             Log.e(TAG, "Error saving/updating tested word: ${e.message}", e)
             Result.failure(e)
         }
+    }
+
+    private suspend fun updateUserPoints(userId: String, points: Int) {
+        val userDoc = db.collection("users").document(userId)
+        val snapshot = userDoc.get().await()
+        val currentPoints = snapshot.getLong("totalPoints") ?: 0L
+        userDoc.update("totalPoints", currentPoints + points).await()
     }
 }

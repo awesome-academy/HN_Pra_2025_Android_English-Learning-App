@@ -21,5 +21,6 @@ data class SavedWord(
     val soundUrl: String = "",
     @get:PropertyName("wordType") val wordType: Int = WordType.SAVED.value,
     val createdAt: Date = Date(),
-    val updatedAt: Date = Date()
+    val updatedAt: Date = Date(),
+    val streak: Int = 0 // Number of consecutive correct answers
 )

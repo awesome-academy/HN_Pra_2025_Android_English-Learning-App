@@ -14,7 +14,6 @@ import androidx.viewpager2.widget.ViewPager2
 import com.google.firebase.auth.FirebaseAuth
 import com.sun.englishlearning.R
 import com.sun.englishlearning.data.model.Word
-import com.sun.englishlearning.data.model.WordType
 import com.sun.englishlearning.data.repository.SavedWordsRepository
 import com.sun.englishlearning.data.repository.SavedWordsRepositoryImpl
 import com.sun.englishlearning.databinding.ActivityFlashcardBinding
@@ -235,11 +234,10 @@ class TestFlashcardActivity : BaseActivity<ActivityFlashcardBinding>(),
         } else {
             wrongAnswers.add(word.id)
         }
-        // Save classification to Firebase
+        // Save classification, streak, and points to Firebase
         val userId = auth.currentUser?.uid ?: return
-        val wordType = if (isCorrect) WordType.MEDIUM else WordType.WEAK
         lifecycleScope.launch {
-            savedWordsRepository.saveOrUpdateTestedWord(userId, word, wordType)
+            savedWordsRepository.saveOrUpdateTestedWord(userId, word, isCorrect)
         }
     }
 

@@ -9,14 +9,20 @@ import android.view.LayoutInflater
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.Toast
 import androidx.activity.addCallback
+import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
+import com.google.firebase.auth.FirebaseAuth
 import com.sun.englishlearning.R
 import com.sun.englishlearning.data.model.Word
+import com.sun.englishlearning.data.model.WordType
+import com.sun.englishlearning.data.repository.SavedWordsRepository
+import com.sun.englishlearning.data.repository.SavedWordsRepositoryImpl
 import com.sun.englishlearning.databinding.ActivityFlashcardBinding
 import com.sun.englishlearning.screen.testflashcard.adapter.TestFlashcardAdapter
 import com.sun.englishlearning.utils.AudioManager
 import com.sun.englishlearning.utils.DialogUtils
 import com.sun.englishlearning.utils.base.BaseActivity
+import kotlinx.coroutines.launch
 
 class TestFlashcardActivity : BaseActivity<ActivityFlashcardBinding>(),
     TestFlashcardFragment.OnTestProgressListener {
@@ -50,6 +56,8 @@ class TestFlashcardActivity : BaseActivity<ActivityFlashcardBinding>(),
     private var lessonTitle: String = ""
     private var lessonId: String = ""
     private val audioManager = AudioManager.getInstance()
+    private val savedWordsRepository: SavedWordsRepository = SavedWordsRepositoryImpl()
+    private val auth: FirebaseAuth = FirebaseAuth.getInstance()
 
     // Track test results
     private val correctAnswers = mutableListOf<String>()
@@ -226,6 +234,12 @@ class TestFlashcardActivity : BaseActivity<ActivityFlashcardBinding>(),
             correctAnswers.add(word.id)
         } else {
             wrongAnswers.add(word.id)
+        }
+        // Save classification to Firebase
+        val userId = auth.currentUser?.uid ?: return
+        val wordType = if (isCorrect) WordType.MEDIUM else WordType.WEAK
+        lifecycleScope.launch {
+            savedWordsRepository.saveOrUpdateTestedWord(userId, word, wordType)
         }
     }
 

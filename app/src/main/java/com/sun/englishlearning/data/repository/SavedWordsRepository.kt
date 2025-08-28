@@ -19,6 +19,7 @@ interface SavedWordsRepository {
     suspend fun isWordSaved(userId: String, word: String): Result<Boolean>
     suspend fun isWordSavedWithType(userId: String, word: String, wordType: WordType): Result<SavedWord?>
     suspend fun deleteWordByUserAndName(userId: String, word: String, wordType: WordType): Result<Unit>
+    suspend fun saveOrUpdateTestedWord(userId: String, word: com.sun.englishlearning.data.model.Word, wordType: WordType): Result<Unit>
 }
 
 class SavedWordsRepositoryImpl : SavedWordsRepository {
@@ -213,6 +214,56 @@ class SavedWordsRepositoryImpl : SavedWordsRepository {
             Result.success(Unit)
         } catch (e: Exception) {
             Log.e(TAG, "Error deleting word by user and name: ${e.message}", e)
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun saveOrUpdateTestedWord(userId: String, word: com.sun.englishlearning.data.model.Word, wordType: WordType): Result<Unit> {
+        return try {
+            Log.d(TAG, "Saving/updating tested word: ${word.word} for user: $userId, type: ${wordType.name}")
+
+            val snapshot = db.collection(COLLECTION_NAME)
+                .whereEqualTo("userId", userId)
+                .whereEqualTo("word", word.word)
+                .whereEqualTo("wordType", wordType.value)
+                .get()
+                .await()
+
+            if (snapshot.isEmpty) {
+                // Word not found, save as new
+                val document = db.collection(COLLECTION_NAME).document()
+                val wordToSave = SavedWord(
+                    id = document.id,
+                    userId = userId,
+                    word = word.word,
+                    wordType = wordType.value,
+                    createdAt = Date(),
+                    updatedAt = Date()
+                )
+
+                document.set(wordToSave).await()
+                Log.d(TAG, "Successfully saved new tested word: ${word.word}")
+            } else {
+                // Word found, update existing
+                val documentId = snapshot.documents.first().id
+
+                db.collection(COLLECTION_NAME)
+                    .document(documentId)
+                    .update(
+                        mapOf(
+                            "word" to word.word,
+                            "wordType" to wordType.value,
+                            "updatedAt" to Date()
+                        )
+                    )
+                    .await()
+
+                Log.d(TAG, "Successfully updated tested word: ${word.word}")
+            }
+
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Log.e(TAG, "Error saving/updating tested word: ${e.message}", e)
             Result.failure(e)
         }
     }

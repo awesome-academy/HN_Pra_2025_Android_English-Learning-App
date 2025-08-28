@@ -116,33 +116,19 @@ class FlashcardPresenter internal constructor() : FlashcardContract.Presenter {
 
     override fun markWordAsLearned(word: Word) {
         val userId = FirebaseAuth.getInstance().currentUser?.uid
-        if (userId == null) {
-            mView?.onError(Exception("User not logged in"))
+        if (userId == null || word.lessonId.isEmpty() || word.id.isEmpty()) {
+            mView?.onError(Exception("Invalid user or word data"))
             return
-        }
-
-        // Fix: Ensure word has required data for marking as learned
-        val wordWithValidData = if (word.lessonId.isEmpty() || word.id.isEmpty()) {
-            // Generate missing data for words from Dictionary API
-            val lessonId = word.lessonId.ifEmpty { "default_lesson" }
-            val wordId = word.id.ifEmpty { word.word.hashCode().toString() }
-
-            word.copy(
-                id = wordId,
-                lessonId = lessonId
-            )
-        } else {
-            word
         }
 
         lifecycleScope?.launch {
             try {
                 val lessonRepository = LessonRepositoryImpl(context!!, userProgressRepository)
-                val result = lessonRepository.updateLessonProgressForFlashcard(userId, wordWithValidData.lessonId, wordWithValidData.id)
+                val result = lessonRepository.updateLessonProgressForFlashcard(userId, word.lessonId, word.id)
                 if (result.isSuccess) {
                     mView?.onWordMarkedAsLearned(true)
                     mView?.updateLearnedButtonUI(true)
-                    mView?.onProgressUpdated(wordWithValidData.lessonId)
+                    mView?.onProgressUpdated(word.lessonId)
                 } else {
                     mView?.onWordMarkedAsLearned(false)
                 }

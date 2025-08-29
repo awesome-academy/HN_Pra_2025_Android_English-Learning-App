@@ -131,6 +131,10 @@
     <string name="notifications_pm">PM</string>
     <string name="notifications_off">Off</string>
     <string name="notifications_save">Save</string>
+    <string name="daily_learning_reminder_title">Daily Learning Reminder</string>
+    <string name="daily_learning_reminder_default">Don\'t forget to practice your English today. Tap to open the app.</string>
+    <string name="daily_learning_reminder_with_progress">Khóa gần nhất: %1$s — %2$d/%3$d từ đã học</string>
+    <string name="recent_course_fallback">recent course</string>
 
     <string name="save_this_word">Save this word</string>
     <string name="mark_as_learned">Mark as Learned</string>

@@ -7,6 +7,10 @@ import android.content.Intent
 import androidx.core.app.NotificationCompat
 import com.sun.englishlearning.MainActivity
 import com.sun.englishlearning.R
+import com.google.firebase.auth.FirebaseAuth
+import com.sun.englishlearning.data.repository.UserLessonProgressRepositoryImpl
+import com.sun.englishlearning.data.repository.LessonRepositoryImpl
+import kotlinx.coroutines.runBlocking
 
 class ReminderReceiver : BroadcastReceiver() {
     
@@ -38,9 +42,41 @@ class ReminderReceiver : BroadcastReceiver() {
                     .build()
             }
             else -> {
-                NotificationCompat.Builder(context, NotificationsFragment.CHANNEL_ID)
-                    .setContentTitle("Daily Learning Reminder")
-                    .setContentText("Don't forget to practice your English today. Tap to open the app.")
+                // Enrich daily reminder with recent course and words learned
+                                 val enrichedContent: String = runBlocking {
+                     val user = FirebaseAuth.getInstance().currentUser
+                     if (user == null) {
+                         context.getString(R.string.daily_learning_reminder_default)
+                     } else {
+                         try {
+                             val repo = UserLessonProgressRepositoryImpl()
+                             val progressListResult = repo.getUserProgressByUser(user.uid)
+                             val progressList = progressListResult.getOrNull()
+                             val latest = progressList?.firstOrNull()
+                             if (latest != null) {
+                                 // Get lesson name from repository
+                                 val lessonRepo = LessonRepositoryImpl(context, repo)
+                                 val lessonResult = lessonRepo.getLesson(latest.lessonId)
+                                 val lessonName = if (lessonResult.isSuccess) {
+                                     lessonResult.getOrNull()?.title ?: context.getString(R.string.recent_course_fallback)
+                                 } else {
+                                     context.getString(R.string.recent_course_fallback)
+                                 }
+                                 val learned = latest.wordsLearned
+                                 val total = latest.totalWords
+                                 context.getString(R.string.daily_learning_reminder_with_progress, lessonName, learned, total)
+                             } else {
+                                 context.getString(R.string.daily_learning_reminder_default)
+                             }
+                         } catch (e: Exception) {
+                             context.getString(R.string.daily_learning_reminder_default)
+                         }
+                     }
+                 }
+
+                                 NotificationCompat.Builder(context, NotificationsFragment.CHANNEL_ID)
+                     .setContentTitle(context.getString(R.string.daily_learning_reminder_title))
+                     .setContentText(enrichedContent)
                     .setSmallIcon(R.drawable.ic_book)
                     .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                     .setContentIntent(pendingIntent)
